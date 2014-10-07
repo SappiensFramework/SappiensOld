@@ -1,11 +1,10 @@
 <?php
 require '../../Config.php';
-exit;
- 
+
 try {
     
     $formModulo = new \Sappiens\Grupo\Modulo\Modulo();
-    $form = $formModulo->getFormSmart();
+    $form = $formModulo->getFormModulo();
     //$form->validar();
 
 } catch (Exception $ex) {
