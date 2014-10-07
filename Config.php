@@ -10,8 +10,6 @@
  */
 namespace Sappiens;
 
-session_start();
-
 header('Content-Type: text/html; charset=utf-8');
 
 class Config
@@ -44,7 +42,7 @@ class Config
      */
     public static function conf()
     {
-        self::$SIS_INSTANCIA = new \Teste\Config();
+        self::$SIS_INSTANCIA = new \Sappiens\Config();
 
         return self::$SIS_INSTANCIA;
     }
@@ -65,7 +63,7 @@ class Config
     }
 }
 
-\Teste\Config::conf();
+\Sappiens\Config::conf();
 
 require_once SIS_FM_BASE . 'Lib/Zion/ClassLoader/Loader.class.php';
 
