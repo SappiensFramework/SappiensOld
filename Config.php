@@ -8,7 +8,7 @@
  * @version 2.0
  * @package Framework
  */
-namespace Teste;
+namespace Sappiens;
 
 session_start();
 
@@ -24,7 +24,7 @@ class Config
     {
         $this->setDiretorios();
 
-        define('SIS_ID_NAMESPACE_PRJETO','Teste');
+        define('SIS_ID_NAMESPACE_PRJETO','Sappiens');
         define('SIS_NAMESPACE_PRJETO','C:/xampp/htdocs');
         
         self::$SIS_CFG = [
