@@ -3,7 +3,7 @@ require '../../Config.php';
 
 try {
     
-    $formModulo = new \Sappiens\Grupo\Modulo\Modulo();
+    $formModulo = new \Sappiens\Grupo\Modulo\ModuloForm();
     $form = $formModulo->getFormModulo();
     //$form->validar();
 
