@@ -1,5 +1,5 @@
 <?php
 
-	header('location: ./dashboard?ref=./index');
+	header('location: ./Dashboard?ref=./index');
 
 ?>
