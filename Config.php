@@ -22,8 +22,13 @@ class Config
     {
         $this->setDiretorios();
 
-        define('SIS_ID_NAMESPACE_PRJETO','Sappiens');
-        define('SIS_NAMESPACE_PRJETO','C:/xampp/htdocs');
+        define('SIS_ID_NAMESPACE_PROJETO','Sappiens');
+        define('SIS_NAMESPACE_PROJETO','C:/xampp/htdocs');
+        define('SIS_DESCRICAO', SIS_ID_NAMESPACE_PROJETO . ', Plataforma de Gestão Integrada para o Serviço Público');
+        define('SIS_AUTOR', 'Pablo Vanni, Feliphe Bueno, Vinícius Pozzebon');
+        define('SIS_RELEASE', 'Alpha');
+        define('SIS_VENDOR_TEMPLATE','PixelAdmin');
+        define('SIS_VENDOR_TEMPLATE_VERSION','1.3.0');        
         
         self::$SIS_CFG = [
             'NomeCliente' => 'CENTER SIS',
@@ -52,14 +57,15 @@ class Config
         define('SIS_DIR_BASE', str_replace('\\', '/', dirname(__FILE__)) . '/');
         define('SIS_URL_BASE', 'http://' . $_SERVER['SERVER_NAME'] . substr($_SERVER['PHP_SELF'], 0, - (strlen($_SERVER['SCRIPT_FILENAME']) - strlen(SIS_DIR_BASE))));
 
-        define('SIS_URL_BASE_STATIC','//static.sappiens.com.br');
+        define('SIS_URL_BASE_STATIC','//static.sappiens.com.br/');
+        define('SIS_URL_BASE_DEFAULT','http://localhost'); // -> em ambiente online mudar para //app.sappiens.com.br
 
         define('SIS_FM_BASE', 'C:/xampp/htdocs/Zion/');
         define('SIS_LAYOUT_BASE', 'http://localhost/Zion/Layout/');
 
         define('SIS_URL_FM_BASE', 'http://localhost/Zion/');
 
-        define('SIS_DEFAULT_AUTOCOMPLETE',SIS_URL_BASE.'complete.php');
+        define('SIS_DEFAULT_AUTOCOMPLETE',SIS_URL_BASE.'includes/autocomplete/');
     }
 }
 
@@ -69,6 +75,6 @@ require_once SIS_FM_BASE . 'Lib/Zion/ClassLoader/Loader.class.php';
 
 (new \Zion\ClassLoader\Loader())
         ->setNamEspaces('Zion','C:/xampp/htdocs/Zion/Lib') //NameSpace do Framework
-        ->setNamEspaces(SIS_ID_NAMESPACE_PRJETO,SIS_NAMESPACE_PRJETO) //NameSpace do Projeto
+        ->setNamEspaces(SIS_ID_NAMESPACE_PROJETO,SIS_NAMESPACE_PROJETO) //NameSpace do Projeto
         ->setSufixos(array('', '.vo', '.class', '.interface')) //Sufixos em Geral
         ->inicio();
