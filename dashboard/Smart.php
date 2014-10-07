@@ -11,7 +11,7 @@ class Smart
     public function getFormSmart()
     {
         $form = new \Zion\Form\Form();
-        
+/*        
         $form->config()
                 ->setMethod('GET')
                 ->setNome('Form1')  
@@ -32,6 +32,6 @@ class Smart
                 ->setClassCss('btn btn-primary')
                 ->setValor('Enviar');
         */
-        return $form->processarForm($campos);        
+        //return $form->processarForm($campos);        
     }
 }

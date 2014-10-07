@@ -82,12 +82,12 @@ class Template extends \Zion\Layout\Padrao
 		$buffer .= $this->html->abreComentario() . 'Zion Framework: ending generic header' . $this->html->fechaComentario();
 		$buffer .= $this->html->abreComentario() . 'Zion Framework: starting template header' . $this->html->fechaComentario();
 		$buffer .= $this->html->abreTagAberta('link', array('href' => 'http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin', 'rel' => 'stylesheet', 'type' => 'text/css'));
-		$buffer .= $this->html->abreTagAberta('link', array('href' => URL_BASE_STATIC . CFG_VENDOR_TEMPLATE . '/' . CFG_VENDOR_TEMPLATE_VERSION . '/assets/stylesheets/bootstrap.min.css', 'rel' => 'stylesheet', 'type' => 'text/css'));
-		$buffer .= $this->html->abreTagAberta('link', array('href' => URL_BASE_STATIC . CFG_VENDOR_TEMPLATE . '/' . CFG_VENDOR_TEMPLATE_VERSION . '/assets/stylesheets/pixel-admin.min.css', 'rel' => 'stylesheet', 'type' => 'text/css'));
-		$buffer .= $this->html->abreTagAberta('link', array('href' => URL_BASE_STATIC . CFG_VENDOR_TEMPLATE . '/' . CFG_VENDOR_TEMPLATE_VERSION . '/assets/stylesheets/widgets.min.css', 'rel' => 'stylesheet', 'type' => 'text/css'));
-		$buffer .= $this->html->abreTagAberta('link', array('href' => URL_BASE_STATIC . CFG_VENDOR_TEMPLATE . '/' . CFG_VENDOR_TEMPLATE_VERSION . '/assets/stylesheets/pages.min.css', 'rel' => 'stylesheet', 'type' => 'text/css'));
-		$buffer .= $this->html->abreTagAberta('link', array('href' => URL_BASE_STATIC . CFG_VENDOR_TEMPLATE . '/' . CFG_VENDOR_TEMPLATE_VERSION . '/assets/stylesheets/rtl.min.css', 'rel' => 'stylesheet', 'type' => 'text/css'));
-		$buffer .= $this->html->abreTagAberta('link', array('href' => URL_BASE_STATIC . CFG_VENDOR_TEMPLATE . '/' . CFG_VENDOR_TEMPLATE_VERSION . '/assets/stylesheets/themes.min.css', 'rel' => 'stylesheet', 'type' => 'text/css'));
+		$buffer .= $this->html->abreTagAberta('link', array('href' => SIS_URL_BASE_STATIC . SIS_VENDOR_TEMPLATE . '/' . SIS_VENDOR_TEMPLATE_VERSION . '/assets/stylesheets/bootstrap.min.css', 'rel' => 'stylesheet', 'type' => 'text/css'));
+		$buffer .= $this->html->abreTagAberta('link', array('href' => SIS_URL_BASE_STATIC . SIS_VENDOR_TEMPLATE . '/' . SIS_VENDOR_TEMPLATE_VERSION . '/assets/stylesheets/pixel-admin.min.css', 'rel' => 'stylesheet', 'type' => 'text/css'));
+		$buffer .= $this->html->abreTagAberta('link', array('href' => SIS_URL_BASE_STATIC . SIS_VENDOR_TEMPLATE . '/' . SIS_VENDOR_TEMPLATE_VERSION . '/assets/stylesheets/widgets.min.css', 'rel' => 'stylesheet', 'type' => 'text/css'));
+		$buffer .= $this->html->abreTagAberta('link', array('href' => SIS_URL_BASE_STATIC . SIS_VENDOR_TEMPLATE . '/' . SIS_VENDOR_TEMPLATE_VERSION . '/assets/stylesheets/pages.min.css', 'rel' => 'stylesheet', 'type' => 'text/css'));
+		$buffer .= $this->html->abreTagAberta('link', array('href' => SIS_URL_BASE_STATIC . SIS_VENDOR_TEMPLATE . '/' . SIS_VENDOR_TEMPLATE_VERSION . '/assets/stylesheets/rtl.min.css', 'rel' => 'stylesheet', 'type' => 'text/css'));
+		$buffer .= $this->html->abreTagAberta('link', array('href' => SIS_URL_BASE_STATIC . SIS_VENDOR_TEMPLATE . '/' . SIS_VENDOR_TEMPLATE_VERSION . '/assets/stylesheets/themes.min.css', 'rel' => 'stylesheet', 'type' => 'text/css'));
 		$buffer .= $this->html->fechaTag('head');
 		$buffer .= $this->html->abreComentario() . 'Zion Framework: ending template header' . $this->html->fechaComentario();
 
@@ -101,7 +101,7 @@ class Template extends \Zion\Layout\Padrao
 		$buffer  = '';
 		$buffer .= $this->html->abreComentario() . 'Zion Framework: starting body app' . $this->html->fechaComentario();
 		$buffer .= $this->html->abreTagAberta('body', array('class' => 'theme-clean main-menu-animated'));
-		$buffer .= '<script>var init = [];</script><script src="'. URL_BASE_STATIC . CFG_VENDOR_TEMPLATE . '/' . CFG_VENDOR_TEMPLATE_VERSION . '/assets/demo/demo.js"></script>';
+		$buffer .= '<script>var init = [];</script><script src="'. SIS_URL_BASE_STATIC . SIS_VENDOR_TEMPLATE . '/' . SIS_VENDOR_TEMPLATE_VERSION . '/assets/demo/demo.js"></script>';
 		$buffer .= $this->html->abreTagAberta('div', array('id' => 'main-wrapper'));		
 
 		return $buffer;
@@ -182,9 +182,9 @@ class Template extends \Zion\Layout\Padrao
 		$buffer .= $this->html->abreTagAberta('a', array('href' => './?ref=navbar-brand', 'class' => 'navbar-brand'));
 
 			$buffer .= $this->html->abreTagAberta('div');
-				$buffer .= $this->html->abreTagAberta('img', array('alt' => 'Início', 'src' => URL_BASE_STATIC . CFG_VENDOR_TEMPLATE . '/' . CFG_VENDOR_TEMPLATE_VERSION . '/assets/images/pixel-admin/main-navbar-logo.png'));
+				$buffer .= $this->html->abreTagAberta('img', array('alt' => 'Início', 'src' => SIS_URL_BASE_STATIC . SIS_VENDOR_TEMPLATE . '/' . SIS_VENDOR_TEMPLATE_VERSION . '/assets/images/pixel-admin/main-navbar-logo.png'));
 			$buffer .= $this->html->fechaTag('div');
-			$buffer .= CFG_SIS_NOME;
+			$buffer .= SIS_ID_NAMESPACE_PROJETO;
 
 		// end: navbar-brand
 		$buffer .= $this->html->fechaTag('a');
@@ -397,7 +397,7 @@ class Template extends \Zion\Layout\Padrao
 
 					$buffer .= $this->html->abreTagAberta('div', array('class' => 'message'));
 
-						$buffer .= $this->html->abreTagAberta('img', array('src' => URL_BASE_STATIC . CFG_VENDOR_TEMPLATE . '/' . CFG_VENDOR_TEMPLATE_VERSION . '/assets/demo/avatars/3.jpg', 'class' => 'message-avatar'));
+						$buffer .= $this->html->abreTagAberta('img', array('src' => SIS_URL_BASE_STATIC . SIS_VENDOR_TEMPLATE . '/' . SIS_VENDOR_TEMPLATE_VERSION . '/assets/demo/avatars/3.jpg', 'class' => 'message-avatar'));
 						$buffer .= $this->html->abreTagAberta('a', array('class' => 'message-subject')) . 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.' . $this->html->fechaTag('a');
 						$buffer .= $this->html->abreTagAberta('div', array('class' => 'message-description')) . 'from ' . $this->html->abreTagAberta('a', array('href' => '#')) . 'Vinícius Pozzebon' . $this->html->fechaTag('a') . ' há 2h' . $this->html->fechaTag('div');
 
@@ -424,7 +424,7 @@ class Template extends \Zion\Layout\Padrao
 		$buffer  = '';
 		$buffer .= $this->html->abreTagAberta('li');	
 
-			$buffer .= $form->montaForm();				
+			//$buffer .= $form->montaForm();				
 
 		$buffer .= $this->html->fechaTag('li');	
 
@@ -470,27 +470,27 @@ class Template extends \Zion\Layout\Padrao
 
 				$buffer .= $this->html->fechaTag('div');
 
-				$buffer .= $this->html->abreTagAberta('img', array('src' => URL_BASE_STATIC . CFG_VENDOR_TEMPLATE . '/' . CFG_VENDOR_TEMPLATE_VERSION . '/assets/demo/avatars/1.jpg', 'class' => ''));
+				$buffer .= $this->html->abreTagAberta('img', array('src' => SIS_URL_BASE_STATIC . SIS_VENDOR_TEMPLATE . '/' . SIS_VENDOR_TEMPLATE_VERSION . '/assets/demo/avatars/1.jpg', 'class' => ''));
 
 				$buffer .= $this->html->abreTagAberta('div', array('class' => 'btn-group'));
 
 					// envelope
-					$buffer .= $this->html->abreTagAberta('a', array('href' => URL_BASE . './messages?ref=fa-envelope', 'class' => 'btn btn-xs btn-primary btn-outline dark'));
+					$buffer .= $this->html->abreTagAberta('a', array('href' => SIS_URL_BASE . './messages?ref=fa-envelope', 'class' => 'btn btn-xs btn-primary btn-outline dark'));
 						$buffer .= $this->html->abreTagAberta('i', array('class' => 'fa fa-envelope')) . $this->html->fechaTag('i');
 					$buffer .= $this->html->fechaTag('a');	
 
 					// perfil
-					$buffer .= $this->html->abreTagAberta('a', array('href' => URL_BASE . './user?ref=fa-user', 'class' => 'btn btn-xs btn-primary btn-outline dark'));
+					$buffer .= $this->html->abreTagAberta('a', array('href' => SIS_URL_BASE . './user?ref=fa-user', 'class' => 'btn btn-xs btn-primary btn-outline dark'));
 						$buffer .= $this->html->abreTagAberta('i', array('class' => 'fa fa-user')) . $this->html->fechaTag('i');
 					$buffer .= $this->html->fechaTag('a');	
 
 					// configuracoes
-					$buffer .= $this->html->abreTagAberta('a', array('href' => URL_BASE . './config?ref=fa-cog', 'class' => 'btn btn-xs btn-primary btn-outline dark'));
+					$buffer .= $this->html->abreTagAberta('a', array('href' => SIS_URL_BASE . './config?ref=fa-cog', 'class' => 'btn btn-xs btn-primary btn-outline dark'));
 						$buffer .= $this->html->abreTagAberta('i', array('class' => 'fa fa-cog')) . $this->html->fechaTag('i');
 					$buffer .= $this->html->fechaTag('a');	
 
 					// sair
-					$buffer .= $this->html->abreTagAberta('a', array('href' => URL_BASE . './logout?ref=fa-power-off', 'class' => 'btn btn-xs btn-danger btn-outline dark'));
+					$buffer .= $this->html->abreTagAberta('a', array('href' => SIS_URL_BASE . './logout?ref=fa-power-off', 'class' => 'btn btn-xs btn-danger btn-outline dark'));
 						$buffer .= $this->html->abreTagAberta('i', array('class' => 'fa fa-power-off')) . $this->html->fechaTag('i');
 					$buffer .= $this->html->fechaTag('a');																									
 
@@ -629,8 +629,8 @@ class Template extends \Zion\Layout\Padrao
 		$buffer  = '';
 		$buffer .= $this->html->abreComentario() . 'Zion Framework: starting scripts block' . $this->html->fechaComentario();
 		$buffer .= $this->html->abreTagAberta('script', array('src' => 'https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js')) . $this->html->fechaTag('script');
-		$buffer .= $this->html->abreTagAberta('script', array('src' => URL_BASE_STATIC . CFG_VENDOR_TEMPLATE . '/' . CFG_VENDOR_TEMPLATE_VERSION . '/assets/javascripts/bootstrap.min.js')) . $this->html->fechaTag('script');
-		$buffer .= $this->html->abreTagAberta('script', array('src' => URL_BASE_STATIC . CFG_VENDOR_TEMPLATE . '/' . CFG_VENDOR_TEMPLATE_VERSION . '/assets/javascripts/pixel-admin.min.js')) . $this->html->fechaTag('script');		
+		$buffer .= $this->html->abreTagAberta('script', array('src' => SIS_URL_BASE_STATIC . SIS_VENDOR_TEMPLATE . '/' . SIS_VENDOR_TEMPLATE_VERSION . '/assets/javascripts/bootstrap.min.js')) . $this->html->fechaTag('script');
+		$buffer .= $this->html->abreTagAberta('script', array('src' => SIS_URL_BASE_STATIC . SIS_VENDOR_TEMPLATE . '/' . SIS_VENDOR_TEMPLATE_VERSION . '/assets/javascripts/pixel-admin.min.js')) . $this->html->fechaTag('script');		
 		$buffer .= $this->html->abreTagAberta('script', array('type' => 'text/javascript')) . 'window.PixelAdmin.start(init);'. $this->html->fechaTag('script');	
 		$buffer .= $this->html->abreComentario() . 'Zion Framework: ending scripts block' . $this->html->fechaComentario();	
 		$buffer .= $this->html->abreComentario() . 'Zion Framework: starting generic footer' . $this->html->fechaComentario();		
