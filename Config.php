@@ -29,7 +29,7 @@ class Config
         define('SIS_RELEASE', 'Alpha');
         define('SIS_VENDOR_TEMPLATE','PixelAdmin');
         define('SIS_VENDOR_TEMPLATE_VERSION','1.3.0');   
-        define('SESSID', rand());     
+        define('SIS_URL_BASE_STATIC_DEFAULT', SIS_URL_BASE_STATIC . SIS_VENDOR_TEMPLATE . '/' . SIS_VENDOR_TEMPLATE_VERSION);     
         
         self::$SIS_CFG = [
             'NomeCliente' => 'CENTER SIS',

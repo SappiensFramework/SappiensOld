@@ -96,6 +96,7 @@ ob_start();
 								}
 							},
 							messages: {
+								'jq-validation-email': 'Hei?!',
 								'jq-validation-policy': 'You must check it!'
 							}
 						});
@@ -103,20 +104,52 @@ ob_start();
 				</script>
 				<!-- / Javascript -->
 
-				<div class="panel">
+				<div id="Form1" class="panel">
 					<div class="panel-heading">
 						<span class="panel-title">jQuery Validation</span>
 					</div>
 					<div class="panel-body">
-						<div class="note note-info">More info and examples at <a href="http://bassistance.de/jquery-plugins/jquery-plugin-validation/" target="_blank">http://bassistance.de/jquery-plugins/jquery-plugin-validation/</a></div>
 						
-						<form class="form-horizontal" id="jq-validation-form">
-							<div class="form-group">
-								<label for="jq-validation-email" class="col-sm-3 control-label">Email</label>
-								<div class="col-sm-9">
-									<input type="text" class="form-control" id="jq-validation-email" name="jq-validation-email" placeholder="Email">
+						<form id="jq-validation-form" class="form-horizontal" >						
+		
+								<div class="row">										
+
+									<div class="col-sm-3">
+
+										<div class="form-group">
+											<label for="jq-validation-email" class="col-sm-3 control-label">Email</label>
+											<div class="col-sm-9 has-feedback">												
+												<input type="text" class="form-control" id="jq-validation-email" name="jq-validation-email" placeholder="Email" title="Exemplo de tooltip 1.">
+												<span class="fa fa-envelope form-control-feedback"></span>
+											</div>
+										</div>
+
+									</div>
+
+									<div class="col-sm-3">
+
+										<div class="form-group">
+											<label for="jq-validation-email" class="col-sm-3 control-label">Email</label>
+											<div class="col-sm-9 has-feedback">
+												<input type="text" class="form-control" id="jq-validation-email" name="jq-validation-email" placeholder="Email" title="Exemplo de tooltip 2.">
+												<span class="fa fa-user form-control-feedback"></span>
+											</div>
+										</div>
+
+									</div>									
+
+									<div class="col-sm-6">
+
+										<div class="form-group">
+											<label for="jq-validation-email" class="col-sm-3 control-label">Email</label>
+											<div class="col-sm-9">
+												<input type="text" class="form-control" id="jq-validation-email" name="jq-validation-email" placeholder="Email">
+											</div>
+										</div>
+
+									</div>									
+
 								</div>
-							</div>
 
 							<div class="form-group">
 								<label for="jq-validation-password" class="col-sm-3 control-label">Password</label>
