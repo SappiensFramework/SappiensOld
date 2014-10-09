@@ -11,7 +11,7 @@ class ModuloForm
      */
     public function getFormModulo()
     {
-        $form = new \Zion\Form\Form();
+        $form = new \Pixel\Form\Form();
 
         $form->config('Form1', 'GET')
                 ->setClassCss('form-horizontal')
@@ -38,7 +38,7 @@ class ModuloForm
                 ->setEmColunaDeTamanho(6)
                 ->setValor($form->retornaValor('Sobrenome'))
                 ->setIdentifica('Nome da Pessoa');
-
+/*
         $campos[] = $form->email('email', 'E-mail')
                 ->setPlaceHolder('E-mail')
                 ->setClassCss('form-control')
@@ -71,7 +71,7 @@ class ModuloForm
 
         $campos[] = $form->botaoSubmit('enviar', 'Enviar')
                 ->setClassCss('btn btn-primary');
-
+*/
         return $form->processarForm($campos);
     }
 

@@ -3,19 +3,19 @@ require '../../Config.php';
 
 try {
 
-    $html = new \Zion\Layout\Html();
-    $formModulo = new \Sappiens\Grupo\Modulo\ModuloForm();
-    $form = $formModulo->getFormModulo();
+	$html = new \Zion\Layout\Html();
+	$formModulo = new \Sappiens\Grupo\Modulo\ModuloForm();
+	$form = $formModulo->getFormModulo();
 
-    $template = new \Sappiens\includes\Template();
+	$template = new \Pixel\Template\Template();
 
-    $template->setConteudoHeader();
-    $template->setConteudoMain($form->montaForm());
-    $template->setConteudoScripts();
-    $template->setConteudoFooter();    
+	$template->setConteudoHeader();
+	$template->setConteudoMain($form->montaForm());
+	$template->setConteudoScripts();
+	$template->setConteudoFooter();    
 
 } catch (Exception $ex) {
-    exit($ex->getMessage());
+	exit($ex->getMessage());
 }
 
 define('DEFAULT_GRUPO_NOME', 'Grupo');

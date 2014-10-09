@@ -2,30 +2,23 @@
 
 namespace Sappiens\Grupo\Modulo;
 
-class ModuloController
+class ModuloController extends \Zion\Core\Controller
 {
-
-    public function __construct($acao)
+    protected function iniciar()
     {
-        if (!method_exists($this, $acao)) {
-            throw new Exception("Opção inválida!");
-        }
-
-        try {
-            echo $this->{$acao}();
-        } catch (Exception $e) {
-
-            $tratar = new \Zion\Validacao\Valida();
-
-            echo json_encode(array('sucesso' => 'false', 'retorno' => $tratar->texto()->trata($e->getMessage())));
-        }
+        $class = new \Sappiens\Grupo\Modulo\ModuloClass();
+        
+        $template = new \Sappiens\Includes\Template();
+        
+        $template->setConteudo($class->grid());
+        
+        $retorno = $template->getTemplate();
+                
+        return json_encode(array('sucesso' => 'true', 'retorno' => $retorno));
     }
 
-    private function cadastrar()
+    protected function cadastrar()
     {
         return json_encode(array('sucesso' => 'true', 'retorno' => 'ret'));
     }
-
 }
-
-new ModuloController($_GET['acao']);
