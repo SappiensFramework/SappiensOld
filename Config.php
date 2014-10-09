@@ -28,7 +28,8 @@ class Config
         define('SIS_AUTOR', 'Pablo Vanni, Feliphe Bueno, Vinícius Pozzebon');
         define('SIS_RELEASE', 'Alpha');
         define('SIS_VENDOR_TEMPLATE','PixelAdmin');
-        define('SIS_VENDOR_TEMPLATE_VERSION','1.3.0');        
+        define('SIS_VENDOR_TEMPLATE_VERSION','1.3.0');   
+        define('SESSID', rand());     
         
         self::$SIS_CFG = [
             'NomeCliente' => 'CENTER SIS',

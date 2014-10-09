@@ -7,6 +7,11 @@ try {
 
 	$template = new \Sappiens\includes\Template();
 
+	$template->setConteudoHeader();
+	$template->setConteudoMain('Conteúdo do Dashboard');
+	$template->setConteudoScripts();
+	$template->setConteudoFooter();
+
 
 } catch (Exception $ex) {
     exit($ex->getMessage());
