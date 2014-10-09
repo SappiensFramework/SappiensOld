@@ -36,39 +36,52 @@ class ModuloForm
                 ->setEmColunaDeTamanho(6)
                 ->setValor($form->retornaValor('Sobrenome'))
                 ->setIdentifica('Nome da Pessoa');
-/*
-        $campos[] = $form->email('email', 'E-mail')
-                ->setPlaceHolder('E-mail')
-                ->setClassCss('form-control')
-                ->setIconFA('fa-envelope')
-                ->setEmColunaDeTamanho(6)
-                ->setValor($form->retornaValor('email'))
-                ->setIdentifica('Email');
-
-        $campos[] = $form->escolha()
-                ->setNome('sexo')
-                ->setIdentifica('Sexo')
-                ->setClassCss('form-control')
-                ->setEmColunaDeTamanho(6)
-                ->setValor($form->retornaValor('sexo'))
-                ->setInicio(true)
-                ->setArray(array('M' => 'Masculinox', 'F' => 'Feminino'));
-
-        $campos[] = $form->data('data', 'Data')
-                ->setPlaceHolder('Selecione uma data')
-                ->setClassCss('form-control')
-                ->setEmColunaDeTamanho(6)
-                ->setValor($form->retornaValor('data'));*/
 
         $campos[] = $form->suggest('cidade', 'Cidades')
                 ->setTabela('cidade')
-                ->setClassCss('form-control')
                 ->setCampoDesc('CidadeNome')
                 ->setPlaceHolder('Informe o nome da sua cidade preferida...')
-                ->setEmColunaDeTamanho(12);
+                ->setEmColunaDeTamanho(6);
+        
+        $campos[] = $form->senha('senha', 'Digite a Senha')
+                ->setEmColunaDeTamanho(6)
+                ->setIconFA('fa-key')
+                ->setPlaceHolder('Coloque sua Senha aqui!');
+
+        $campos[] = $form->data('data', 'Data de Nascimento', true)
+                ->setEmColunaDeTamanho(6)
+                ->setPlaceHolder('Informe a data corretamnete');
+
+        $campos[] = $form->hora('hora', 'Hora do dia')
+                ->setEmColunaDeTamanho(6)
+                ->setPlaceHolder('Coloque a hora');
         /*
-        $campos[] = $form->botaoSubmit('enviar', 'Enviar')
-                ->setClassCss('btn btn-primary');*/
+          $campos[] = $form->email('email', 'E-mail')
+          ->setPlaceHolder('E-mail')
+          ->setClassCss('form-control')
+          ->setIconFA('fa-envelope')
+          ->setEmColunaDeTamanho(6)
+          ->setValor($form->retornaValor('email'))
+          ->setIdentifica('Email');
+
+          $campos[] = $form->escolha()
+          ->setNome('sexo')
+          ->setIdentifica('Sexo')
+          ->setClassCss('form-control')
+          ->setEmColunaDeTamanho(6)
+          ->setValor($form->retornaValor('sexo'))
+          ->setInicio(true)
+          ->setArray(array('M' => 'Masculinox', 'F' => 'Feminino'));
+
+          $campos[] = $form->data('data', 'Data')
+          ->setPlaceHolder('Selecione uma data')
+          ->setClassCss('form-control')
+          ->setEmColunaDeTamanho(6)
+          ->setValor($form->retornaValor('data')); */
+
+        /*
+          $campos[] = $form->botaoSubmit('enviar', 'Enviar')
+          ->setClassCss('btn btn-primary'); */
 
         return $form->processarForm($campos);
     }
