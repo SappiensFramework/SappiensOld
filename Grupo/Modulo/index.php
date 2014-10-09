@@ -1,62 +1,11 @@
 <?php
-require '../../Config.php';
 
-try {
-    
-    $formModulo = new \Sappiens\Grupo\Modulo\ModuloForm();
-    $form = $formModulo->getFormModulo();
-    //$form->validar();
+include_once '../../Config.php';
 
-} catch (Exception $ex) {
-    exit($ex->getMessage());
-}
+//define('GRUPO','Grupo');
+//define('MODULO','Modulo');
 
-$UrlBaseStatic  = "//static.sappiens.com.br";
-	
-?>
-<!DOCTYPE html>
-<html lang="pt-BR" >
-<head>
-<style>
+define('DEFAULT_MODULO_NOME', 'Dashboard');
+define('DEFAULT_MODULO_URL', 'dashboard');
 
-</style>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<link rel="stylesheet" type="text/css" media="screen" href="<?=$UrlBaseStatic;?>/css/bootstrap.min.css">
-<link rel="stylesheet" type="text/css" media="screen" href="<?=$UrlBaseStatic?>/css/font-awesome.min.css">
-<link rel="stylesheet" type="text/css" media="screen" href="<?=$UrlBaseStatic?>/css/smartadmin-production.min.css">
-<link rel="stylesheet" type="text/css" media="screen" href="<?=$UrlBaseStatic?>/css/smartadmin-rtl.min.css">
-<link rel="stylesheet" href="<?=$UrlBaseStatic?>/fonts/fonts.css">
-<script src="<?=$UrlBaseStatic?>/js/libs/jquery/2.0.2/jquery.min.js"></script>
-<script src="<?=$UrlBaseStatic?>/js/libs/jquery-ui/1.10.3/jquery-ui.min.js"></script>
-</head>
-<body>
-<div class="widget-body no-padding">	
-
-        
-        
-        <?=$form->montaForm();?>
-    
-    
-</div>
-<script src="<?=$UrlBaseStatic?>/js/app.config.js"></script>
-<script src="<?=$UrlBaseStatic?>/js/bootstrap/bootstrap.min.js"></script>
-<script src="<?=$UrlBaseStatic?>/js/notification/SmartNotification.min.js"></script>
-<script src="<?=$UrlBaseStatic?>/js/plugin/jquery-validate/jquery.validate.min.js"></script>
-<script src="<?=$UrlBaseStatic?>/js/plugin/jquery-form/jquery-form.min.js"></script>
-<script src="<?=$UrlBaseStatic?>/js/plugin/select2/select2.min.js"></script>
-<script src="<?=$UrlBaseStatic?>/js/plugin/masked-input/jquery.maskedinput.min.js"></script>
-<script src="<?=$UrlBaseStatic?>/js/app.min.js"></script>
-<script type="text/javascript">
-	// DO NOT REMOVE : GLOBAL FUNCTIONS!
-	$(document).ready(function() {
-		pageSetUp();
-	})
-</script>
-<script type="text/javascript">
-<?php
-    echo $form->javascript()->getLoad();
-?>
-</script>
-</body>
-</html>
+echo (new \Sappiens\Grupo\Modulo\ModuloController($acao))->controle(\filter_input(INPUT_GET, 'acao'));
