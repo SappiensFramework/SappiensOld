@@ -19,7 +19,7 @@ try {
 }
 
 define('DEFAULT_GRUPO_NOME', 'Grupo');
-define('DEFAULT_MODULO_NOME', 'MÃ³dulo');
+define('DEFAULT_MODULO_NOME', 'Módulo');
 define('DEFAULT_MODULO_URL', 'Modulo');
 
 echo $template->getTemplate();

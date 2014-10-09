@@ -4,6 +4,7 @@ namespace Sappiens\Grupo\Modulo;
 
 class ModuloClass
 {
+
     public function getChave()
     {
         return "ArtigoCod";
@@ -23,26 +24,10 @@ class ModuloClass
         return array_merge($Padrao, $MeusParametros, $HiddenParametros);
     }
 
-    public function filtrar($ObjForm)
+    public function grid()
     {
-        $Gr = new GridPadrao();
-
-        //Grid de Visualização- Configurações
-        $Gr->setListados(array("ArtigoAutor", "ArtigoTitulo", "ArtigoData", "Acessos"));
-        $Gr->setTitulos(array("Autor", "Titulo", "Data", "Acessos"));
-
-        $Gr->setFormatarComo("ArtigoData", "Data");
-        $Gr->setFormatarComo("Criado", "DataHora");
-
-        //Setando Parametros
-        Parametros::setParametros("GET", $this->getParametros($ObjForm));
-
-        //Configurações Fixas da Grid
-        $Gr->setSql(parent::filtrarSql($ObjForm));
-        $Gr->setChave($this->getChave());
-
-        //Retornando a Grid Formatada - HTML
-        return $Gr->inForm($Gr->montaGridPadrao(), "FormGrid");
+        return '<table style="width:100%"><tr><td>Jill</td><td>Smith</td> 
+        <td>50</td></tr><tr><td>Eve</td><td>Jackson</td><td>94</td></tr></table>';
     }
 
     public function visualizar()
@@ -124,7 +109,7 @@ class ModuloClass
         //Finaliza Transação
         $Con->stopTransaction();
     }
-    
+
     public function remover($Chave, $Form)
     {
         $Con = Conexao::conectar();
@@ -175,4 +160,5 @@ class ModuloClass
         //Retorna Campos
         return $Form->getFormManu();
     }
+
 }
