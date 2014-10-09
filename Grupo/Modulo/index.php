@@ -10,7 +10,7 @@ try {
 	$template = new \Pixel\Template\Template();
 
 	$template->setConteudoHeader();
-	$template->setConteudoMain($form->montaForm());
+	$template->setConteudoMain(include('./ExemploForm.php'));
 	$template->setConteudoScripts();
 	$template->setConteudoFooter();    
 
