@@ -28,7 +28,8 @@ class Config
         define('SIS_AUTOR', 'Pablo Vanni, Feliphe Bueno, Vinícius Pozzebon');
         define('SIS_RELEASE', 'Alpha');
         define('SIS_VENDOR_TEMPLATE','PixelAdmin');
-        define('SIS_VENDOR_TEMPLATE_VERSION','1.3.0');        
+        define('SIS_VENDOR_TEMPLATE_VERSION','1.3.0');   
+        define('SESSID', rand());     
         
         self::$SIS_CFG = [
             'NomeCliente' => 'CENTER SIS',
@@ -65,7 +66,7 @@ class Config
 
         define('SIS_URL_FM_BASE', 'http://localhost/Zion/');
 
-        define('SIS_DEFAULT_AUTOCOMPLETE',SIS_URL_BASE.'includes/autocomplete/');
+        define('SIS_DEFAULT_AUTOCOMPLETE', SIS_URL_BASE . 'includes/autocomplete/');
     }
 }
 
@@ -74,7 +75,7 @@ class Config
 require_once SIS_FM_BASE . 'Lib/Zion/ClassLoader/Loader.class.php';
 
 (new \Zion\ClassLoader\Loader())
-        ->setNamEspaces('Zion','C:/xampp/htdocs/Zion/Lib') //NameSpace do Framework
-        ->setNamEspaces(SIS_ID_NAMESPACE_PROJETO,SIS_NAMESPACE_PROJETO) //NameSpace do Projeto
-        ->setSufixos(array('', '.vo', '.class', '.interface')) //Sufixos em Geral
+        ->setNamEspaces('Zion', 'C:/xampp/htdocs/Zion/Lib') //NameSpace do Framework
+        ->setNamEspaces('Pixel', 'C:/xampp/htdocs/Zion/Lib') //NameSpace do Framework
+        ->setNamEspaces(SIS_ID_NAMESPACE_PROJETO, SIS_NAMESPACE_PROJETO) //NameSpace do Projeto
         ->inicio();
