@@ -1,11 +1,11 @@
 <?php
 
 require '../Config.php';
-$html   = new \Zion\Layout\Html();
 
 try {
 
-	$template = new \Sappiens\includes\Template();
+	$html     = new \Zion\Layout\Html();
+	$template = new \Pixel\Template\Template();
 
 	$template->setConteudoHeader();
 	$template->setConteudoMain('Conteúdo do Dashboard');

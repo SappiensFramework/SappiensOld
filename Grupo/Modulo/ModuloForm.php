@@ -11,7 +11,7 @@ class ModuloForm
      */
     public function getFormModulo()
     {
-        $form = new \Zion\Form\Form();
+        $form = new \Pixel\Form\Form();
 
         $form->config('Form1', 'GET')
                 ->setClassCss('form-horizontal')

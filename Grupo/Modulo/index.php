@@ -7,7 +7,7 @@ try {
     $formModulo = new \Sappiens\Grupo\Modulo\ModuloForm();
     $form = $formModulo->getFormModulo();
 
-    $template = new \Sappiens\includes\Template();
+    $template = new \Pixel\Template\Template();
 
     $template->setConteudoHeader();
     $template->setConteudoMain($form->montaForm());
