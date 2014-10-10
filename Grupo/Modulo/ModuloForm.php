@@ -22,7 +22,6 @@ class ModuloForm
         $campos[] = $form->texto('nome', 'Nome da Pessoa', true)
                 ->setId('nome2')
                 ->setPlaceHolder('digite o nome aqui')
-                ->setClassCss('form-control')
                 ->setIconFA('fa-user')
                 ->setToolTipMsg('&nbsp;&nbsp;Qualquer informação de ajuda&nbsp;')
                 ->setEmColunaDeTamanho(6)
@@ -30,7 +29,6 @@ class ModuloForm
 
         $campos[] = $form->texto('sobrenome', 'Sobrenome')
                 ->setPlaceHolder('Sobrenome')
-                ->setClassCss('form-control')
                 ->setIconFA('fa-user')
                 ->setToolTipMsg('&nbsp;&nbsp;Qualquer informação de ajuda&nbsp;')
                 ->setEmColunaDeTamanho(6)
@@ -79,9 +77,12 @@ class ModuloForm
           ->setEmColunaDeTamanho(6)
           ->setValor($form->retornaValor('data')); */
 
-        /*
+
           $campos[] = $form->botaoSubmit('enviar', 'Enviar')
-          ->setClassCss('btn btn-primary'); */
+          ->setClassCss('btn btn-primary'); 
+          
+          $campos[] = $form->botaoReset('limpar', 'Limpar')
+          ->setClassCss('btn btn-primary'); 
 
         return $form->processarForm($campos);
     }

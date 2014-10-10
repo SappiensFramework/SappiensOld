@@ -10,7 +10,8 @@ try {
 	$template = new \Pixel\Template\Template();
 
 	$template->setConteudoHeader();
-	$template->setConteudoMain(include('./ExemploForm.php'));
+	//$template->setConteudoMain(include('./ExemploForm.php'));
+        $template->setConteudoMain($form->montaForm());
 	$template->setTooltipForm('Form1');
 	//$template->setConteudoScripts('<script src="' . SIS_URL_BASE_STATIC . SIS_VENDOR_TEMPLATE . '/' . SIS_VENDOR_TEMPLATE_VERSION . '/assets/javascripts/jquery-ui-extras.min.js"></script>');
 	//$template->setConteudoScripts('<script>var initTooltipsDemo=function(){if(window.JQUERY_UI_EXTRAS_LOADED){$(\'#Form1\').tooltip()}};init.push(initTooltipsDemo);</script>');	
