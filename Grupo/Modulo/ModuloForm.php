@@ -53,6 +53,34 @@ class ModuloForm
         $campos[] = $form->hora('hora', 'Hora do dia')
                 ->setEmColunaDeTamanho(6)
                 ->setPlaceHolder('Coloque a hora');
+        
+        $campos[] = $form->numero('numero', 'Digite o número',true)
+                ->setEmColunaDeTamanho(6)
+                ->setValorMaximo(100)
+                ->setValorMinimo(80)
+                ->setIconFA('fa-sort-numeric-desc')
+                ->setPlaceHolder('digite apenas números');
+        
+        $campos[] = $form->float('float', 'meu float',true)
+                ->setEmColunaDeTamanho(6)
+                ->setPlaceHolder('Aqui um float');
+        
+        $campos[] = $form->cpf('cpf', 'CPF',true)
+                ->setEmColunaDeTamanho(6)
+                ->setPlaceHolder('xxx-xxx-xxx-xx');
+        
+        $campos[] = $form->cnpj('cnpj', 'CNPJ',true)
+                ->setEmColunaDeTamanho(6)
+                ->setPlaceHolder('xx.xxx.xxx/xxxx-xx');
+        
+        $campos[] = $form->cep('cep', 'CEP',true)
+                ->setEmColunaDeTamanho(6)
+                ->setPlaceHolder('informe o cep');
+        
+        $campos[] = $form->cep('cep2', 'CEP2',true)
+                ->setEmColunaDeTamanho(6)
+                ->setPlaceHolder('informe o cep');
+        
         /*
           $campos[] = $form->email('email', 'E-mail')
           ->setPlaceHolder('E-mail')
