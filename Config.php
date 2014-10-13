@@ -24,6 +24,7 @@ class Config
 
         define('SIS_ID_NAMESPACE_PROJETO','Sappiens');
         define('SIS_NAMESPACE_PROJETO','C:/xampp/htdocs');
+        define('SIS_SLOGAN', 'Simples. Flexível. Poderoso.');
         define('SIS_DESCRICAO', SIS_ID_NAMESPACE_PROJETO . ', Plataforma de Gestão Integrada para o Serviço Público');
         define('SIS_AUTOR', 'Pablo Vanni, Feliphe Bueno, Vinícius Pozzebon');
         define('SIS_RELEASE', 'Alpha');
@@ -56,7 +57,7 @@ class Config
     private function setDiretorios()
     {
         define('SIS_DIR_BASE', str_replace('\\', '/', dirname(__FILE__)) . '/');
-        define('SIS_URL_BASE', 'http://' . $_SERVER['SERVER_NAME'] . substr($_SERVER['PHP_SELF'], 0, - (strlen($_SERVER['SCRIPT_FILENAME']) - strlen(SIS_DIR_BASE))));
+        define('SIS_URL_BASE', '//' . $_SERVER['SERVER_NAME'] . substr($_SERVER['PHP_SELF'], 0, - (strlen($_SERVER['SCRIPT_FILENAME']) - strlen(SIS_DIR_BASE))));
 
         define('SIS_URL_BASE_STATIC','//static.sappiens.com.br/');
         define('SIS_URL_BASE_DEFAULT','http://localhost'); // -> em ambiente online mudar para //app.sappiens.com.br
