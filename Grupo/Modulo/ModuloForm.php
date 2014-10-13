@@ -57,16 +57,17 @@ class ModuloForm
         $campos[] = $form->numero('numero', 'Digite o número',true)
                 ->setEmColunaDeTamanho(6)
                 ->setValorMaximo(100)
-                ->setValorMinimo(80)
+                ->setValorMinimo(80)                
                 ->setIconFA('fa-sort-numeric-desc')
                 ->setPlaceHolder('digite apenas números');
         
         $campos[] = $form->float('float', 'meu float',true)
                 ->setEmColunaDeTamanho(6)
+                ->setPrefixo('R$ ')
                 ->setPlaceHolder('Aqui um float');
         
         $campos[] = $form->cpf('cpf', 'CPF',true)
-                ->setEmColunaDeTamanho(6)
+                ->setEmColunaDeTamanho(6)                
                 ->setPlaceHolder('xxx-xxx-xxx-xx');
         
         $campos[] = $form->cnpj('cnpj', 'CNPJ',true)
@@ -77,9 +78,9 @@ class ModuloForm
                 ->setEmColunaDeTamanho(6)
                 ->setPlaceHolder('informe o cep');
         
-        $campos[] = $form->cep('cep2', 'CEP2',true)
+        $campos[] = $form->telefone('telefone', 'Fone',true)
                 ->setEmColunaDeTamanho(6)
-                ->setPlaceHolder('informe o cep');
+                ->setPlaceHolder('informe o telefone');
         
         /*
           $campos[] = $form->email('email', 'E-mail')
