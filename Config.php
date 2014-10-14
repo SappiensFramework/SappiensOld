@@ -73,7 +73,7 @@ class Config
 
 \Sappiens\Config::conf();
 
-require_once SIS_FM_BASE . 'Lib/Zion/ClassLoader/Loader.class.php';
+require_once SIS_FM_BASE . 'Lib/Zion/ClassLoader/Loader.php';
 
 (new \Zion\ClassLoader\Loader())
         ->setNamEspaces('Zion', 'C:/xampp/htdocs/Zion/Lib') //NameSpace do Framework
