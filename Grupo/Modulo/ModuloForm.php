@@ -35,7 +35,7 @@ class ModuloForm
                 ->setValor($form->retornaValor('Sobrenome'))
                 ->setIdentifica('Nome da Pessoa');
 
-        $campos[] = $form->suggest('cidade', 'Cidades')
+        $campos[] = $form->suggest('cidade', 'Cidades', true)
                 ->setTabela('cidade')
                 ->setCampoDesc('CidadeNome')
                 ->setPlaceHolder('Informe o nome da sua cidade preferida...')
@@ -64,6 +64,7 @@ class ModuloForm
         $campos[] = $form->float('float', 'meu float',true)
                 ->setEmColunaDeTamanho(6)
                 ->setPrefixo('R$ ')
+                ->setIconFA('fa-usd')
                 ->setPlaceHolder('Aqui um float');
         
         $campos[] = $form->cpf('cpf', 'CPF',true)
@@ -111,7 +112,7 @@ class ModuloForm
           ->setClassCss('btn btn-primary'); 
           
           $campos[] = $form->botaoReset('limpar', 'Limpar')
-          ->setClassCss('btn btn-primary'); 
+          ->setClassCss('btn btn-default'); 
 
         return $form->processarForm($campos);
     }
