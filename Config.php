@@ -33,15 +33,15 @@ class Config
         define('SIS_URL_BASE_STATIC_DEFAULT', SIS_URL_BASE_STATIC . SIS_VENDOR_TEMPLATE . '/' . SIS_VENDOR_TEMPLATE_VERSION);     
         
         self::$SIS_CFG = [
-            'NomeCliente' => 'CENTER SIS',
-            'TituloAdm' => 'ENGINE',
-            'StringCrypt' => 'wzixjdy',
-            'QLinhasGrid' => 17,
-            'Bases'=>array('PADRAO'=>array(
-                'Host'=>'192.168.25.51',
-                'Banco'=>'onyxprev_sappiens',
-                'Usuario'=>'onyxprev_sapp',
-                'Senha'=>'qwertybracom'))];
+            'nomeCliente' => 'MEGA POWER DE BRA ULTRA',
+            'tituloAdm' => 'ENGINE',
+            'stringCrypt' => 'wzixjdy',
+            'qLinhasGrid' => 17,
+            'bases'=>array('padrao'=>array(
+                'host'=>'192.168.25.51',
+                'banco'=>'onyxprev_sappiens',
+                'usuario'=>'onyxprev_sapp',
+                'senha'=>'qwertybracom'))];
     }
 
     /**

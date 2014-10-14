@@ -26,28 +26,46 @@ class ModuloClass
 
     public function grid()
     {
-        return '<table style="width:100%"><tr><td>Jill</td><td>Smith</td> 
-        <td>50</td></tr><tr><td>Eve</td><td>Jackson</td><td>94</td></tr></table>';
+        $grid  = new \Zion\Grid\GridPadrao();
+		
+        //Grid de Visualização - Configurações
+      	$grid->setListados(array("CidadeCod", "CidadeNome", "CidadeUF"));  
+      	$grid->setTitulos(array("Cod", "Cidade", "U.F."));
+      	
+      	//Setando Parametros
+        \Zion\Paginacao\Parametros::setParametros("GET", array());
+
+      	     	
+      	//Configurações Fixas da Grid
+      	$grid->setSql("SELECT CidadeCod, CidadeNome, CidadeUF FROM cidade WHERE 1 ");
+        $grid->setChave('CidadeCod');
+        $grid->setTipoOrdenacao(filter_input(INPUT_GET, 'to'));
+        $grid->setQuemOrdena(filter_input(INPUT_GET, 'qo'));
+        $grid->setPaginaAtual(filter_input(INPUT_GET, 'pa'));
+        $grid->setQLinhas(5);
+
+        //Retornando a Grid Formatada - HTML
+        return $grid->inForm($grid->montaGridPadrao(),"FormGrid");
     }
 
     public function visualizar()
     {
-        $Gr = new GridVisualizar();
+        $grid = new GridVisualizar();
 
         //Grid de Visualiza? Detalhada
-        $Gr->setListados(array("ArtigoCod", "ArtigoAutor", "ArtigoTitulo", "ArtigoConteudo", "ArtigoData", "Criado"));
-        $Gr->setTitulos(array("Cód", "Autor", "Titulo", "Texto", "Data", "Criado"));
+        $grid->setListados(array("ArtigoCod", "ArtigoAutor", "ArtigoTitulo", "ArtigoConteudo", "ArtigoData", "Criado"));
+        $grid->setTitulos(array("Cód", "Autor", "Titulo", "Texto", "Data", "Criado"));
 
         //Configura?s Fixas da Grid
-        $Gr->setChave($this->getChave());
+        $grid->setChave($this->getChave());
 
         //Retornando a Grid Formatada - HTML
         if (!is_array($_POST['SisReg']))
             throw new Exception("Nenhum registro selecionado!");
 
         foreach ($_POST['SisReg'] as $Cod) {
-            $Gr->setSql(parent::visualizarSql($Cod));
-            $Vis .= $Gr->montaGridVisualizar();
+            $grid->setSql(parent::visualizarSql($Cod));
+            $Vis .= $grid->montaGridVisualizar();
         }
 
         return $Vis;
