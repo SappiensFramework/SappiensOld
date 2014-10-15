@@ -2,5 +2,5 @@
 
 require '../../Config.php';
 
-$complete = new \Zion\Ajax\Complete();
+$complete = new \Zion\Remoto\Complete();
 echo $complete->listar();
