@@ -1,22 +1,19 @@
 <?php
 require '../../Config.php';
-define('MODULO','Modulo');
+
 try {
 
-//	$html = new \Zion\Layout\Html();
-//	$formModulo = new \Sappiens\Grupo\Modulo\ModuloForm();
-//	$form = $formModulo->getFormModulo();
-//
+	$html = new \Zion\Layout\Html();
+	$formModulo = new \Sappiens\Grupo\Modulo\ModuloForm();
+	$form = $formModulo->getFormModulo();
+
 	$template = new \Pixel\Template\Template();
 
-        $class = new Sappiens\Grupo\Modulo\ModuloClass();
-    
 	$template->setConteudoHeader();
-	//$template->setConteudoMain(include('./ExemploForm.php'));
-        //$template->setConteudoMain($form->montaForm());
-        $template->setConteudoMain($class->grid());
-        
+	$template->setConteudoMain(include('./ExemploForm.php'));
+    //$template->setConteudoMain($form->montaForm());
 	$template->setTooltipForm('Form1');
+	$template->setTooltipForm('grid-control');
 	$template->setConteudoFooter();    
 
 } catch (Exception $ex) {
@@ -29,3 +26,4 @@ define('DEFAULT_MODULO_URL', 'Modulo');
 
 echo $template->getTemplate();
 
+?>
