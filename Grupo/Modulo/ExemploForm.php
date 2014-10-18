@@ -126,12 +126,16 @@ ob_start();
 	</div>
 </div>
 
-<div class="panel-body buttons-with-margins" id="page-alerts-dark-demo">
-	<button data-type="warning" data-text="<strong>Warning!</strong> Best check yo self, you're not looking too good." class="btn btn-small btn-warning auto-close-alert">Add warning</button>&nbsp;&nbsp;
-	<button data-type="danger"  data-text="<strong>Oh snap!</strong> Change a few things up and try submitting again." class="btn btn-small btn-danger auto-close-alert">Add error</button>&nbsp;&nbsp;
-	<button data-type="success" data-text="<strong>Well done!</strong> You successfully read this important alert message." class="btn btn-small btn-success auto-close-alert">Add success</button>&nbsp;&nbsp;
-	<button data-type="info"    data-text="<strong>Heads up!</strong> This alert needs your attention, but it's not super important." class="btn btn-small btn-info auto-close-alert">Add info</button>&nbsp;&nbsp;
-</div>	
+
+<div class="panel">
+	<div class="panel-heading">
+		<span class="panel-title">Exemplo de modal</span>
+	</div>
+	<div class="panel-body">
+		<button class="btn btn-primary" data-toggle="modal" data-target="#modal-msg">Modal</button>&nbsp;&nbsp;&nbsp;
+		<br /><br /><em>Se quiser trocar o tema do Modal, basta dar um removeClass 'modal-danger' (que eh carregado por padrao) e um addClass dos tipos modal-info (azul), modal-success (verde) ou modal-warning (laranja).</em>
+	</div>
+</div>
 
 <?
 
