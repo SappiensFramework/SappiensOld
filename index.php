@@ -1,5 +1,5 @@
 <?php
 
-	header('location: ./Dashboard?ref=./index');
+	header('location: ./Accounts/Login');
 
 ?>
