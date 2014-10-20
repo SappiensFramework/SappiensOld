@@ -17,7 +17,7 @@ try {
 	$template->setConteudoFooter();    
 
 } catch (Exception $ex) {
-	exit($ex->getMessage());
+	exit(\Zion\Exception\Exception::getMessageTrace($ex));
 }
 
 define('DEFAULT_GRUPO_NOME', 'Grupo');
