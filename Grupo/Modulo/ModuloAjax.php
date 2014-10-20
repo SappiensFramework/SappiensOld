@@ -12,6 +12,7 @@ class ModuloAjax
         echo $jQuery->ajax()
                 ->post()
                 ->setUrl('http://www.globo.com')
+                ->setContentType('json')
                 ->setDone('alert("fechei");')
                 ->criar();
     }

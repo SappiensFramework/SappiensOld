@@ -32,6 +32,8 @@ class Config
         define('SIS_VENDOR_TEMPLATE_VERSION','1.3.0');   
         define('SIS_URL_BASE_STATIC_DEFAULT', SIS_URL_BASE_STATIC . SIS_VENDOR_TEMPLATE . '/' . SIS_VENDOR_TEMPLATE_VERSION);     
         
+        $_SESSION['UsuarioCod'] = 1;//Usada temporariamente apenas para não busgar os componentes que dependem de UsuarioCod setado
+        
         self::$SIS_CFG = [
             'nomeCliente' => 'MEGA POWER DE BRA ULTRA',
             'tituloAdm' => 'ENGINE',

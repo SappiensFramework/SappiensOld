@@ -1,6 +1,12 @@
 <?php
 require '../../Config.php';
 
+//$a = new \Sappiens\Grupo\Modulo\ModuloAjax();
+//
+//echo $a->ajax();
+//exit;
+define('MODULO', 'Modulo');
+
 try {
 
 	$html = new \Zion\Layout\Html();
@@ -9,12 +15,15 @@ try {
 
 	$template = new \Pixel\Template\Template();
 
+	$class = new Sappiens\Grupo\Modulo\ModuloClass();
+    
 	$template->setConteudoHeader();
-	$template->setConteudoMain(include('./ExemploForm.php'));
-    //$template->setConteudoMain($form->montaForm());
+	//$template->setConteudoMain(include('./ExemploForm.php'));
+        //$template->setConteudoMain($form->montaForm());
+        $template->setConteudoMain($class->grid());
+        
 	$template->setTooltipForm('Form1');
-	$template->setTooltipForm('grid-control');
-	$template->setConteudoFooter();    
+	$template->setConteudoFooter();   
 
 } catch (Exception $ex) {
 	exit($ex->getMessage());

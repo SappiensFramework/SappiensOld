@@ -45,7 +45,7 @@ class ModuloClass
         $grid->setQLinhas(5);
 
         //Retornando a Grid Formatada - HTML
-        return $grid->inForm($grid->montaGridPadrao(),"FormGrid");
+        return $grid->montaGridPadrao();
     }
 
     public function visualizar()
