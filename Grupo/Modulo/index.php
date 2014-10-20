@@ -1,38 +1,8 @@
 <?php
 require '../../Config.php';
 
-//$a = new \Sappiens\Grupo\Modulo\ModuloAjax();
-//
-//echo $a->ajax();
-//exit;
 define('MODULO', 'Modulo');
+define('DEFAULT_MODULO_NOME', 'Dashboard');
+define('DEFAULT_MODULO_URL', 'dashboard');
 
-try {
-
-	$html = new \Zion\Layout\Html();
-	$formModulo = new \Sappiens\Grupo\Modulo\ModuloForm();
-	$form = $formModulo->getFormModulo();
-
-	$template = new \Pixel\Template\Template();
-
-	$class = new Sappiens\Grupo\Modulo\ModuloClass();
-    
-	$template->setConteudoHeader();
-	//$template->setConteudoMain(include('./ExemploForm.php'));
-        //$template->setConteudoMain($form->montaForm());
-        $template->setConteudoMain($class->grid());
-        
-	$template->setTooltipForm('Form1');
-	$template->setConteudoFooter();   
-
-} catch (Exception $ex) {
-	exit($ex->getMessage());
-}
-
-define('DEFAULT_GRUPO_NOME', 'Grupo');
-define('DEFAULT_MODULO_NOME', 'Módulo');
-define('DEFAULT_MODULO_URL', 'Modulo');
-
-echo $template->getTemplate();
-
-?>
+echo (new \Sappiens\Grupo\Modulo\ModuloController($acao))->controle(\filter_input(INPUT_GET, 'acao'));
