@@ -20,30 +20,30 @@ class Config
 
     private function __construct()
     {
-        $this->setDiretorios();
+
+        $this->setDiretorios();           
 
         define('SIS_ID_NAMESPACE_PROJETO','Sappiens');
-        define('SIS_NAMESPACE_PROJETO','C:/xampp/htdocs');
-        define('SIS_SLOGAN', 'Simples. Flexível. Poderoso.');
+        define('SIS_NAMESPACE_PROJETO','C:/xampp/htdocs');       
+        define('SIS_SLOGAN', 'Simples. Flexível. Gostoso.');
         define('SIS_DESCRICAO', SIS_ID_NAMESPACE_PROJETO . ', Plataforma de Gestão Integrada para o Serviço Público');
         define('SIS_AUTOR', 'Pablo Vanni, Feliphe Bueno, Vinícius Pozzebon');
         define('SIS_RELEASE', 'Alpha');
         define('SIS_VENDOR_TEMPLATE','PixelAdmin');
         define('SIS_VENDOR_TEMPLATE_VERSION','1.3.0');   
-        define('SIS_URL_BASE_STATIC_DEFAULT', SIS_URL_BASE_STATIC . SIS_VENDOR_TEMPLATE . '/' . SIS_VENDOR_TEMPLATE_VERSION);     
+        define('SIS_URL_BASE_TEMPLATE', SIS_VENDOR_TEMPLATE . '/' . SIS_VENDOR_TEMPLATE_VERSION . '/');     
+        define('SIS_STRING_CRYPT', 'wzixjdy');
+        define('SIS_LINHAS_GRID', '20');
         
         $_SESSION['UsuarioCod'] = 1;//Usada temporariamente apenas para não busgar os componentes que dependem de UsuarioCod setado
         
         self::$SIS_CFG = [
-            'nomeCliente' => 'MEGA POWER DE BRA ULTRA',
-            'tituloAdm' => 'ENGINE',
-            'stringCrypt' => 'wzixjdy',
-            'qLinhasGrid' => 17,
-            'bases'=>array('padrao'=>array(
-                'host'=>'192.168.25.51',
-                'banco'=>'onyxprev_sappiens',
-                'usuario'=>'onyxprev_sapp',
-                'senha'=>'qwertybracom'))];
+            'bases'         => array('padrao'=> array(
+                'host'      =>'192.168.25.51',
+                'banco'     =>'onyxprev_sappiens',
+                'usuario'   =>'onyxprev_sapp',
+                'senha'     =>'qwertybracom'))];     
+
     }
 
     /**
@@ -51,13 +51,15 @@ class Config
      */
     public static function conf()
     {
-        self::$SIS_INSTANCIA = new \Sappiens\Config();
 
+        self::$SIS_INSTANCIA = new \Sappiens\Config();
         return self::$SIS_INSTANCIA;
+
     }
 
     private function setDiretorios()
     {
+
         define('SIS_DIR_BASE', str_replace('\\', '/', dirname(__FILE__)) . '/');
         define('SIS_URL_BASE', '//' . $_SERVER['SERVER_NAME'] . substr($_SERVER['PHP_SELF'], 0, - (strlen($_SERVER['SCRIPT_FILENAME']) - strlen(SIS_DIR_BASE))));
 
@@ -70,6 +72,7 @@ class Config
         define('SIS_URL_FM_BASE', 'http://localhost/Zion/');
 
         define('SIS_DEFAULT_AUTOCOMPLETE', SIS_URL_BASE . 'includes/autocomplete/');
+
     }
 }
 

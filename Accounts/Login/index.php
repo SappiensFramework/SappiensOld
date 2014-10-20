@@ -10,10 +10,10 @@ try {
 
 	$template = new \Pixel\Template\Template();
 
-	$template->setConteudoHeader($html->abreTagAberta('link', array('href' => urlStatic . '/assets/stylesheets/login.css', 'rel' => 'stylesheet', 'type' => 'text/css')));
+	$template->setConteudoHeader($html->abreTagAberta('link', array('href' => SIS_URL_BASE_STATIC . SIS_URL_BASE_TEMPLATE . 'assets/stylesheets/login.css', 'rel' => 'stylesheet', 'type' => 'text/css')));
 	$template->setConteudoBody('theme-default page-signin');
-	$template->setConteudoContainerLogin($html->abreTagAberta('script', array('src' => urlStatic . '/assets/javascripts/login-prescripts.js')) . $html->fechaTag('script'));
-	$template->setConteudoScripts($html->abreTagAberta('script', array('src' => urlStatic . '/assets/javascripts/login-postscripts.js')) . $html->fechaTag('script'));    
+	$template->setConteudoContainerLogin($html->abreTagAberta('script', array('src' => SIS_URL_BASE_STATIC . SIS_URL_BASE_TEMPLATE . 'assets/javascripts/login-prescripts.js')) . $html->fechaTag('script'));
+	$template->setConteudoScripts($html->abreTagAberta('script', array('src' => SIS_URL_BASE_STATIC . SIS_URL_BASE_TEMPLATE . 'assets/javascripts/login-postscripts.js')) . $html->fechaTag('script'));    
 	$template->setConteudoFooter();    
 
 } catch (Exception $ex) {

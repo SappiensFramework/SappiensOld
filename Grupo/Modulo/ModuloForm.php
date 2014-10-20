@@ -35,10 +35,12 @@ class ModuloForm
                 ->setValor($form->retornaValor('Sobrenome'))
                 ->setIdentifica('Nome da Pessoa');
 
-        $campos[] = $form->suggest('cidade', 'Cidades', true)
-                ->setTabela('cidade')
-                ->setCampoDesc('CidadeNome')
+        $campos[] = $form->suggest('uf_cidade', 'Cidades', true)
+                ->setTabela('uf_cidade')
+                ->setCampoCod('UfCidadeCod')
+                ->setCampoDesc('UfCidadeNome')
                 ->setPlaceHolder('Informe o nome da sua cidade preferida...')
+                ->setHiddenValue('UfCidadeCod')
                 ->setEmColunaDeTamanho(6);
         
         $campos[] = $form->senha('senha', 'Digite a Senha')

@@ -19,10 +19,10 @@ try {
     
 	$template->setConteudoHeader();
 	//$template->setConteudoMain(include('./ExemploForm.php'));
-        //$template->setConteudoMain($form->montaForm());
-        $template->setConteudoMain($class->grid());
+        $template->setConteudoMain($form->montaForm());
+    //    $template->setConteudoMain($class->grid());
         
-	$template->setTooltipForm('Form1');
+	$template->setTooltipForm('grid-control');
 	$template->setConteudoFooter();   
 
 } catch (Exception $ex) {
