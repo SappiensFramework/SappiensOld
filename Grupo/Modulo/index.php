@@ -10,10 +10,10 @@ try {
 	$template = new \Pixel\Template\Template();
 
 	$template->setConteudoHeader();
-	$template->setConteudoMain(include('./ExemploForm.php'));
-    //$template->setConteudoMain($form->montaForm());
-	$template->setTooltipForm('Form1');
-	$template->setTooltipForm('grid-control');
+	//$template->setConteudoMain(include('./ExemploForm.php'));
+    $template->setConteudoMain($form->montaForm());
+	//$template->setTooltipForm('Form1');
+	//$template->setTooltipForm('grid-control');
 	$template->setConteudoFooter();    
 
 } catch (Exception $ex) {

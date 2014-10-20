@@ -12,9 +12,8 @@ try {
 
 	$template->setConteudoHeader($html->abreTagAberta('link', array('href' => urlStatic . '/assets/stylesheets/login.css', 'rel' => 'stylesheet', 'type' => 'text/css')));
 	$template->setConteudoBody('theme-default page-signin');
-	$template->setConteudoContainerLogin($html->abreTagAberta('script', array('src' => urlStatic . '/assets/javascript/login-prescripts.js')) . $html->fechaTag('script'));
-	//$template->setConteudoMain($html->abreTagAberta('script', array('src' => urlStatic . '/assets/javascript/login-prescripts.js')) . $html->fechaTag('script'));
-	//$template->setTooltipForm('Form1');
+	$template->setConteudoContainerLogin($html->abreTagAberta('script', array('src' => urlStatic . '/assets/javascripts/login-prescripts.js')) . $html->fechaTag('script'));
+	$template->setConteudoScripts($html->abreTagAberta('script', array('src' => urlStatic . '/assets/javascripts/login-postscripts.js')) . $html->fechaTag('script'));    
 	$template->setConteudoFooter();    
 
 } catch (Exception $ex) {
