@@ -2,7 +2,7 @@
 
 namespace Sappiens\Grupo\Modulo;
 
-class ModuloClass
+class ModuloClass extends ModuloSql
 {
 
     public function getChave()
@@ -24,25 +24,24 @@ class ModuloClass
         return array_merge($Padrao, $MeusParametros, $HiddenParametros);
     }
 
-    public function grid()
+    public function filtrar()
     {
-        $grid  = new \Zion\Grid\GridPadrao();
+        $grid  = new \Pixel\Grid\GridPadrao();
 		
         //Grid de Visualização - Configurações
-      	$grid->setListados(array("CidadeCod", "CidadeNome", "CidadeUF"));  
-      	$grid->setTitulos(array("Cod", "Cidade", "U.F."));
+      	$grid->setListados(array("UfCidadeCod", "UfCidadeNome"));  
+      	$grid->setTitulos(array("Cod", "Cidade"));
       	
       	//Setando Parametros
         \Zion\Paginacao\Parametros::setParametros("GET", array());
 
       	     	
       	//Configurações Fixas da Grid
-      	$grid->setSql("SELECT CidadeCod, CidadeNome, CidadeUF FROM cidade WHERE 1 ");
-        $grid->setChave('CidadeCod');
+      	$grid->setSql(parent::filtrarSql());
+        $grid->setChave('UfCidadeCod');
         $grid->setTipoOrdenacao(filter_input(INPUT_GET, 'to'));
         $grid->setQuemOrdena(filter_input(INPUT_GET, 'qo'));
         $grid->setPaginaAtual(filter_input(INPUT_GET, 'pa'));
-        $grid->setQLinhas(5);
 
         //Retornando a Grid Formatada - HTML
         return $grid->montaGridPadrao();
