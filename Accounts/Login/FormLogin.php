@@ -6,7 +6,7 @@ try {
 
 	$html = new \Zion\Layout\Html();
 	$formModulo = new \Sappiens\Grupo\Modulo\ModuloForm();
-	$form = $formModulo->getFormModulo();
+	$form = $formModulo->getModuloForm();
 
 	$template = new \Pixel\Template\Template();
 
