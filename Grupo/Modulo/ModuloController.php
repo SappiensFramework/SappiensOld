@@ -3,7 +3,6 @@
 namespace Sappiens\Grupo\Modulo;
 
 class ModuloController extends \Zion\Core\Controller
-                $retorno = $template->abreTagAberta('i', array('class' => 'fa fa-warning recD5px')) . $template->fechaTag('i') . 'Oops! Você não possui permissões de acesso a este módulo!';
 {   
     protected function filtrar()
     {

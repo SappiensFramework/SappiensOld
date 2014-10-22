@@ -6,9 +6,9 @@ class ModuloSql
 {
     public function filtrarSql()
     {
-        $sql = "SELECT UfCidadeCod, UfCidadeNome 
-            FROM uf_cidade 
-            WHERE 1 ";
+        $sql = "SELECT UfCidadeCod, UfCidadeNome, UfCidadeNomeUfNome
+	              FROM v_uf_cidade
+	             WHERE 1 ";
 
         return $sql;
     }
