@@ -19,7 +19,7 @@ try {
     
 	$template->setConteudoHeader();
 	//$template->setConteudoMain(include('./ExemploForm.php'));
-        $template->setConteudoMain($form->montaForm());
+        //$template->setConteudoMain($form->montaForm());
     //    $template->setConteudoMain($class->grid());
         
 	$template->setTooltipForm('grid-control');
