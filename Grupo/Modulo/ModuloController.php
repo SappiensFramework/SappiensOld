@@ -15,10 +15,10 @@ class ModuloController extends \Zion\Core\Controller
 
             $modulo = new \Sappiens\Grupo\Modulo\ModuloClass();
 
-            if ($acesso->permissaoAcao('Fil')) {
+            if ($acesso->permissaoAcao('filtrar')) {
                 $retorno = $modulo->filtrar();
             } else {
-                $retorno = 'Sem permissão';
+                $retorno = $template->abreTagAberta('i', array('class' => 'fa fa-warning recD5px')) . $template->fechaTag('i') . 'Oops! Você não possui permissões de acesso a este módulo!';
             }
         } catch (\Exception $ex) {
             $retorno = $ex;
@@ -31,7 +31,7 @@ class ModuloController extends \Zion\Core\Controller
 
     protected function filtrar()
     {
-        new \Zion\Acesso\Acesso('Fil');
+        new \Zion\Acesso\Acesso('filtrar');
 
         $modulo = new \Sappiens\Grupo\Modulo\ModuloClass();
 

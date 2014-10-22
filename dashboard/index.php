@@ -18,6 +18,7 @@ try {
 }
 
 // Define o nome do módulo e o nome amigável ao usuário
+define('DEFAULT_MODULO_ICONE', 'fa fa-dashboard');
 define('DEFAULT_MODULO_NOME', 'Dashboard');
 define('DEFAULT_MODULO_URL', 'Dashboard');
 
