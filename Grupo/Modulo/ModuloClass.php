@@ -47,7 +47,7 @@ class ModuloClass extends ModuloSql
         $grid->setPaginaAtual(filter_input(INPUT_GET, 'pa'));
 
         //Retornando a Grid Formatada - HTML
-        return ['grid'=>$grid->montaGridPadrao(),'paginacao'=>$grid->getPaginacaoGrid()];
+        return $grid->montaGridPadrao();
     }
 
     public function visualizar()

@@ -49,7 +49,7 @@ class ModuloForm
                         ->get()
                         ->setUrl('?acao=filtrar')
                         ->setDataType('json')
-                        ->setDone(' $("#content-wrapper").html(ret.retorno); ')
+                        ->setDone(' $("#sisContainerGrid").html(ret.retorno); ')
                         ->setFuncao('sisFiltrar()')
                         ->criar());
         
