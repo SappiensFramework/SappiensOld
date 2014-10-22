@@ -39,12 +39,13 @@ class ModuloClass extends ModuloSql
       	//Configurações Fixas da Grid
       	$grid->setSql(parent::filtrarSql());
         $grid->setChave('UfCidadeCod');
+        //$grid->setSelecaoMultipla(true);
         $grid->setTipoOrdenacao(filter_input(INPUT_GET, 'to'));
         $grid->setQuemOrdena(filter_input(INPUT_GET, 'qo'));
         $grid->setPaginaAtual(filter_input(INPUT_GET, 'pa'));
 
         //Retornando a Grid Formatada - HTML
-        return $grid->montaGridPadrao();
+        return ['grid'=>$grid->montaGridPadrao(),'paginacao'=>$grid->getPaginacaoGrid()];
     }
 
     public function visualizar()

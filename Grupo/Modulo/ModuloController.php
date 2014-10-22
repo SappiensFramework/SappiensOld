@@ -3,39 +3,13 @@
 namespace Sappiens\Grupo\Modulo;
 
 class ModuloController extends \Zion\Core\Controller
-{
-
-    protected function iniciar()
-    {
-        try {
-
-            $template = new \Pixel\Template\Template();
-
-            $acesso = new \Zion\Acesso\Acesso();
-
-            $modulo = new \Sappiens\Grupo\Modulo\ModuloClass();
-
-            if ($acesso->permissaoAcao('filtrar')) {
-                $retorno = $modulo->filtrar();
-            } else {
-                $retorno = $template->abreTagAberta('i', array('class' => 'fa fa-warning recD5px')) . $template->fechaTag('i') . 'Oops! VocÃª nÃ£o possui permissÃµes de acesso a este mÃ³dulo!';
-            }
-        } catch (\Exception $ex) {
-            $retorno = $ex;
-        }
-
-        $template->setConteudoMain($retorno);
-
-        return $template->getTemplate();
-    }
-
+                $retorno = $template->abreTagAberta('i', array('class' => 'fa fa-warning recD5px')) . $template->fechaTag('i') . 'Oops! Você não possui permissões de acesso a este módulo!';
+{   
     protected function filtrar()
     {
-        new \Zion\Acesso\Acesso('filtrar');
-
         $modulo = new \Sappiens\Grupo\Modulo\ModuloClass();
 
-        return parent::jsonSucesso($modulo->grid());
+        return parent::jsonSucesso($modulo->filtrar());
     }
 
     protected function cadastrar()

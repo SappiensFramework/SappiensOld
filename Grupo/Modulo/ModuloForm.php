@@ -4,6 +4,7 @@ namespace Sappiens\Grupo\Modulo;
 
 class ModuloForm
 {
+
     public function getModuloForm()
     {
         $form = new \Pixel\Form\Form();
@@ -14,20 +15,19 @@ class ModuloForm
 
         $campos[] = $form->hidden('Cod')
                 ->setValor($form->retornaValor('Cod'));
-        
+
         $campos[] = $form->texto('UfSigla', 'Sigla da Unidade Federativa', true)
                 ->setMaximoCaracteres(2)
                 ->setMinimoCaracteres(2)
                 ->setValor($form->retornaValor('Cod'));
-        
+
         $campos[] = $form->texto('UfNome', 'Nome da Unidade Federativa', false)
                 ->setMaximoCaracteres(100)
                 ->setValor($form->retornaValor('Cod'));
-        
-        
-        $campos[] = $form->numero('UfIbgeCod', 'Código do IBGE',true)
+
+        $campos[] = $form->numero('UfIbgeCod', 'Código do IBGE', true)
                 ->setValor($form->retornaValor('Cod'))
-                ->setMaximoCaracteres(10);               
+                ->setMaximoCaracteres(10);
 
         $campos[] = $form->botaoSubmit('enviar', 'Enviar')
                 ->setClassCss('btn btn-primary');
@@ -36,6 +36,24 @@ class ModuloForm
                 ->setClassCss('btn btn-default');
 
         return $form->processarForm($campos);
+    }
+
+    public function getJSEstatico()
+    {
+        $jsStatic = \Pixel\Form\FormJavaScript::iniciar();
+
+        $jQuery = new \Zion\JQuery\JQuery();
+
+        $jsStatic->setFunctions(
+                $jQuery->ajax()
+                        ->get()
+                        ->setUrl('?acao=filtrar')
+                        ->setDataType('json')
+                        ->setDone(' $("#content-wrapper").html(ret.retorno); ')
+                        ->setFuncao('sisFiltrar()')
+                        ->criar());
+        
+        return $jsStatic->getFunctions();
     }
 
 }
