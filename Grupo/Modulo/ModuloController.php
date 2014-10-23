@@ -39,6 +39,7 @@ class ModuloController extends \Zion\Core\Controller
             $retorno = $ex;
         }
 
+        $template->setTooltipForm();
         $template->setConteudoBotoes($botoes);
         $template->setConteudoGrid($grid);
         $template->setConteudoMain($retorno);
