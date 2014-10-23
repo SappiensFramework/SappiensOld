@@ -49,8 +49,9 @@ class ModuloForm
                         ->get()
                         ->setUrl('?acao=filtrar')
                         ->setDataType('json')
+                        ->setData('p')
                         ->setDone(' $("#sisContainerGrid").html(ret.retorno); ')
-                        ->setFuncao('sisFiltrar()')
+                        ->setFuncao('sisFiltrar(p)')
                         ->criar());
         
         return $jsStatic->getFunctions();

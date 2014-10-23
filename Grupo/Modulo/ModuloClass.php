@@ -5,39 +5,39 @@ namespace Sappiens\Grupo\Modulo;
 class ModuloClass extends ModuloSql
 {
 
-    public function getChave()
+    public function getChavePrimaria()
     {
         return "ArtigoCod";
     }
 
-    public function getParametros($ObjForm)
+    public function getParametros($objForm)
     {
-        $Fil = new Filtrar();
-        $Util = new Util();
+        $fil = new \Pixel\Filtro\Filtrar();
+        $util = new \Zion\Crud\CrudUtil();
 
-        $Padrao = array("PaginaAtual", "QuemOrdena", "TipoOrdenacao");
+        $padrao = ["pa", "qo", "to"];
 
-        $MeusParametros = $Util->getParametrosForm($ObjForm);
+        $meusParametros = $util->getParametrosForm($objForm);
 
-        $HiddenParametros = $Fil->getHiddenParametros($MeusParametros);
+        $hiddenParametros = $fil->getHiddenParametros($meusParametros);
 
-        return array_merge($Padrao, $MeusParametros, $HiddenParametros);
+        return array_merge($padrao, $meusParametros, $hiddenParametros);
     }
 
     public function filtrar()
     {
-        $grid  = new \Pixel\Grid\GridPadrao();
-		
+        $grid = new \Pixel\Grid\GridPadrao();
+
         //Grid de Visualização - Configurações
-      	$grid->setListados(array("UfCidadeCod", "UfCidadeNome", "UfCidadeNomeUfNome"));  
-      	$grid->setTitulos(array("Cod", "Cidade", "Cidade/UF"));
-      	
-      	//Setando Parametros
+        $grid->setListados(array("UfCidadeCod", "UfCidadeNome", "UfCidadeNomeUfNome"));
+        $grid->setTitulos(array("Cod", "Cidade", "Cidade/UF"));
+
+        //Setando Parametros
         \Zion\Paginacao\Parametros::setParametros("GET", array());
 
-      	     	
-      	//Configurações Fixas da Grid
-      	$grid->setSql(parent::filtrarSql());
+
+        //Configurações Fixas da Grid
+        $grid->setSql(parent::filtrarSql());
         $grid->setChave('UfCidadeCod');
         $grid->setSelecaoMultipla(true);
         $grid->setAlinhamento(array('UfCidadeNomeUfNome' => 'DIREITA'));
@@ -73,7 +73,7 @@ class ModuloClass extends ModuloSql
         return $Vis;
     }
 
-    public function cadastrar($ObjForm)
+    public function cadastrar($objForm)
     {
         //Inicia Conexão
         $Con = Conexao::conectar();
@@ -88,7 +88,7 @@ class ModuloClass extends ModuloSql
         $Log = new Log();
 
         //Executa Sql
-        $Con->executar(parent::cadastrarSql($ObjForm));
+        $Con->executar(parent::cadastrarSql($objForm));
 
         //Código Gerado
         $ArtigoCod = $Con->ultimoInsertId();
@@ -96,14 +96,14 @@ class ModuloClass extends ModuloSql
         //Grava Log
         $Log->geraLog($ArtigoCod);
 
-        $CFG = $ObjForm->getBufferCFG("FotoAutor");
+        $CFG = $objForm->getBufferCFG("FotoAutor");
         $ArquivoUpload->sisUpload($CFG, $ArtigoCod, "Cad", "Imagem");
 
         //Finaliza Transação
         $Con->stopTransaction();
     }
 
-    public function alterar($ObjForm)
+    public function alterar($objForm)
     {
         //Inicia Conexão
         $Con = Conexao::conectar();
@@ -118,19 +118,19 @@ class ModuloClass extends ModuloSql
         $Log = new Log();
 
         //Executa Sql
-        $Con->executar(parent::alterarSql($ObjForm));
+        $Con->executar(parent::alterarSql($objForm));
 
-        $CFG = $ObjForm->getBufferCFG("FotoAutor");
-        $ArquivoUpload->sisUpload($CFG, $ObjForm->getCampoRetorna('Id'), "Alt", "Imagem");
+        $CFG = $objForm->getBufferCFG("FotoAutor");
+        $ArquivoUpload->sisUpload($CFG, $objForm->getCampoRetorna('Id'), "Alt", "Imagem");
 
         //Grava Log
-        $Log->geraLog($ObjForm->get('Id'));
+        $Log->geraLog($objForm->get('Id'));
 
         //Finaliza Transação
         $Con->stopTransaction();
     }
 
-    public function remover($Chave, $Form)
+    public function remover($Chave, $form)
     {
         $Con = Conexao::conectar();
 
@@ -143,7 +143,7 @@ class ModuloClass extends ModuloSql
 
         $Con->executar(parent::removerSql($Chave));
 
-        $CFG = $Form->getBufferCFG("FotoAutor");
+        $CFG = $form->getBufferCFG("FotoAutor");
         $ArquivoUpload->removerArquivos($CFG, $Chave);
 
         $Log->geraLog($Chave);
@@ -151,7 +151,7 @@ class ModuloClass extends ModuloSql
         $Con->stopTransaction();
     }
 
-    public function getValoresFormManu($Id, $Metodo, $Form)
+    public function getValoresFormManu($Id, $metodo, $form)
     {
         //Processador de Formulários
         $Util = new Util();
@@ -160,25 +160,25 @@ class ModuloClass extends ModuloSql
         $Con = Conexao::conectar();
 
         //Executa Formulário de Manutenção apenas para obtenção de configurações
-        $Form->setProcessarHtml(false);
-        $Form->setProcessarValidacao(false);
-        $Form->getFormManu();
+        $form->setProcessarHtml(false);
+        $form->setProcessarValidacao(false);
+        $form->getFormManu();
 
         //Extrai Parametros Sql
-        $ParametrosSql = $Con->execLinhaArray(parent::getDadosSql($Id));
+        $parametrosSql = $Con->execLinhaArray(parent::getDadosSql($Id));
 
         //Define Campos do Fomulário
-        $ParametrosForm = $Util->getParametrosForm($Form);
+        $parametrosForm = $Util->getParametrosForm($form);
 
         //Extrai Parametros de Array Para Superglobal
-        $Util->getParametrosMetodo($ParametrosForm, $ParametrosSql, $this->getChave(), $Metodo);
+        $Util->getParametrosMetodo($parametrosForm, $parametrosSql, $this->getChave(), $metodo);
 
         //Processamento apenas HTML - Ativa Validação e HTML
-        $Form->setProcessarHtml(true);
-        $Form->setProcessarValidacao(true);
+        $form->setProcessarHtml(true);
+        $form->setProcessarValidacao(true);
 
         //Retorna Campos
-        return $Form->getFormManu();
+        return $form->getFormManu();
     }
 
 }
