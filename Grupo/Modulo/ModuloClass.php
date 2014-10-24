@@ -29,7 +29,7 @@ class ModuloClass extends ModuloSql
         $grid = new \Pixel\Grid\GridPadrao();
 
         //Grid de Visualização - Configurações
-        $grid->setListados(array("UfCidadeCod", "UfCidadeNome", "UfCidadeNomeUfNome"));
+        $grid->setListados(array("ufCidadeCod", "ufCidadeNome", "ufCidadeNomeUfNome"));
         $grid->setTitulos(array("Cod", "Cidade", "Cidade/UF"));
 
         //Setando Parametros
@@ -38,9 +38,9 @@ class ModuloClass extends ModuloSql
 
         //Configurações Fixas da Grid
         $grid->setSql(parent::filtrarSql());
-        $grid->setChave('UfCidadeCod');
+        $grid->setChave('ufCidadeCod');
         $grid->setSelecaoMultipla(true);
-        $grid->setAlinhamento(array('UfCidadeNomeUfNome' => 'DIREITA'));
+        $grid->setAlinhamento(array('ufCidadeNomeUfNome' => 'DIREITA'));
         //$grid->setSelecao(false);
         $grid->setTipoOrdenacao(filter_input(INPUT_GET, 'to'));
         $grid->setQuemOrdena(filter_input(INPUT_GET, 'qo'));

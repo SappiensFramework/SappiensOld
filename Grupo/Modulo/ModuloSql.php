@@ -6,7 +6,7 @@ class ModuloSql
 {
     public function filtrarSql()
     {
-        $sql = "SELECT UfCidadeCod, UfCidadeNome, UfCidadeNomeUfNome
+        $sql = "SELECT ufCidadeCod, ufCidadeNome, ufCidadeNomeUfNome
 	              FROM v_uf_cidade
 	             WHERE 1 ";
 
