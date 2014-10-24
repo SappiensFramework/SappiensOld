@@ -9,14 +9,14 @@ class ModuloForm
     {
         $form = new \Pixel\Form\Form();
 
-        $form->config('Form', 'GET')
+        $form->config('formFiltro', 'GET')
                 ->setNovalidate(true)
                 ->setHeader('Estados');
 
-        $campos[] = $form->texto('UfSigla', 'Sigla da Unidade Federativa', true)
+        $campos[] = $form->texto('ufSigla', 'Sigla da Unidade Federativa', true)
                 ->setMaximoCaracteres(2)
                 ->setMinimoCaracteres(2)
-                ->setValor($form->retornaValor('Cod'));
+                ->setValor($form->retornaValor('cod'));
         
         return $form->processarForm($campos);
     }
@@ -25,25 +25,28 @@ class ModuloForm
     {
         $form = new \Pixel\Form\Form();
 
-        $form->config('Form', 'POST')
-                ->setNovalidate(true)
+        $cod = $form->retornaValor('cod');
+        
+        $form->config('formManu'.$cod, 'POST')
+                ->setNovalidate(true)                
                 ->setHeader('Estados');
 
-        $campos[] = $form->hidden('Cod')
-                ->setValor($form->retornaValor('Cod'));
+        $campos[] = $form->hidden('cod')
+                ->setValor($cod);
 
-        $campos[] = $form->texto('UfSigla', 'Sigla da Unidade Federativa', true)
+        $campos[] = $form->texto('ufSigla', 'Sigla da Unidade Federativa', true)
                 ->setMaximoCaracteres(2)
                 ->setMinimoCaracteres(2)
-                ->setValor($form->retornaValor('Cod'));
+                ->setValor($form->retornaValor('ufSigla'));
 
-        $campos[] = $form->texto('UfNome', 'Nome da Unidade Federativa', false)
+        $campos[] = $form->texto('ufNome', 'Nome da Unidade Federativa', false)
                 ->setMaximoCaracteres(100)
-                ->setValor($form->retornaValor('Cod'));
+                ->setValor($form->retornaValor('cod'));
 
-        $campos[] = $form->numero('UfIbgeCod', 'Código do IBGE', true)
-                ->setValor($form->retornaValor('Cod'))
-                ->setMaximoCaracteres(10);
+        $campos[] = $form->numero('ufIbgeCod', 'Código do IBGE', true)
+                ->setValor($form->retornaValor('ufNome'))
+                ->setMaximoCaracteres(10)
+                ->setValor($form->retornaValor('ufIbgeCod'));
 
         $campos[] = $form->botaoSubmit('enviar', 'Enviar')
                 ->setClassCss('btn btn-primary');

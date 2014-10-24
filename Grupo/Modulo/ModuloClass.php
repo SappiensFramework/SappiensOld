@@ -7,7 +7,7 @@ class ModuloClass extends ModuloSql
 
     public function getChavePrimaria()
     {
-        return "ArtigoCod";
+        return 'ufCidadeCod';
     }
 
     public function getParametrosGrid($objForm)
@@ -27,155 +27,104 @@ class ModuloClass extends ModuloSql
     public function filtrar($objForm)
     {
         $grid = new \Pixel\Grid\GridPadrao();
-
-        //Grid de Visualização - Configurações
-        $grid->setListados(array("UfCidadeCod", "UfCidadeNome", "UfCidadeNomeUfNome"));
-        $grid->setTitulos(array("Cod", "Cidade", "Cidade/UF"));
-
+        
         //Setando Parametros
         \Zion\Paginacao\Parametros::setParametros("GET", $this->getParametrosGrid($objForm));
-
+        
+        //Grid de Visualização - Configurações
+        $grid->setListados(array('ufCidadeCod', 'ufCidadeNome', 'ufCidadeNomeUfNome'));
+        $grid->setTitulos(array('cod', 'cidade', 'cidade/UF'));
 
         //Configurações Fixas da Grid
         $grid->setSql(parent::filtrarSql());
-        $grid->setChave('UfCidadeCod');
+        $grid->setChave($this->getChavePrimaria());
         $grid->setSelecaoMultipla(true);
-        $grid->setAlinhamento(array('UfCidadeNomeUfNome' => 'DIREITA'));
-        //$grid->setSelecao(false);
+        $grid->setAlinhamento(array('ufCidadeNomeUfNome' => 'DIREITA'));
         $grid->setTipoOrdenacao(filter_input(INPUT_GET, 'to'));
         $grid->setQuemOrdena(filter_input(INPUT_GET, 'qo'));
         $grid->setPaginaAtual(filter_input(INPUT_GET, 'pa'));
 
-        //Retornando a Grid Formatada - HTML
         return $grid->montaGridPadrao();
-    }
-
-    public function visualizar()
-    {
-        $grid = new GridVisualizar();
-
-        //Grid de Visualiza? Detalhada
-        $grid->setListados(array("ArtigoCod", "ArtigoAutor", "ArtigoTitulo", "ArtigoConteudo", "ArtigoData", "Criado"));
-        $grid->setTitulos(array("Cód", "Autor", "Titulo", "Texto", "Data", "Criado"));
-
-        //Configura?s Fixas da Grid
-        $grid->setChave($this->getChave());
-
-        //Retornando a Grid Formatada - HTML
-        if (!is_array($_POST['SisReg']))
-            throw new Exception("Nenhum registro selecionado!");
-
-        foreach ($_POST['SisReg'] as $Cod) {
-            $grid->setSql(parent::visualizarSql($Cod));
-            $Vis .= $grid->montaGridVisualizar();
-        }
-
-        return $Vis;
     }
 
     public function cadastrar($objForm)
     {
-        //Inicia Conexão
-        $Con = Conexao::conectar();
+        $con = Conexao::conectar();
 
-        //Classe de Upload
-        $ArquivoUpload = new ArquivoUpload();
+        $arquivoUpload = new ArquivoUpload();
 
-        //Inicia Transação
-        $Con->startTransaction();
+        $con->startTransaction();
 
-        //Inicia Classe de Logs
-        $Log = new Log();
+        $log = new Log();
 
-        //Executa Sql
-        $Con->executar(parent::cadastrarSql($objForm));
+        $con->executar(parent::cadastrarSql($objForm));
 
-        //Código Gerado
-        $ArtigoCod = $Con->ultimoInsertId();
+        $artigoCod = $con->ultimoInsertId();
 
-        //Grava Log
-        $Log->geraLog($ArtigoCod);
+        $log->geraLog($artigoCod);
 
-        $CFG = $objForm->getBufferCFG("FotoAutor");
-        $ArquivoUpload->sisUpload($CFG, $ArtigoCod, "Cad", "Imagem");
+        $cFG = $objForm->getBufferCFG("FotoAutor");
+        $arquivoUpload->sisUpload($cFG, $artigoCod, "Cad", "Imagem");
 
-        //Finaliza Transação
-        $Con->stopTransaction();
+        $con->stopTransaction();
     }
 
     public function alterar($objForm)
     {
-        //Inicia Conexão
-        $Con = Conexao::conectar();
+        $con = Conexao::conectar();
 
-        //Classe de Upload
-        $ArquivoUpload = new ArquivoUpload();
+        $arquivoUpload = new ArquivoUpload();
 
-        //Inicia Transação
-        $Con->startTransaction();
+        $con->startTransaction();
 
-        //Inicia Classe de Logs
-        $Log = new Log();
+        $log = new Log();
 
-        //Executa Sql
-        $Con->executar(parent::alterarSql($objForm));
+        $con->executar(parent::alterarSql($objForm));
 
-        $CFG = $objForm->getBufferCFG("FotoAutor");
-        $ArquivoUpload->sisUpload($CFG, $objForm->getCampoRetorna('Id'), "Alt", "Imagem");
+        $cFG = $objForm->getBufferCFG("FotoAutor");
+        $arquivoUpload->sisUpload($cFG, $objForm->getCampoRetorna('Id'), "Alt", "Imagem");
 
-        //Grava Log
-        $Log->geraLog($objForm->get('Id'));
+        $log->geraLog($objForm->get('Id'));
 
-        //Finaliza Transação
-        $Con->stopTransaction();
+        $con->stopTransaction();
     }
 
-    public function remover($Chave, $form)
+    public function remover($chave, $form)
     {
-        $Con = Conexao::conectar();
+        $con = Conexao::conectar();
 
-        //Classe de Upload
-        $ArquivoUpload = new ArquivoUpload();
+        $arquivoUpload = new ArquivoUpload();
 
-        $Log = new Log();
+        $log = new Log();
 
-        $Con->startTransaction();
+        $con->startTransaction();
 
-        $Con->executar(parent::removerSql($Chave));
+        $con->executar(parent::removerSql($chave));
 
-        $CFG = $form->getBufferCFG("FotoAutor");
-        $ArquivoUpload->removerArquivos($CFG, $Chave);
+        $cFG = $form->getBufferCFG("FotoAutor");
+        $arquivoUpload->removerArquivos($cFG, $chave);
 
-        $Log->geraLog($Chave);
+        $log->geraLog($chave);
 
-        $Con->stopTransaction();
+        $con->stopTransaction();
     }
 
     public function getValoresFormManu($Id, $metodo, $form)
     {
-        //Processador de Formulários
-        $Util = new Util();
+        $util = new Util();
 
-        //Inicia Conexão
-        $Con = Conexao::conectar();
+        $con = Conexao::conectar();
 
-        //Executa Formulário de Manutenção apenas para obtenção de configurações
-        $form->setProcessarHtml(false);
-        $form->setProcessarValidacao(false);
         $form->getFormManu();
 
         //Extrai Parametros Sql
-        $parametrosSql = $Con->execLinhaArray(parent::getDadosSql($Id));
+        $parametrosSql = $con->execLinhaArray(parent::getDadosSql($Id));
 
         //Define Campos do Fomulário
-        $parametrosForm = $Util->getParametrosForm($form);
+        $parametrosForm = $util->getParametrosForm($form);
 
         //Extrai Parametros de Array Para Superglobal
-        $Util->getParametrosMetodo($parametrosForm, $parametrosSql, $this->getChave(), $metodo);
-
-        //Processamento apenas HTML - Ativa Validação e HTML
-        $form->setProcessarHtml(true);
-        $form->setProcessarValidacao(true);
+        $util->getParametrosMetodo($parametrosForm, $parametrosSql, $this->getChave(), $metodo);
 
         //Retorna Campos
         return $form->getFormManu();

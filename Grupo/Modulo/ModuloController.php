@@ -13,35 +13,30 @@ class ModuloController extends \Zion\Core\Controller
 
     protected function iniciar()
     {
-        $botoes = '';
-        $grid = '';
         $retorno = '';
 
         try {
 
             $template = new \Pixel\Template\Template();
 
-            $acesso = new \Zion\Acesso\Acesso();
-
+            new \Zion\Acesso\Acesso('filtrar');
+            
             $moduloForm = new \Sappiens\Grupo\Modulo\ModuloForm();
 
-            $template->setConteudoScripts($moduloForm->getJSEstatico());
+            $template->setConteudoScripts($moduloForm->getJSEstatico());            
+            
+            $botoes = (new \Pixel\Grid\GridBotoes())->geraBotoes();
 
-            if ($acesso->permissaoAcao('filtrar')) {
+            $grid = $this->modulo->filtrar($moduloForm->getModuloFormFiltro());                       
+        
+            $template->setTooltipForm();
+            $template->setConteudoBotoes($botoes);
+            $template->setConteudoGrid($grid);
 
-                $botoes = (new \Pixel\Grid\GridBotoes())->geraBotoes();
-
-                $grid = $this->modulo->filtrar($moduloForm->getModuloFormFiltro());
-            } else {
-                $retorno = 'Sem permissão';
-            }
         } catch (\Exception $ex) {
             $retorno = $ex;
         }
-
-        $template->setTooltipForm();
-        $template->setConteudoBotoes($botoes);
-        $template->setConteudoGrid($grid);
+        
         $template->setConteudoMain($retorno);
 
         return $template->getTemplate();
@@ -49,6 +44,8 @@ class ModuloController extends \Zion\Core\Controller
 
     protected function filtrar()
     {
+        new \Zion\Acesso\Acesso('filtrar');
+        
         $moduloForm = new \Sappiens\Grupo\Modulo\ModuloForm();
         
         return parent::jsonSucesso($this->modulo->filtrar($moduloForm->getModuloFormFiltro()));
