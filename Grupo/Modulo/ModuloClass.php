@@ -10,10 +10,10 @@ class ModuloClass extends ModuloSql
         return "ArtigoCod";
     }
 
-    public function getParametros($objForm)
+    public function getParametrosGrid($objForm)
     {
         $fil = new \Pixel\Filtro\Filtrar();
-        $util = new \Zion\Crud\CrudUtil();
+        $util = new \Pixel\Crud\CrudUtil();
 
         $padrao = ["pa", "qo", "to"];
 
@@ -24,7 +24,7 @@ class ModuloClass extends ModuloSql
         return array_merge($padrao, $meusParametros, $hiddenParametros);
     }
 
-    public function filtrar()
+    public function filtrar($objForm)
     {
         $grid = new \Pixel\Grid\GridPadrao();
 
@@ -33,7 +33,7 @@ class ModuloClass extends ModuloSql
         $grid->setTitulos(array("Cod", "Cidade", "Cidade/UF"));
 
         //Setando Parametros
-        \Zion\Paginacao\Parametros::setParametros("GET", array());
+        \Zion\Paginacao\Parametros::setParametros("GET", $this->getParametrosGrid($objForm));
 
 
         //Configurações Fixas da Grid

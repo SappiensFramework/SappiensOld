@@ -31,7 +31,7 @@ class ModuloController extends \Zion\Core\Controller
 
                 $botoes = (new \Pixel\Grid\GridBotoes())->geraBotoes();
 
-                $grid = $this->modulo->filtrar();
+                $grid = $this->modulo->filtrar($moduloForm->getModuloFormFiltro());
             } else {
                 $retorno = 'Sem permissão';
             }
@@ -49,7 +49,9 @@ class ModuloController extends \Zion\Core\Controller
 
     protected function filtrar()
     {
-        return parent::jsonSucesso($this->modulo->filtrar());
+        $moduloForm = new \Sappiens\Grupo\Modulo\ModuloForm();
+        
+        return parent::jsonSucesso($this->modulo->filtrar($moduloForm->getModuloFormFiltro()));
     }
 
     protected function cadastrar()

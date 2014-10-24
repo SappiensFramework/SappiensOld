@@ -5,6 +5,22 @@ namespace Sappiens\Grupo\Modulo;
 class ModuloForm
 {
 
+    public function getModuloFormFiltro()
+    {
+        $form = new \Pixel\Form\Form();
+
+        $form->config('Form', 'GET')
+                ->setNovalidate(true)
+                ->setHeader('Estados');
+
+        $campos[] = $form->texto('UfSigla', 'Sigla da Unidade Federativa', true)
+                ->setMaximoCaracteres(2)
+                ->setMinimoCaracteres(2)
+                ->setValor($form->retornaValor('Cod'));
+        
+        return $form->processarForm($campos);
+    }
+
     public function getModuloForm()
     {
         $form = new \Pixel\Form\Form();
