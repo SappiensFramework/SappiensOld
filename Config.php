@@ -33,7 +33,7 @@ class Config
         define('SIS_VENDOR_TEMPLATE_VERSION','1.3.0');   
         define('SIS_URL_BASE_TEMPLATE', SIS_VENDOR_TEMPLATE . '/' . SIS_VENDOR_TEMPLATE_VERSION . '/');     
         define('SIS_STRING_CRYPT', 'wzixjdy');
-        define('SIS_LINHAS_GRID', '20');
+        define('SIS_LINHAS_GRID', '10');
         
         $_SESSION['UsuarioCod'] = 1;//Usada temporariamente apenas para não busgar os componentes que dependem de UsuarioCod setado
         
