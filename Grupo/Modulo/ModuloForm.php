@@ -72,6 +72,17 @@ class ModuloForm
                         ->setDone(' $("#sisContainerGrid").html(ret.retorno); ')
                         ->setFuncao('sisFiltrar(p)')
                         ->criar());
+        //sisBuscaGridA
+        $jsStatic->setFunctions("
+        $('#sisBuscaGridA, #sisBuscaGridB').on('itemRemoved', function(event) {
+            sisFiltrar('sisBuscaGeral='+$(this).val());
+        });
+        
+        $('#sisBuscaGridA, #sisBuscaGridB').on('itemAdded', function(event) {
+            sisFiltrar('sisBuscaGeral='+$(this).val());
+          });
+            
+        ");
         
         return $jsStatic->getFunctions();
     }

@@ -27,16 +27,20 @@ class ModuloClass extends ModuloSql
     public function filtrar($objForm)
     {
         $grid = new \Pixel\Grid\GridPadrao();
-        
+
         //Setando Parametros
         \Zion\Paginacao\Parametros::setParametros("GET", $this->getParametrosGrid($objForm));
-        
+
         //Grid de Visualização - Configurações
-        $grid->setListados(array('ufCidadeCod', 'ufCidadeNome', 'ufCidadeNomeUfNome'));
-        $grid->setTitulos(array('cod', 'cidade', 'cidade/UF'));
+        $colunas = [
+            'ufCidadeCod' => 'Cód',
+            'ufCidadeNome' => 'Cidade',
+            'ufCidadeNomeUfNome' => 'cidade/uf'];
+
+        $grid->setColunas($colunas);
 
         //Configurações Fixas da Grid
-        $grid->setSql(parent::filtrarSql());
+        $grid->setSql(parent::filtrarSql($objForm,$colunas));
         $grid->setChave($this->getChavePrimaria());
         $grid->setSelecaoMultipla(true);
         $grid->setAlinhamento(array('ufCidadeNomeUfNome' => 'DIREITA'));
