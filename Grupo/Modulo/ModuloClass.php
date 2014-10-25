@@ -42,8 +42,9 @@ class ModuloClass extends ModuloSql
         $grid->setSelecaoMultipla(true);
         $grid->setAlinhamento(array('ufCidadeNomeUfNome' => 'DIREITA'));
         //$grid->setSelecao(false);
+        $qo = filter_input(INPUT_GET, 'qo') ? filter_input(INPUT_GET, 'qo') : 'ufCidadeNome';
         $grid->setTipoOrdenacao(filter_input(INPUT_GET, 'to'));
-        $grid->setQuemOrdena(filter_input(INPUT_GET, 'qo'));
+        $grid->setQuemOrdena($qo);
         $grid->setPaginaAtual(filter_input(INPUT_GET, 'pa'));
 
         //Retornando a Grid Formatada - HTML
