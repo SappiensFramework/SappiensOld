@@ -4,20 +4,21 @@ namespace Sappiens\Grupo\Modulo;
 
 class ModuloClass extends ModuloSql
 {
-
-    public function getChavePrimaria()
+    private $chavePrimaria;
+    
+    public function __construct()
     {
-        return 'ufCidadeCod';
+        $this->chavePrimaria = 'ufCidadeCod';
     }
 
     public function getParametrosGrid($objForm)
     {
         $fil = new \Pixel\Filtro\Filtrar();
-        $util = new \Pixel\Crud\CrudUtil();
+        $crud = new \Pixel\Crud\CrudUtil();
 
         $padrao = ["pa", "qo", "to"];
 
-        $meusParametros = $util->getParametrosForm($objForm);
+        $meusParametros = $crud->getParametrosForm($objForm);
 
         $hiddenParametros = $fil->getHiddenParametros($meusParametros);
 
@@ -35,13 +36,13 @@ class ModuloClass extends ModuloSql
         $colunas = [
             'ufCidadeCod' => 'Cód',
             'ufCidadeNome' => 'Cidade',
-            'ufCidadeNomeUfNome' => 'cidade/uf'];
+            'ufCidadeNomeUfNome' => 'Cidade/Uf'];
 
         $grid->setColunas($colunas);
 
         //Configurações Fixas da Grid
         $grid->setSql(parent::filtrarSql($objForm,$colunas));
-        $grid->setChave($this->getChavePrimaria());
+        $grid->setChave($this->chavePrimaria);
         $grid->setSelecaoMultipla(true);
         $grid->setAlinhamento(array('ufCidadeNomeUfNome' => 'DIREITA'));
         $grid->setTipoOrdenacao(filter_input(INPUT_GET, 'to'));
@@ -53,24 +54,15 @@ class ModuloClass extends ModuloSql
 
     public function cadastrar($objForm)
     {
-        $con = Conexao::conectar();
-
-        $arquivoUpload = new ArquivoUpload();
-
-        $con->startTransaction();
-
-        $log = new Log();
-
-        $con->executar(parent::cadastrarSql($objForm));
-
-        $artigoCod = $con->ultimoInsertId();
-
-        $log->geraLog($artigoCod);
-
-        $cFG = $objForm->getBufferCFG("FotoAutor");
-        $arquivoUpload->sisUpload($cFG, $artigoCod, "Cad", "Imagem");
-
-        $con->stopTransaction();
+        $crud = new \Pixel\Crud\CrudUtil();
+        
+        $campos = [
+            'ufSigla',
+            'ufNome',
+            'ufIbgeCod'
+        ];
+        
+        return $crud->insert('uf', $campos, $objForm);
     }
 
     public function alterar($objForm)

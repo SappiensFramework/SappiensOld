@@ -4,15 +4,20 @@ namespace Sappiens\Grupo\Modulo;
 
 class ModuloController extends \Zion\Core\Controller
 {
-    private $modulo;
-    
+
+    private $moduloClass;
+    private $moduloForm;
+
     public function __construct()
     {
-        $this->modulo = new \Sappiens\Grupo\Modulo\ModuloClass();
+        $this->moduloClass = new \Sappiens\Grupo\Modulo\ModuloClass();
+        $this->moduloForm = new \Sappiens\Grupo\Modulo\ModuloForm();
     }
 
     protected function iniciar()
     {
+        $filtro = new \Pixel\Filtro\FiltroForm();
+
         $retorno = '';
 
         try {
@@ -20,23 +25,22 @@ class ModuloController extends \Zion\Core\Controller
             $template = new \Pixel\Template\Template();
 
             new \Zion\Acesso\Acesso('filtrar');
-            
-            $moduloForm = new \Sappiens\Grupo\Modulo\ModuloForm();
 
-            $template->setConteudoScripts($moduloForm->getJSEstatico());            
-            
-            $botoes = (new \Pixel\Grid\GridBotoes())->geraBotoes();
+            $template->setConteudoScripts($this->moduloForm->getJSEstatico());
 
-            $grid = $this->modulo->filtrar($moduloForm->getModuloFormFiltro());                       
-        
+            $filtros = $filtro->montaFiltro($this->moduloForm->getModuloFormFiltro());
+
+            $botoes = (new \Pixel\Grid\GridBotoes())->geraBotoes('');
+
+            $grid = $this->moduloClass->filtrar($this->moduloForm->getModuloFormFiltro());
+
             $template->setTooltipForm();
             $template->setConteudoBotoes($botoes);
             $template->setConteudoGrid($grid);
-
         } catch (\Exception $ex) {
             $retorno = $ex;
         }
-        
+
         $template->setConteudoMain($retorno);
 
         return $template->getTemplate();
@@ -45,15 +49,26 @@ class ModuloController extends \Zion\Core\Controller
     protected function filtrar()
     {
         new \Zion\Acesso\Acesso('filtrar');
-        
-        $moduloForm = new \Sappiens\Grupo\Modulo\ModuloForm();
-        
-        return parent::jsonSucesso($this->modulo->filtrar($moduloForm->getModuloFormFiltro()));
+
+        return parent::jsonSucesso($this->moduloClass->filtrar($this->moduloForm->getModuloFormFiltro()));
     }
 
     protected function cadastrar()
     {
-        return json_encode(array('sucesso' => 'true', 'retorno' => 'ret'));
+        new \Zion\Acesso\Acesso('cadastrar');
+
+        if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') == 'POST') {
+
+            $this->moduloClass->cadastrar($this->moduloForm->getModuloForm());
+
+            $retorno = 'true';
+        } else {
+
+            $objForm = $this->moduloForm->getModuloForm();
+            $retorno = $objForm->montaForm();
+        }
+
+        return \json_encode(['sucesso' => 'true', 'retorno' => $retorno]);
     }
 
 }
