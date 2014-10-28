@@ -19,17 +19,10 @@ class ModuloSql
         return $sql;
     }
 
-    public function cadastrarSql($objForm)
+    public function getDadosSql($cod)
     {
-        $util = new \Pixel\Crud\CrudUtil();
-
-        $sql = "INSERT INTO uf 
-                (SistemaNome, DirBase, BancoNome, PastaNome) VALUES 
-                (%s, %s, %s, %s)";
-
-        $var = $util->getSqlInsertUpdate($objForm, $sql);
-
-        return vsprintf($sql, $var);
+        return "SELECT ufCod, ufSigla, ufNome, ufIbgeCod 
+                FROM  uf
+                WHERE  ufCod = $cod";
     }
-
 }

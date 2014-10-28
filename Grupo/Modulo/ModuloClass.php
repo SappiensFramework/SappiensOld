@@ -64,8 +64,22 @@ class ModuloClass extends ModuloSql
         
         return $crud->insert('uf', $campos, $objForm);
     }
-
+    
     public function alterar($objForm)
+    {
+        $crud = new \Pixel\Crud\CrudUtil();
+        
+        $campos = [
+            'ufSigla',
+            'ufNome',
+            'ufIbgeCod'
+        ];
+        
+        return $crud->update('uf', $campos, $objForm, $this->chavePrimaria);
+    }
+    
+    
+    public function alterarOld($objForm)
     {
         $con = Conexao::conectar();
 
@@ -105,25 +119,24 @@ class ModuloClass extends ModuloSql
         $con->stopTransaction();
     }
 
-    public function getValoresFormManu($Id, $metodo, $form)
+    public function getValoresFormManu($cod, $metodo, $form)
     {
-        $util = new Util();
+        $util = new \Pixel\Crud\CrudUtil();
 
-        $con = Conexao::conectar();
+        $con = \Zion\Banco\Conexao::conectar();
 
-        $form->getFormManu();
+        $objForm = $form->getFormManu('alterar');
 
-        //Extrai Parametros Sql
-        $parametrosSql = $con->execLinhaArray(parent::getDadosSql($Id));
+        $parametrosSql = $con->execLinhaArray(parent::getDadosSql($cod));
 
         //Define Campos do Fomulário
-        $parametrosForm = $util->getParametrosForm($form);
+        $parametrosForm = $util->getParametrosForm($objForm);
 
         //Extrai Parametros de Array Para Superglobal
-        $util->getParametrosMetodo($parametrosForm, $parametrosSql, $this->getChave(), $metodo);
+        $util->getParametrosMetodo($parametrosForm, $parametrosSql, $this->chavePrimaria, $metodo);
 
         //Retorna Campos
-        return $form->getFormManu();
+        return $form->getFormManu('alterar');
     }
 
 }

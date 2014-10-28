@@ -5,7 +5,7 @@ namespace Sappiens\Grupo\Modulo;
 class ModuloForm
 {
 
-    public function getModuloFormFiltro()
+    public function getFormFiltro()
     {
         $form = new \Pixel\Form\Form();
 
@@ -27,10 +27,10 @@ class ModuloForm
      * 
      * @return \Pixel\Form\Form
      */
-    public function getModuloForm($acao)
+    public function getFormManu($acao)
     {
         $form = new \Pixel\Form\Form();
-        
+
         $form->setAcao($acao);
 
         $cod = $form->retornaValor('cod');
@@ -71,6 +71,7 @@ class ModuloForm
 
         $jQuery = new \Zion\JQuery\JQuery();
 
+        //Filtrar
         $jsStatic->setFunctions(
                 $jQuery->ajax()
                         ->get()
@@ -81,6 +82,7 @@ class ModuloForm
                         ->setFuncao('sisFiltrar(p)')
                         ->criar());
 
+        //Layout do Cadastro
         $jsStatic->setFunctions(
                 $jQuery->ajax()
                         ->get()
@@ -89,7 +91,8 @@ class ModuloForm
                         ->setDone(' $("#sisContainerManu").html(ret.retorno); ')
                         ->setFuncao('sisCadastrarLayout()')
                         ->criar());
-
+        
+        //Efetivar o cadastro no banco de dados
         $jsStatic->setFunctions(
                 $jQuery->ajax()
                         ->post()
@@ -99,10 +102,33 @@ class ModuloForm
                         ->setDone(' alert(ret.retorno); ')
                         ->setFuncao('sisCadastrar(nomeForm)')
                         ->criar());
+        
+        //Layout da Alteração
+        $jsStatic->setFunctions(
+                $jQuery->ajax()
+                        ->get()
+                        ->setUrl('?acao=alterar')
+                        ->setDataType('json')
+                        ->setData('$("#formGrid").serialize()')
+                        ->setDone(' $("#sisContainerManu").html(ret.retorno); ')
+                        ->setFuncao('sisAlterarLayout()')
+                        ->criar());
 
+        //Efetivar a alteração no banco de dados
+        $jsStatic->setFunctions(
+                $jQuery->ajax()
+                        ->post()
+                        ->setData('$("#sisContainerGrid").serialize()')
+                        ->setUrl('?acao=alterar')
+                        ->setDataType('json')
+                        ->setDone(' alert(ret.retorno); ')
+                        ->setFuncao('sisAlterar(nomeForm)')
+                        ->criar());        
+        
+        
         $jsStatic->sisCadastrar('sisCadastrar(nomeForm)');
         $jsStatic->sisAlterar('sisAlterar(nomeForm)');
-        
+
         return $jsStatic->getFunctions();
     }
 
