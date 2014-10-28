@@ -23,14 +23,19 @@ class ModuloForm
         return $form->processarForm($campos);
     }
 
-    public function getModuloForm()
+    /**
+     * 
+     * @return \Pixel\Form\Form
+     */
+    public function getModuloForm($acao)
     {
         $form = new \Pixel\Form\Form();
+        
+        $form->setAcao($acao);
 
         $cod = $form->retornaValor('cod');
 
         $form->config('formManu' . $cod, 'POST')
-                ->setNovalidate(true)
                 ->setHeader('Estados');
 
         $campos[] = $form->hidden('cod')
@@ -39,11 +44,12 @@ class ModuloForm
         $campos[] = $form->texto('ufSigla', 'Sigla da Unidade Federativa', true)
                 ->setMaximoCaracteres(2)
                 ->setMinimoCaracteres(2)
+                ->setCaixa('ALTA')
                 ->setValor($form->retornaValor('ufSigla'));
 
         $campos[] = $form->texto('ufNome', 'Nome da Unidade Federativa', false)
                 ->setMaximoCaracteres(100)
-                ->setValor($form->retornaValor('cod'));
+                ->setValor($form->retornaValor('ufNome'));
 
         $campos[] = $form->numero('ufIbgeCod', 'Código do IBGE', true)
                 ->setValor($form->retornaValor('ufNome'))
@@ -87,12 +93,16 @@ class ModuloForm
         $jsStatic->setFunctions(
                 $jQuery->ajax()
                         ->post()
+                        ->setData('$("#"+nomeForm).serialize()')
                         ->setUrl('?acao=cadastrar')
                         ->setDataType('json')
-                        ->setDone(' $("#sisContainerManu").html(ret.retorno); ')
-                        ->setFuncao('cadastrar()')
+                        ->setDone(' alert(ret.retorno); ')
+                        ->setFuncao('sisCadastrar(nomeForm)')
                         ->criar());
 
+        $jsStatic->sisCadastrar('sisCadastrar(nomeForm)');
+        $jsStatic->sisAlterar('sisAlterar(nomeForm)');
+        
         return $jsStatic->getFunctions();
     }
 

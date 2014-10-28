@@ -57,15 +57,19 @@ class ModuloController extends \Zion\Core\Controller
     {
         new \Zion\Acesso\Acesso('cadastrar');
 
-        if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') == 'POST') {
+        $objForm = $this->moduloForm->getModuloForm('cadastrar');
 
-            $this->moduloClass->cadastrar($this->moduloForm->getModuloForm());
+        if (\filter_input(\INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
+
+            $objForm->validar();
+            
+            $this->moduloClass->cadastrar($objForm);
 
             $retorno = 'true';
         } else {
 
-            $objForm = $this->moduloForm->getModuloForm();
             $retorno = $objForm->montaForm();
+            $retorno.= $objForm->javaScript()->getLoad(true);
         }
 
         return \json_encode(['sucesso' => 'true', 'retorno' => $retorno]);
