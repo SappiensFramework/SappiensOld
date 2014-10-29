@@ -8,7 +8,7 @@ class ModuloClass extends ModuloSql
     
     public function __construct()
     {
-        $this->chavePrimaria = 'ufCidadeCod';
+        $this->chavePrimaria = 'ufCod';
     }
 
     public function getParametrosGrid($objForm)
@@ -34,9 +34,9 @@ class ModuloClass extends ModuloSql
 
         //Grid de Visualização - Configurações
         $colunas = [
-            'ufCidadeCod' => 'Cód',
-            'ufCidadeNome' => 'Cidade',
-            'ufCidadeNomeUfNome' => 'Cidade/Uf'];
+            'ufCod' => 'Cód',
+            'ufSigla' => 'Sigla',
+            'ufNome' => 'Nome'];
 
         $grid->setColunas($colunas);
 
@@ -78,45 +78,11 @@ class ModuloClass extends ModuloSql
         return $crud->update('uf', $campos, $objForm, $this->chavePrimaria);
     }
     
-    
-    public function alterarOld($objForm)
+    public function remover($cod)
     {
-        $con = Conexao::conectar();
-
-        $arquivoUpload = new ArquivoUpload();
-
-        $con->startTransaction();
-
-        $log = new Log();
-
-        $con->executar(parent::alterarSql($objForm));
-
-        $cFG = $objForm->getBufferCFG("FotoAutor");
-        $arquivoUpload->sisUpload($cFG, $objForm->getCampoRetorna('Id'), "Alt", "Imagem");
-
-        $log->geraLog($objForm->get('Id'));
-
-        $con->stopTransaction();
-    }
-
-    public function remover($chave, $form)
-    {
-        $con = Conexao::conectar();
-
-        $arquivoUpload = new ArquivoUpload();
-
-        $log = new Log();
-
-        $con->startTransaction();
-
-        $con->executar(parent::removerSql($chave));
-
-        $cFG = $form->getBufferCFG("FotoAutor");
-        $arquivoUpload->removerArquivos($cFG, $chave);
-
-        $log->geraLog($chave);
-
-        $con->stopTransaction();
+        $crud = new \Pixel\Crud\CrudUtil();
+        
+        return $crud->delete('uf', $cod, $this->chavePrimaria);
     }
 
     public function setValoresFormManu($cod, $formIntancia)
@@ -125,11 +91,11 @@ class ModuloClass extends ModuloSql
 
         $con = \Zion\Banco\Conexao::conectar();
 
-        $objForm = $formIntancia->getFormManu('alterar');
+        $objForm = $formIntancia->getFormManu('alterar', $cod);
 
         $parametrosSql = $con->execLinhaArray(parent::getDadosSql($cod));
 
-        $util->setParametrosForm($objForm, $parametrosSql);
+        $util->setParametrosForm($objForm, $parametrosSql, $cod);
         
         return $objForm;
     }

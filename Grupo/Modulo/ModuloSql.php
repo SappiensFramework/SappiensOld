@@ -10,8 +10,8 @@ class ModuloSql
         $fil = new \Pixel\Filtro\Filtrar($objForm);
         $util = new \Pixel\Crud\CrudUtil();
 
-        $sql = "SELECT ufCidadeCod, ufCidadeNome, ufCidadeNomeUfNome
-	              FROM v_uf_cidade
+        $sql = "SELECT ufCod, ufSigla, ufNome 
+	              FROM uf
 	             WHERE 1 ";
 
         $sql .= $util->getSqlFiltro($fil, $objForm, $colunas);

@@ -27,19 +27,17 @@ class ModuloForm
      * 
      * @return \Pixel\Form\Form
      */
-    public function getFormManu($acao)
+    public function getFormManu($acao, $cod = null)
     {
         $form = new \Pixel\Form\Form();
 
         $form->setAcao($acao);
 
-        $cod = $form->retornaValor('cod');
-
         $form->config('formManu' . $cod, 'POST')
                 ->setHeader('Estados');
 
         $campos[] = $form->hidden('cod')
-                ->setValor($cod);
+                ->setValor($form->retornaValor('cod'));
 
         $campos[] = $form->texto('ufSigla', 'Sigla da Unidade Federativa', true)
                 ->setMaximoCaracteres(2)
@@ -118,12 +116,22 @@ class ModuloForm
         $jsStatic->setFunctions(
                 $jQuery->ajax()
                         ->post()
-                        ->setData('$("#sisContainerGrid").serialize()')
+                        ->setData('$("#"+nomeForm).serialize()')
                         ->setUrl('?acao=alterar')
                         ->setDataType('json')
                         ->setDone(' alert(ret.retorno); ')
                         ->setFuncao('sisAlterar(nomeForm)')
-                        ->criar());        
+                        ->criar());
+        
+        $jsStatic->setFunctions(
+                $jQuery->ajax()
+                        ->post()
+                        ->setData('$("#formGrid").serialize()')
+                        ->setUrl('?acao=remover')
+                        ->setDataType('json')
+                        ->setDone(' sisRetornoRemover(ret) ')
+                        ->setFuncao('sisApagar()')
+                        ->criar());
         
         
         $jsStatic->sisCadastrar('sisCadastrar(nomeForm)');

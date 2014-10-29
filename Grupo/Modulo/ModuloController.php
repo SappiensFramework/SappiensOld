@@ -16,22 +16,17 @@ class ModuloController extends \Zion\Core\Controller
 
     protected function iniciar()
     {
-        $filtro = new \Pixel\Filtro\FiltroForm();
-
         $retorno = '';
 
         try {
 
             $template = new \Pixel\Template\Template();
-            $modal = new \Pixel\Template\Main\Modal();
 
             new \Zion\Acesso\Acesso('filtrar');
 
             $template->setConteudoScripts($this->moduloForm->getJSEstatico());
 
-            $filtros = $filtro->montaFiltro($this->moduloForm->getFormFiltro());
-
-            $botoes = (new \Pixel\Grid\GridBotoes())->geraBotoes('');
+            $botoes = (new \Pixel\Grid\GridBotoes())->geraBotoes();
 
             $grid = $this->moduloClass->filtrar($this->moduloForm->getFormFiltro());
 
@@ -39,6 +34,7 @@ class ModuloController extends \Zion\Core\Controller
             $template->setConteudoBotoes($botoes);
             $template->setConteudoGrid($grid);
         } catch (\Exception $ex) {
+            
             $retorno = $ex;
         }
 
@@ -63,7 +59,7 @@ class ModuloController extends \Zion\Core\Controller
         if (\filter_input(\INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
 
             $objForm->validar();
-            
+
             $this->moduloClass->cadastrar($objForm);
 
             $retorno = 'true';
@@ -73,41 +69,78 @@ class ModuloController extends \Zion\Core\Controller
             $retorno.= $objForm->javaScript()->getLoad(true);
         }
 
-        return \json_encode(['sucesso' => 'true', 'retorno' => $retorno]);
+        return \json_encode([
+            'sucesso' => 'true',
+            'retorno' => $retorno]);
     }
-    
+
     protected function alterar()
     {
         new \Zion\Acesso\Acesso('alterar');
 
         if (\filter_input(\INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
 
-            $objForm = $this->moduloForm->getFormManu('alterar');
-            
+            $objForm = $this->moduloForm->getFormManu('alterar', \filter_input(INPUT_POST, 'cod'));
+
             $objForm->validar();
-            
+
             $this->moduloClass->alterar($objForm);
 
             $retorno = 'true';
         } else {
 
-            $selecionados = \filter_input(INPUT_GET, 'sisReg',FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-            
-            if(!\is_array($selecionados)){
+            $selecionados = \filter_input(INPUT_GET, 'sisReg', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+
+            if (!\is_array($selecionados)) {
                 throw new \Exception("Nenhum registro selecionado!");
             }
-            
+
             $retorno = '';
-            foreach ($selecionados as $cod){
-            
+            foreach ($selecionados as $cod) {
+
                 $objForm = $this->moduloClass->setValoresFormManu($cod, $this->moduloForm);
-                $retorno .= $objForm->montaForm();                
+                $retorno .= $objForm->montaForm();
+                $retorno .= $objForm->javaScript()->getLoad(true);
+                $objForm->javaScript()->resetLoad();
             }
-            
-            $retorno .= $objForm->javaScript()->getLoad(true);
         }
 
-        return \json_encode(['sucesso' => 'true', 'retorno' => $retorno]);
+        return \json_encode([
+            'sucesso' => 'true',
+            'retorno' => $retorno]);
+    }
+
+    protected function remover()
+    {
+        new \Zion\Acesso\Acesso('remover');
+
+        $selecionados = \filter_input(INPUT_POST, 'sisReg', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        $rSelecionados = count($selecionados);
+        $rApagados = 0;
+        $mensagem = [];
+
+        try {
+
+            if (!\is_array($selecionados)) {
+                throw new \Exception("Nenhum registro selecionado!");
+            }
+
+            foreach ($selecionados as $cod) {
+
+                $this->moduloClass->remover($cod);
+
+                $rApagados++;
+            }
+        } catch (\Exception $ex) {
+
+            $mensagem[] = $ex->getMessage();
+        }
+
+        return \json_encode([
+            'sucesso' => 'true',
+            'selecionados' => $rSelecionados,
+            'apagados' => $rApagados,
+            'retorno' => \implode("\\n", $mensagem)]);
     }
 
 }
