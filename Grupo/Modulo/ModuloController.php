@@ -29,11 +29,11 @@ class ModuloController extends \Zion\Core\Controller
 
             $template->setConteudoScripts($this->moduloForm->getJSEstatico());
 
-            $filtros = $filtro->montaFiltro($this->moduloForm->getModuloFormFiltro());
+            $filtros = $filtro->montaFiltro($this->moduloForm->getFormFiltro());
 
             $botoes = (new \Pixel\Grid\GridBotoes())->geraBotoes('');
 
-            $grid = $this->moduloClass->filtrar($this->moduloForm->getModuloFormFiltro());
+            $grid = $this->moduloClass->filtrar($this->moduloForm->getFormFiltro());
 
             $template->setTooltipForm();
             $template->setConteudoBotoes($botoes);
@@ -51,14 +51,14 @@ class ModuloController extends \Zion\Core\Controller
     {
         new \Zion\Acesso\Acesso('filtrar');
 
-        return parent::jsonSucesso($this->moduloClass->filtrar($this->moduloForm->getModuloFormFiltro()));
+        return parent::jsonSucesso($this->moduloClass->filtrar($this->moduloForm->getFormFiltro()));
     }
 
     protected function cadastrar()
     {
         new \Zion\Acesso\Acesso('cadastrar');
 
-        $objForm = $this->moduloForm->getModuloForm('cadastrar');
+        $objForm = $this->moduloForm->getFormManu('cadastrar');
 
         if (\filter_input(\INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
 
@@ -71,6 +71,39 @@ class ModuloController extends \Zion\Core\Controller
 
             $retorno = $objForm->montaForm();
             $retorno.= $objForm->javaScript()->getLoad(true);
+        }
+
+        return \json_encode(['sucesso' => 'true', 'retorno' => $retorno]);
+    }
+    
+    protected function alterar()
+    {
+        new \Zion\Acesso\Acesso('alterar');
+
+        if (\filter_input(\INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
+
+            $objForm = $this->moduloForm->getFormManu('alterar');
+            
+            $objForm->validar();
+            
+            $this->moduloClass->alterar($objForm);
+
+            $retorno = 'true';
+        } else {
+
+            $selecionados = \filter_input(INPUT_GET, 'sisReg',FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            
+            if(!\is_array($selecionados)){
+                throw new \Exception("Nenhum registro selecionado!");
+            }
+            
+            $retorno = '';
+            foreach ($selecionados as $cod){
+            
+                $objForm = $this->moduloClass->getValoresFormManu($cod, "POST", $this->moduloForm);
+                $retorno .= $objForm->montaForm();
+                $retorno .= $objForm->javaScript()->getLoad(true);
+            }
         }
 
         return \json_encode(['sucesso' => 'true', 'retorno' => $retorno]);
