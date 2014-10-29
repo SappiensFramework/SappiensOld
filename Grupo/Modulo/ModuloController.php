@@ -23,6 +23,7 @@ class ModuloController extends \Zion\Core\Controller
         try {
 
             $template = new \Pixel\Template\Template();
+            $modal = new \Pixel\Template\Main\Modal();
 
             new \Zion\Acesso\Acesso('filtrar');
 
