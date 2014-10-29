@@ -20,13 +20,13 @@ class SelecionarClienteForm
                 ->setTarget('_blank')
                 ->setAction('recebe.php');
 */
-        $campos[] = $form->suggest('v_uf_cidade', 'Cidades2', false)
-                ->setTabela('v_uf_cidade')
-                ->setCampoCod('UfCidadeCod')
-                ->setCampoDesc('UfCidadeNomeUfNome')
+        $campos[] = $form->suggest('v_cliente', 'Clientes', false)
+                ->setTabela('v_cliente')
+                ->setCampoCod('clienteCod')
+                ->setCampoDesc('clienteNome')
                 ->setPlaceHolder('Pesquisar...')
                 //->setClassCss('navbar-form')
-                ->setHiddenValue('UfCidadeCod')
+                ->setHiddenValue('clienteCod')
                 ->setLayoutPixel(false);
                 //->setEmColunaDeTamanho(12);
 /*
