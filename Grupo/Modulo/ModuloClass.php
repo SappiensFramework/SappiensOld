@@ -119,24 +119,19 @@ class ModuloClass extends ModuloSql
         $con->stopTransaction();
     }
 
-    public function getValoresFormManu($cod, $metodo, $form)
+    public function setValoresFormManu($cod, $formIntancia)
     {
         $util = new \Pixel\Crud\CrudUtil();
 
         $con = \Zion\Banco\Conexao::conectar();
 
-        $objForm = $form->getFormManu('alterar');
+        $objForm = $formIntancia->getFormManu('alterar');
 
         $parametrosSql = $con->execLinhaArray(parent::getDadosSql($cod));
 
-        //Define Campos do Fomulário
-        $parametrosForm = $util->getParametrosForm($objForm);
-
-        //Extrai Parametros de Array Para Superglobal
-        $util->getParametrosMetodo($parametrosForm, $parametrosSql, $this->chavePrimaria, $metodo);
-
-        //Retorna Campos
-        return $form->getFormManu('alterar');
+        $util->setParametrosForm($objForm, $parametrosSql);
+        
+        return $objForm;
     }
 
 }

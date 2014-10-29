@@ -99,10 +99,11 @@ class ModuloController extends \Zion\Core\Controller
             $retorno = '';
             foreach ($selecionados as $cod){
             
-                $objForm = $this->moduloClass->getValoresFormManu($cod, "POST", $this->moduloForm);
-                $retorno .= $objForm->montaForm();
-                $retorno .= $objForm->javaScript()->getLoad(true);
+                $objForm = $this->moduloClass->setValoresFormManu($cod, $this->moduloForm);
+                $retorno .= $objForm->montaForm();                
             }
+            
+            $retorno .= $objForm->javaScript()->getLoad(true);
         }
 
         return \json_encode(['sucesso' => 'true', 'retorno' => $retorno]);
