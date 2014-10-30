@@ -97,7 +97,7 @@ class ModuloForm
                         ->setData('$("#"+nomeForm).serialize()')
                         ->setUrl('?acao=cadastrar')
                         ->setDataType('json')
-                        ->setDone(' alert(ret.retorno); ')
+                        ->setDone(' setAlert(ret.sucesso, ret.retorno); ')
                         ->setFuncao('sisCadastrar(nomeForm)')
                         ->criar());
         
@@ -109,7 +109,7 @@ class ModuloForm
                         ->setDataType('json')
                         ->setData('$("#formGrid").serialize()')
                         ->setDone(' $("#sisContainerManu").html(ret.retorno); ')
-                        ->setFuncao('sisAlterarLayout()')
+                        ->setFuncao(' sisAlterarLayout()')
                         ->criar());
 
         //Efetivar a alteração no banco de dados
@@ -119,7 +119,7 @@ class ModuloForm
                         ->setData('$("#"+nomeForm).serialize()')
                         ->setUrl('?acao=alterar')
                         ->setDataType('json')
-                        ->setDone(' alert(ret.retorno); ')
+                        ->setDone(' setAlert(ret.sucesso, ret.retorno); ')
                         ->setFuncao('sisAlterar(nomeForm)')
                         ->criar());
         
