@@ -97,7 +97,7 @@ class ModuloForm
                         ->setData('$("#"+nomeForm).serialize()')
                         ->setUrl('?acao=cadastrar')
                         ->setDataType('json')
-                        ->setDone(' setAlert(ret.sucesso, ret.retorno); ')
+                        ->setDone(' sisSetAlert(ret.sucesso); ')
                         ->setFuncao('sisCadastrar(nomeForm)')
                         ->criar());
 
@@ -119,7 +119,7 @@ class ModuloForm
                         ->setData('$("#"+nomeForm).serialize()')
                         ->setUrl('?acao=alterar')
                         ->setDataType('json')
-                        ->setDone(' setAlert(ret.sucesso, ret.retorno); ')
+                        ->setDone(' sisSetAlert(ret.sucesso); ')
                         ->setFuncao('sisAlterar(nomeForm)')
                         ->criar());
 
