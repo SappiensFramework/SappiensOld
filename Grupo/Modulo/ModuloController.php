@@ -26,7 +26,11 @@ class ModuloController extends \Zion\Core\Controller
 
             $template->setConteudoScripts($this->moduloForm->getJSEstatico());
 
-            $botoes = (new \Pixel\Grid\GridBotoes())->geraBotoes();
+            $getBotoes = new \Pixel\Grid\GridBotoes();
+
+            $filtros = "<input id='Filtro' class='input' >";            
+            $getBotoes->setFiltros($filtros);
+            $botoes = $getBotoes->geraBotoes();
 
             $grid = $this->moduloClass->filtrar($this->moduloForm->getFormFiltro());
 
