@@ -11,7 +11,7 @@ try {
         array('tabId' => 1,
               'tabActive' => 'active',
               'tabTitle' => 'Titulo da tab 1', 
-              'tabContent' => '<button class="btn btn-success" data-toggle="modal" data-target="#modal-msg">Success</button>'
+              'tabContent' => '<button class="btn btn-success" data-toggle="modal" data-target="#modalmsg">Success</button>'
               ),
         array('tabId' => 2,
               'tabActive' => '',

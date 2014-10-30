@@ -14,6 +14,33 @@ class ModuloController extends \Zion\Core\Controller
         $this->moduloForm = new \Sappiens\Grupo\Modulo\ModuloForm();
     }
 
+    private function getFiltros()
+    {
+
+        $form = new \Pixel\Form\Form();
+
+        $acao = 'alterar';
+        $cod = 1;
+
+        $form->setAcao($acao);
+
+        $form->config('formManu' . $cod, 'POST')
+                ->setHeader('Estados');
+
+        $campos[] = $form->texto('ufNome', 'Nome da Unidade Federativa', false)
+                ->setMaximoCaracteres(100)
+                ->setValor($form->retornaValor('ufNome'));
+
+        $campos[] = $form->botaoSubmit('enviar', 'Salvar')
+                ->setClassCss('btn btn-primary');
+
+        $campos[] = $form->botaoReset('limpar', 'Limpar')
+                ->setClassCss('btn btn-default');
+
+        return $form->processarForm($campos);        
+
+    }
+
     protected function iniciar()
     {
         $retorno = '';
@@ -28,7 +55,8 @@ class ModuloController extends \Zion\Core\Controller
 
             $getBotoes = new \Pixel\Grid\GridBotoes();
 
-            $filtros = "<input id='Filtro' class='input' >";            
+            //$filtros = $this->getFiltros();     
+            $filtros = '';       
             $getBotoes->setFiltros($filtros);
             $botoes = $getBotoes->geraBotoes();
 
