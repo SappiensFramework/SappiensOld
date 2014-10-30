@@ -67,39 +67,7 @@ class ModuloForm
     {
         $jsStatic = \Pixel\Form\FormJavaScript::iniciar();
 
-        $jQuery = new \Zion\JQuery\JQuery();
-
-        //Filtrar
-        $jsStatic->setFunctions(
-                $jQuery->ajax()
-                        ->get()
-                        ->setUrl('?acao=filtrar')
-                        ->setDataType('json')
-                        ->setData('p')
-                        ->setDone(' $("#sisContainerGrid").html(ret.retorno); ')
-                        ->setFuncao('sisFiltrar(p)')
-                        ->criar());
-
-        //Layout do Cadastro
-        $jsStatic->setFunctions(
-                $jQuery->ajax()
-                        ->get()
-                        ->setUrl('?acao=cadastrar')
-                        ->setDataType('json')
-                        ->setDone(' $("#sisContainerManu").html(ret.retorno); ')
-                        ->setFuncao('sisCadastrarLayout()')
-                        ->criar());
-
-        //Efetivar o cadastro no banco de dados
-        $jsStatic->setFunctions(
-                $jQuery->ajax()
-                        ->post()
-                        ->setData('$("#"+nomeForm).serialize()')
-                        ->setUrl('?acao=cadastrar')
-                        ->setDataType('json')
-                        ->setDone(' alert(ret.retorno); ')
-                        ->setFuncao('sisCadastrar(nomeForm)')
-                        ->criar());
+        $jQuery = new \Zion\JQuery\JQuery();        
 
         //Layout da Alteração
         $jsStatic->setFunctions(
@@ -146,8 +114,8 @@ class ModuloForm
                         ->criar());
 
 
-        $jsStatic->sisCadastrar('sisCadastrar(nomeForm)');
-        $jsStatic->sisAlterar('sisAlterar(nomeForm)');
+        //$jsStatic->sisCadastrar('sisCadastrar(nomeForm)');
+        //$jsStatic->sisAlterar('sisAlterar(nomeForm)');
 
         return $jsStatic->getFunctions();
     }
