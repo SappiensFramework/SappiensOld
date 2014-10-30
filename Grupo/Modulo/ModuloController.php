@@ -142,5 +142,28 @@ class ModuloController extends \Zion\Core\Controller
             'apagados' => $rApagados,
             'retorno' => \implode("\\n", $mensagem)]);
     }
+    
+    protected function visualizar()
+    {
+        new \Zion\Acesso\Acesso('visualizar');
+        
+        $selecionados = \filter_input(INPUT_GET, 'sisReg', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+
+        if (!\is_array($selecionados)) {
+            throw new \Exception("Nenhum registro selecionado!");
+        }
+
+        $retorno = '';
+        foreach ($selecionados as $cod) {
+
+            $objForm = $this->moduloClass->setValoresFormManu($cod, $this->moduloForm);
+            $retorno .= $objForm->montaFormVisualizar();
+        }
+
+        return \json_encode([
+            'sucesso' => 'true',
+            'retorno' => $retorno]);
+    }
+
 
 }

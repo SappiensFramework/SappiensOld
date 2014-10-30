@@ -12,7 +12,7 @@ class ModuloForm
         $form->config('formFiltro', 'GET');
 
         $campos[] = $form->suggest('uf', 'Unidade Federativa')
-                ->setTabela('uf')
+                ->setTabela('uf')                
                 ->setCampoBusca('ufNome')
                 ->setCampoDesc('ufNome')
                 ->setEmColunaDeTamanho(10);
@@ -89,7 +89,7 @@ class ModuloForm
                         ->setDone(' $("#sisContainerManu").html(ret.retorno); ')
                         ->setFuncao('sisCadastrarLayout()')
                         ->criar());
-        
+
         //Efetivar o cadastro no banco de dados
         $jsStatic->setFunctions(
                 $jQuery->ajax()
@@ -100,7 +100,7 @@ class ModuloForm
                         ->setDone(' alert(ret.retorno); ')
                         ->setFuncao('sisCadastrar(nomeForm)')
                         ->criar());
-        
+
         //Layout da Alteração
         $jsStatic->setFunctions(
                 $jQuery->ajax()
@@ -122,7 +122,8 @@ class ModuloForm
                         ->setDone(' alert(ret.retorno); ')
                         ->setFuncao('sisAlterar(nomeForm)')
                         ->criar());
-        
+
+        //Efetivar remoção do banco
         $jsStatic->setFunctions(
                 $jQuery->ajax()
                         ->post()
@@ -132,8 +133,19 @@ class ModuloForm
                         ->setDone(' sisRetornoRemover(ret) ')
                         ->setFuncao('sisApagar()')
                         ->criar());
-        
-        
+
+        //Visualizar registros
+        $jsStatic->setFunctions(
+                $jQuery->ajax()
+                        ->get()
+                        ->setUrl('?acao=visualizar')
+                        ->setDataType('json')
+                        ->setData('$("#formGrid").serialize()')
+                        ->setDone(' $("#sisContainerManu").html(ret.retorno); ')
+                        ->setFuncao('sisVisualizar()')
+                        ->criar());
+
+
         $jsStatic->sisCadastrar('sisCadastrar(nomeForm)');
         $jsStatic->sisAlterar('sisAlterar(nomeForm)');
 
