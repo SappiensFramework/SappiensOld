@@ -57,7 +57,7 @@ class ModuloClass extends ModuloSql
         $crud = new \Pixel\Crud\CrudUtil();
         
         $campos = [
-            'ufSiglad',
+            'ufSigla',
             'ufNome',
             'ufIbgeCod'
         ];
