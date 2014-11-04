@@ -54,12 +54,10 @@ class ModuloForm
                 ->setMaximoCaracteres(10)
                 ->setValor($form->retornaValor('ufIbgeCod'));
 
-        $campos[] = $form->botaoSubmit('enviar', 'Salvar')
-                ->setClassCss('btn btn-primary');
+        $campos[] = $form->botaoSalvarPadrao();
 
-        $campos[] = $form->botaoReset('limpar', 'Limpar')
-                ->setClassCss('btn btn-default');
-
+        $campos[] = $form->botaoDescartarPadrao('formManu' . $cod);              
+        
         return $form->processarForm($campos);
     }
 
@@ -67,87 +65,7 @@ class ModuloForm
     {
         $jsStatic = \Pixel\Form\FormJavaScript::iniciar();
 
-        $jQuery = new \Zion\JQuery\JQuery();
-
-        //Filtrar
-        $jsStatic->setFunctions(
-                $jQuery->ajax()
-                        ->get()
-                        ->setUrl('?acao=filtrar')
-                        ->setDataType('json')
-                        ->setData('p')
-                        ->setDone(' $("#sisContainerGrid").html(ret.retorno); ')
-                        ->setFuncao('sisFiltrar(p)')
-                        ->criar());
-
-        //Layout do Cadastro
-        $jsStatic->setFunctions(
-                $jQuery->ajax()
-                        ->get()
-                        ->setUrl('?acao=cadastrar')
-                        ->setDataType('json')
-                        ->setDone(' $("#sisContainerManu").html(ret.retorno); ')
-                        ->setFuncao('sisCadastrarLayout()')
-                        ->criar());
-
-        //Efetivar o cadastro no banco de dados
-        $jsStatic->setFunctions(
-                $jQuery->ajax()
-                        ->post()
-                        ->setData('$("#"+nomeForm).serialize()')
-                        ->setUrl('?acao=cadastrar')
-                        ->setDataType('json')
-                        ->setDone(' setAlert(ret.sucesso, ret.retorno); ')
-                        ->setFuncao('sisCadastrar(nomeForm)')
-                        ->criar());
-
-        //Layout da Alteração
-        $jsStatic->setFunctions(
-                $jQuery->ajax()
-                        ->get()
-                        ->setUrl('?acao=alterar')
-                        ->setDataType('json')
-                        ->setData('$("#formGrid").serialize()')
-                        ->setDone(' $("#sisContainerManu").html(ret.retorno); ')
-                        ->setFuncao(' sisAlterarLayout()')
-                        ->criar());
-
-        //Efetivar a alteração no banco de dados
-        $jsStatic->setFunctions(
-                $jQuery->ajax()
-                        ->post()
-                        ->setData('$("#"+nomeForm).serialize()')
-                        ->setUrl('?acao=alterar')
-                        ->setDataType('json')
-                        ->setDone(' setAlert(ret.sucesso, ret.retorno); ')
-                        ->setFuncao('sisAlterar(nomeForm)')
-                        ->criar());
-
-        //Efetivar remoção do banco
-        $jsStatic->setFunctions(
-                $jQuery->ajax()
-                        ->post()
-                        ->setData('$("#formGrid").serialize()')
-                        ->setUrl('?acao=remover')
-                        ->setDataType('json')
-                        ->setDone(' sisRetornoRemover(ret) ')
-                        ->setFuncao('sisApagar()')
-                        ->criar());
-
-        //Visualizar registros
-        $jsStatic->setFunctions(
-                $jQuery->ajax()
-                        ->get()
-                        ->setUrl('?acao=visualizar')
-                        ->setDataType('json')
-                        ->setData('$("#formGrid").serialize()')
-                        ->setDone(' $("#sisContainerManu").html(ret.retorno); ')
-                        ->setFuncao('sisVisualizar()')
-                        ->criar());
-
-
-        $jsStatic->sisCadastrar('sisCadastrar(nomeForm)');
-        $jsStatic->sisAlterar('sisAlterar(nomeForm)');
+        //$jQuery = new \Zion\JQuery\JQuery();                
 
         return $jsStatic->getFunctions();
     }
