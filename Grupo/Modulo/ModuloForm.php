@@ -53,6 +53,48 @@ class ModuloForm
                 ->setValor($form->retornaValor('ufNome'))
                 ->setMaximoCaracteres(10)
                 ->setValor($form->retornaValor('ufIbgeCod'));
+        
+        $campos[] = $form->editor('ufDescricao', 'Descrição',true)
+                ->setValor($form->retornaValor('ufDescricao'))
+                ->setMaximoCaracteres(50);        
+        
+        $campos[] = $form->escolha('ufEscolhaSelect','Select em Pixel',true)
+                ->setValor($form->retornaValor('ufEscolhaSelect'))
+                ->setTabela('uf')
+                ->setCampoCod('ufCod')
+                ->setCampoDesc('ufNome');
+        
+        $campos[] = $form->escolha('ufEscolhaVarios[]','Escolha vários',true)
+                ->setValor($form->retornaValor('ufEscolhaVarios[]'))
+                ->setSelecaoMinima(2)
+                ->setSelecaoMaxima(3)
+                ->setValorPadrao(['A','E'])
+                ->setInLine(false)
+                ->setMultiplo(true)
+                ->setExpandido(true)
+                ->setArray([
+                    'A'=>'Letra A',
+                    'B'=>'Letra B',
+                    'C'=>'Letra C',
+                    'D'=>'Letra D',
+                    'E'=>'Letra E']);
+        
+        $campos[] = $form->escolha('ufEscolhaDois','Escolha Dois',true)
+                ->setValor($form->retornaValor('ufEscolhaDois'))
+                ->setValorPadrao('V')
+                ->setMultiplo(false)
+                ->setExpandido(true)
+                ->setArray(array(
+                    'M'=>'Macho',
+                    'F'=>'Femea',
+                    'C'=>'Cavalo',
+                    'V'=>'Vaca'));
+        
+        $campos[] = $form->escolha('ufMarqueUm','Escolha Um',false)
+                ->setValor($form->retornaValor('ufMarqueUm'))
+                ->setMultiplo(true)
+                ->setExpandido(true)
+                ->setArray(array('S'=>'Aceito os termos'));
 
         $campos[] = $form->botaoSalvarPadrao();
 

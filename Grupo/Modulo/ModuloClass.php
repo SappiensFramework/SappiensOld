@@ -36,7 +36,8 @@ class ModuloClass extends ModuloSql
         $colunas = [
             'ufCod' => 'Cód',
             'ufSigla' => 'Sigla',
-            'ufNome' => 'Nome'];
+            'ufNome' => 'Nome',
+            'ufDescricao' => 'Descrição'];
 
         $grid->setColunas($colunas);
 
@@ -59,7 +60,12 @@ class ModuloClass extends ModuloSql
         $campos = [
             'ufSigla',
             'ufNome',
-            'ufIbgeCod'
+            'ufIbgeCod',
+            'ufDescricao',
+            'ufEscolhaSelect', 
+            'ufEscolhaVarios[]', 
+            'ufEscolhaDois', 
+            'ufMarqueUm'
         ];
         
         return $crud->insert('uf', $campos, $objForm);
@@ -72,7 +78,12 @@ class ModuloClass extends ModuloSql
         $campos = [
             'ufSigla',
             'ufNome',
-            'ufIbgeCod'
+            'ufIbgeCod',
+            'ufDescricao', 
+            'ufEscolhaSelect', 
+            'ufEscolhaVarios[]', 
+            'ufEscolhaDois', 
+            'ufMarqueUm'
         ];
         
         return $crud->update('uf', $campos, $objForm, $this->chavePrimaria);
@@ -95,6 +106,11 @@ class ModuloClass extends ModuloSql
 
         $parametrosSql = $con->execLinhaArray(parent::getDadosSql($cod));
 
+        $objetos = $objForm->getObjetos();
+        
+        //Intervenção para o campo escolha
+        $objetos['ufEscolhaVarios[]']->setValor(explode(',', $parametrosSql['ufEscolhaVarios']));
+        
         $util->setParametrosForm($objForm, $parametrosSql, $cod);
         
         return $objForm;

@@ -10,7 +10,7 @@ class ModuloSql
         $fil = new \Pixel\Filtro\Filtrar($objForm);
         $util = new \Pixel\Crud\CrudUtil();
 
-        $sql = "SELECT ufCod, ufSigla, ufNome 
+        $sql = "SELECT ufCod, ufSigla, ufNome, ufDescricao  
 	              FROM uf
 	             WHERE 1 ";
 
@@ -21,7 +21,9 @@ class ModuloSql
 
     public function getDadosSql($cod)
     {
-        return "SELECT ufCod, ufSigla, ufNome, ufIbgeCod 
+        return "SELECT ufCod, ufSigla, ufNome, ufIbgeCod, ufDescricao, 
+                       ufEscolhaSelect, ufEscolhaVarios, ufEscolhaDois, 
+                       ufMarqueUm
                 FROM  uf
                 WHERE  ufCod = $cod";
     }
