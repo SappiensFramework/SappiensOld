@@ -63,7 +63,8 @@ class Config
         define('SIS_DIR_BASE', str_replace('\\', '/', dirname(__FILE__)) . '/');
         define('SIS_URL_BASE', '//' . $_SERVER['SERVER_NAME'] . substr($_SERVER['PHP_SELF'], 0, - (strlen($_SERVER['SCRIPT_FILENAME']) - strlen(SIS_DIR_BASE))));
 
-        define('SIS_URL_BASE_STATIC','//static.sappiens.com.br/');
+        //define('SIS_URL_BASE_STATIC','//static.sappiens.com.br/');
+        define('SIS_URL_BASE_STATIC','//192.168.25.51/~onyxprev/static/sappiens/');
         define('SIS_URL_BASE_DEFAULT','http://localhost'); // -> em ambiente online mudar para //app.sappiens.com.br
 
         define('SIS_FM_BASE', 'C:/xampp/htdocs/Zion/');
