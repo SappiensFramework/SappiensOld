@@ -72,6 +72,7 @@ class ModuloForm
                 ->setInLine(false)
                 ->setMultiplo(true)
                 ->setExpandido(true)
+                ->setComplemento(['C'=>'onclick="alert(1)"'])
                 ->setArray([
                     'A'=>'Letra A',
                     'B'=>'Letra B',
