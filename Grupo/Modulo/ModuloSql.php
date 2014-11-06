@@ -21,7 +21,8 @@ class ModuloSql
 
     public function getDadosSql($cod)
     {
-        return "SELECT ufCod, ufSigla, ufNome, ufIbgeCod, ufDescricao, 
+        return "SELECT ufCod, ufSigla, ufNome, ufIbgeCod, ufTextArea, ufDescricao, 
+                       ufChosenSimples, ufChosenmultiplo, 
                        ufEscolhaSelect, ufEscolhaVarios, ufEscolhaDois, 
                        ufMarqueUm
                 FROM  uf

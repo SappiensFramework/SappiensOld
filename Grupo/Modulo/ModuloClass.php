@@ -61,8 +61,11 @@ class ModuloClass extends ModuloSql
             'ufSigla',
             'ufNome',
             'ufIbgeCod',
+            'ufTextArea',
             'ufDescricao',
             'ufEscolhaSelect', 
+            'ufChosenSimples',
+            'ufChosenmultiplo[]',
             'ufEscolhaVarios[]', 
             'ufEscolhaDois', 
             'ufMarqueUm'
@@ -79,8 +82,11 @@ class ModuloClass extends ModuloSql
             'ufSigla',
             'ufNome',
             'ufIbgeCod',
+            'ufTextArea',
             'ufDescricao', 
             'ufEscolhaSelect', 
+            'ufChosenSimples',
+            'ufChosenmultiplo[]',
             'ufEscolhaVarios[]', 
             'ufEscolhaDois', 
             'ufMarqueUm'
@@ -110,6 +116,9 @@ class ModuloClass extends ModuloSql
         
         //Intervenção para o campo escolha
         $objetos['ufEscolhaVarios[]']->setValor(explode(',', $parametrosSql['ufEscolhaVarios']));
+        
+        //Intervenção para o campo chosen
+        $objetos['ufChosenmultiplo[]']->setValor(explode(',', $parametrosSql['ufChosenmultiplo']));
         
         $util->setParametrosForm($objForm, $parametrosSql, $cod);
         
