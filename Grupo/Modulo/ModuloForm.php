@@ -83,6 +83,7 @@ class ModuloForm
                 ->setMultiplo(true)
                 ->setSelecaoMinima(2)
                 ->setSelecaoMaxima(3)
+                ->setValorPadrao([50,51,52])
                 ->setTabela('uf')
                 ->setCampoCod('ufCod')
                 ->setCampoDesc('ufNome');
