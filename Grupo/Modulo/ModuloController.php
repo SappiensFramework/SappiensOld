@@ -566,4 +566,64 @@ class ModuloController extends \Zion\Core\Controller
     }    
 */
 
+    protected function imprimirPDF()
+    {
+
+        $exportacao = new \Zion\Exportacao\Exportacao();
+
+        $colunas = [
+            'ufCod' => 'Cód',
+            'ufSigla' => 'Sigla',
+            'ufNome' => 'Nome'];
+
+        $exportacao->setDadosRelatorio('Grupo', 'Modulo', $colunas, $this->moduloForm->getFormFiltro());
+
+        if($exportacao->getRelatorio('PDF') === false){
+            return \json_encode([
+                'sucesso' => 'false',
+                'retorno' => "Falha ao gerar PDF!"]);
+        }
+
+    }
+
+    protected function downloadCSV()
+    {
+
+        $exportacao = new \Zion\Exportacao\Exportacao();
+
+        $colunas = [
+            'ufCod' => 'Cód',
+            'ufSigla' => 'Sigla',
+            'ufNome' => 'Nome'];
+
+        $exportacao->setDadosRelatorio('Grupo', 'Modulo', $colunas, $this->moduloForm->getFormFiltro());
+
+        if($exportacao->getRelatorio('CSV') === false){
+            return \json_encode([
+                'sucesso' => 'false',
+                'retorno' => "Falha ao gerar CSV!"]);
+        }
+
+    }
+    
+    protected function downloadXLS()
+    {
+
+        $exportacao = new \Zion\Exportacao\Exportacao();
+
+        $colunas = [
+            'ufCod' => 'Cód',
+            'ufSigla' => 'Sigla',
+            'ufNome' => 'Nome'];
+
+        $exportacao->setDadosRelatorio('Grupo', 'Modulo', $colunas, $this->moduloForm->getFormFiltro());
+
+        if($exportacao->getRelatorio('XLS') === false){
+            return \json_encode([
+                'sucesso' => 'false',
+                'retorno' => "Falha ao gerar XLS!"]);
+        }
+
+    }
+
 }
