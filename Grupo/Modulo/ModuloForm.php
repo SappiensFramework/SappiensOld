@@ -9,16 +9,17 @@ class ModuloForm
     {
         $form = new \Pixel\Form\Form();
 
-        $form->config('formFiltro', 'GET');
-
-        $campos[] = $form->suggest('uf', 'Unidade Federativa')
+        $campos[] = $form->suggest('ufNome', 'Unidade Federativa')
                 ->setTabela('uf')
                 ->setCampoBusca('ufNome')
-                ->setCampoDesc('ufNome')
-                ->setEmColunaDeTamanho(10);
-
-        $campos[] = $form->botaoSubmit('enviar', 'Enviar')
-                ->setClassCss('btn btn-primary');
+                ->setCampoDesc('ufNome'); 
+        
+        $campos[] = $form->escolha('usSigla', 'Sigla do Estado')
+                ->setTabela('uf')
+                ->setCampoCod('ufSigla')
+                ->setCampoDesc('ufSigla');
+        
+        $campos[] = $form->numero('ufIbgeCod', 'Código do IBGE');
 
         return $form->processarForm($campos);
     }
