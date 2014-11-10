@@ -4,99 +4,100 @@ namespace Sappiens\Grupo\Modulo;
 
 class ModuloClass extends ModuloSql
 {
+
     private $chavePrimaria;
-    
+    private $crudUtil;
+
     public function __construct()
     {
         $this->chavePrimaria = 'ufCod';
-    }
-
-    public function getParametrosGrid($objForm)
-    {
-        $fil = new \Pixel\Filtro\Filtrar();
-        $crud = new \Pixel\Crud\CrudUtil();
-
-        $padrao = ["pa", "qo", "to"];
-
-        $meusParametros = $crud->getParametrosForm($objForm);
-
-        $hiddenParametros = $fil->getHiddenParametros($meusParametros);
-
-        return array_merge($padrao, $meusParametros, $hiddenParametros);
+        $this->crudUtil = new \Pixel\Crud\CrudUtil();
     }
 
     public function filtrar($objForm)
     {
         $grid = new \Pixel\Grid\GridPadrao();
 
-        //Setando Parametros
-        \Zion\Paginacao\Parametros::setParametros("GET", $this->getParametrosGrid($objForm));
+        \Zion\Paginacao\Parametros::setParametros("GET", $this->crudUtil->getParametrosGrid($objForm));
 
-        //Grid de Visualização - Configurações
+        //Grid - Configurações
         $colunas = [
             'ufCod' => 'Cód',
             'ufSigla' => 'Sigla',
-            'ufNome' => 'Nome'];
+            'ufNome' => 'Nome',
+            'ufDescricao' => 'Descrição'];
 
         $grid->setColunas($colunas);
 
         //Configurações Fixas da Grid
-        $grid->setSql(parent::filtrarSql($objForm,$colunas));
+        $grid->setSql(parent::filtrarSql($objForm, $colunas));
         $grid->setChave($this->chavePrimaria);
-        $grid->setSelecaoMultipla(true);
-        $grid->setAlinhamento(array('ufCidadeNomeUfNome' => 'DIREITA'));
-        $grid->setTipoOrdenacao(filter_input(INPUT_GET, 'to'));
-        $grid->setQuemOrdena(filter_input(INPUT_GET, 'qo'));
-        $grid->setPaginaAtual(filter_input(INPUT_GET, 'pa'));
+        $grid->setAlinhamento(['ufCidadeNomeUfNome' => 'DIREITA']);
 
         return $grid->montaGridPadrao();
     }
 
     public function cadastrar($objForm)
     {
-        $crud = new \Pixel\Crud\CrudUtil();
-        
         $campos = [
             'ufSigla',
             'ufNome',
-            'ufIbgeCod'
+            'ufIbgeCod',
+            'ufTextArea',
+            'ufDescricao',
+            'ufEscolhaSelect',
+            'ufChosenSimples',
+            'ufChosenmultiplo[]',
+            'ufEscolhaVarios[]',
+            'ufEscolhaDois',
+            'ufMarqueUm'
         ];
-        
-        return $crud->insert('uf', $campos, $objForm);
+
+        return $this->crudUtil->insert('uf', $campos, $objForm);
     }
-    
+
     public function alterar($objForm)
     {
-        $crud = new \Pixel\Crud\CrudUtil();
-        
         $campos = [
             'ufSigla',
             'ufNome',
-            'ufIbgeCod'
+            'ufIbgeCod',
+            'ufTextArea',
+            'ufDescricao',
+            'ufEscolhaSelect',
+            'ufChosenSimples',
+            'ufChosenmultiplo[]',
+            'ufEscolhaVarios[]',
+            'ufEscolhaDois',
+            'ufMarqueUm'
         ];
-        
-        return $crud->update('uf', $campos, $objForm, $this->chavePrimaria);
+
+        return $this->crudUtil->update('uf', $campos, $objForm, $this->chavePrimaria);
     }
-    
+
     public function remover($cod)
     {
-        $crud = new \Pixel\Crud\CrudUtil();
-        
-        return $crud->delete('uf', $cod, $this->chavePrimaria);
+        return $this->crudUtil->delete('uf', $cod, $this->chavePrimaria);
     }
 
     public function setValoresFormManu($cod, $formIntancia)
     {
-        $util = new \Pixel\Crud\CrudUtil();
-
         $con = \Zion\Banco\Conexao::conectar();
 
         $objForm = $formIntancia->getFormManu('alterar', $cod);
 
         $parametrosSql = $con->execLinhaArray(parent::getDadosSql($cod));
 
-        $util->setParametrosForm($objForm, $parametrosSql, $cod);
-        
+        $objetos = $objForm->getObjetos();
+
+        //Intervenção para o campo escolha
+        $objetos['ufEscolhaVarios[]']->setValor(explode(',', $parametrosSql['ufEscolhaVarios']));
+
+        //Intervenção para o campo chosen
+        $objetos['ufChosenmultiplo[]']->setValor(explode(',', $parametrosSql['ufChosenmultiplo']));
+
+        $this->crudUtil->setParametrosForm($objForm, $parametrosSql, $cod);
+
         return $objForm;
     }
 

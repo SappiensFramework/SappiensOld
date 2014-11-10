@@ -12,7 +12,7 @@ class ModuloForm
         $form->config('formFiltro', 'GET');
 
         $campos[] = $form->suggest('uf', 'Unidade Federativa')
-                ->setTabela('uf')                
+                ->setTabela('uf')
                 ->setCampoBusca('ufNome')
                 ->setCampoDesc('ufNome')
                 ->setEmColunaDeTamanho(10);
@@ -54,10 +54,78 @@ class ModuloForm
                 ->setMaximoCaracteres(10)
                 ->setValor($form->retornaValor('ufIbgeCod'));
 
+        $campos[] = $form->textArea('ufTextArea', 'Descrição com TextArea', true)
+                ->setValor($form->retornaValor('ufTextArea'));
+        
+        $campos[] = $form->textArea('ufDescricao', 'Descrição com XX', true)
+                ->setValor($form->retornaValor('ufDescricao'));
+        
+//        $campos[] = $form->editor('ufDescricao', 'Descrição com Editor', true)
+//                ->setValor($form->retornaValor('ufDescricao'))
+//                ->setMaximoCaracteres(50);
+
+        $campos[] = $form->escolha('ufEscolhaSelect', 'Select em Pixel', true)
+                ->setValor($form->retornaValor('ufEscolhaSelect'))
+                ->setTabela('uf')
+                ->setCampoCod('ufCod')
+                ->setCampoDesc('ufNome');
+        
+        $campos[] = $form->chosen('ufChosenSimples', 'Chosen Simples com Banco', true)
+                ->setValor($form->retornaValor('ufChosenSimples'))
+                ->setInicio('Selecione esse chosen amiguinho')
+                ->setTabela('uf')
+                ->setCampoCod('ufCod')
+                ->setCampoDesc('ufNome');
+        
+        $campos[] = $form->chosen('ufChosenmultiplo[]', 'Chosen Multiplo com Banco', true)
+                ->setValor($form->retornaValor('ufChosenmultiplo[]'))
+                ->setInicio('Selecione esse chosen amiguinho')
+                ->setMultiplo(true)
+                ->setSelecaoMinima(2)
+                ->setSelecaoMaxima(3)
+                ->setValorPadrao([50,51,52])
+                ->setTabela('uf')
+                ->setCampoCod('ufCod')
+                ->setCampoDesc('ufNome');
+        
+
+        $campos[] = $form->escolha('ufEscolhaVarios[]', 'Escolha vários', true)
+                ->setValor($form->retornaValor('ufEscolhaVarios[]'))
+                ->setSelecaoMinima(2)
+                ->setSelecaoMaxima(3)
+                ->setValorPadrao(['A', 'E'])
+                ->setInLine(false)
+                ->setMultiplo(true)
+                ->setExpandido(true)
+                ->setComplemento(['C' => 'onclick="alert(1)"'])
+                ->setArray([
+            'A' => 'Letra A',
+            'B' => 'Letra B',
+            'C' => 'Letra C',
+            'D' => 'Letra D',
+            'E' => 'Letra E']);
+
+        $campos[] = $form->escolha('ufEscolhaDois', 'Escolha Dois', true)
+                ->setValor($form->retornaValor('ufEscolhaDois'))
+                ->setValorPadrao('V')
+                ->setMultiplo(false)
+                ->setExpandido(true)
+                ->setArray(array(
+            'M' => 'Macho',
+            'F' => 'Femea',
+            'C' => 'Cavalo',
+            'V' => 'Vaca'));
+
+        $campos[] = $form->escolha('ufMarqueUm', 'Escolha Um', false)
+                ->setValor($form->retornaValor('ufMarqueUm'))
+                ->setMultiplo(true)
+                ->setExpandido(true)
+                ->setArray(array('S' => 'Aceito os termos'));
+
         $campos[] = $form->botaoSalvarPadrao();
 
-        $campos[] = $form->botaoDescartarPadrao('formManu' . $cod);              
-        
+        $campos[] = $form->botaoDescartarPadrao('formManu' . $cod);
+
         return $form->processarForm($campos);
     }
 

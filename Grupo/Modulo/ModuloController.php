@@ -18,15 +18,9 @@ class ModuloController extends \Zion\Core\Controller
     {
 
         $this->html = new \Zion\Layout\Html();
-        $template = new \Pixel\Template\Template();
-        //$form = new \Pixel\Form\Form();
 
-        //$form->config('formFiltro', 'GET');
-
-        $buffer  = '';
         $buffer  = $this->html->abreTagAberta('form', array('class' => 'form-horizontal'));
         $buffer .= $this->html->abreTagAberta('div', array('class' => 'form-group'));
-        //$buffer .= $this->html->abreTagAberta('label', array('for' => 'inputFoda', 'class' => 'col-sm-2 control-label')) . 'Termo' . $this->html->fechaTag('label');
         $buffer .= $this->html->abreTagAberta('div', array('class' => 'col-sm-6'));
         $buffer .= $this->html->abreTagAberta('div', array('class' => 'input-group'));
         $buffer .= $this->html->abreTagAberta('div', array('class' => 'input-group-btn'));
@@ -133,12 +127,7 @@ class ModuloController extends \Zion\Core\Controller
     {
 
         $this->html = new \Zion\Layout\Html();
-        $template = new \Pixel\Template\Template();
-        //$form = new \Pixel\Form\Form();
 
-        //$form->config('formFiltro', 'GET');
-
-        $buffer  = '';
         $buffer  = $this->html->abreTagAberta('form', array('class' => 'form-horizontal'));
         $buffer .= $this->html->abreTagAberta('div', array('class' => 'form-group'));
         // por questoes de alinhamento, o primeiro campo é col-sm-5 e o segundo é col-sm-6
@@ -303,7 +292,7 @@ class ModuloController extends \Zion\Core\Controller
 
             $getBotoes = new \Pixel\Grid\GridBotoes();
 
-            //$filtros = new \Pixel\Filtro\FiltroForm();
+            $filtros = new \Pixel\Filtro\FiltroForm();
 
             $getBotoes->setFiltros($this->getFormFiltro());
             $botoes = $getBotoes->geraBotoes();
@@ -360,7 +349,7 @@ class ModuloController extends \Zion\Core\Controller
 
         if (\filter_input(\INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
 
-            $objForm = $this->moduloForm->getFormManu('alterar', \filter_input(INPUT_POST, 'cod'));
+            $objForm = $this->moduloForm->getFormManu('alterar', \filter_input(\INPUT_POST, 'cod'));
 
             $objForm->validar();
 
@@ -369,7 +358,7 @@ class ModuloController extends \Zion\Core\Controller
             $retorno = 'true';
         } else {
 
-            $selecionados = \filter_input(INPUT_GET, 'sisReg', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            $selecionados = \filter_input(\INPUT_GET, 'sisReg', \FILTER_DEFAULT, \FILTER_REQUIRE_ARRAY);
 
             if (!\is_array($selecionados)) {
                 throw new \Exception("Nenhum registro selecionado!");
@@ -394,8 +383,8 @@ class ModuloController extends \Zion\Core\Controller
     {
         new \Zion\Acesso\Acesso('remover');
 
-        $selecionados = \filter_input(INPUT_POST, 'sisReg', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-        $rSelecionados = count($selecionados);
+        $selecionados = \filter_input(\INPUT_POST, 'sisReg', \FILTER_DEFAULT, \FILTER_REQUIRE_ARRAY);
+        $rSelecionados = \count($selecionados);
         $rApagados = 0;
         $mensagem = [];
 
@@ -427,7 +416,7 @@ class ModuloController extends \Zion\Core\Controller
     {
         new \Zion\Acesso\Acesso('visualizar');
         
-        $selecionados = \filter_input(INPUT_GET, 'sisReg', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        $selecionados = \filter_input(\INPUT_GET, 'sisReg', \FILTER_DEFAULT, \FILTER_REQUIRE_ARRAY);
 
         if (!\is_array($selecionados)) {
             throw new \Exception("Nenhum registro selecionado!");
