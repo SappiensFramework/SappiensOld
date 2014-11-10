@@ -294,7 +294,8 @@ class ModuloController extends \Zion\Core\Controller
 
             $filtros = new \Pixel\Filtro\FiltroForm();
 
-            $getBotoes->setFiltros($this->getFormFiltro());
+            //$getBotoes->setFiltros($this->getFormFiltro());
+            $getBotoes->setFiltros($filtros->montaFiltro($this->moduloForm->getFormFiltro()));
             $botoes = $getBotoes->geraBotoes();
 
             $grid = $this->moduloClass->filtrar($this->moduloForm->getFormFiltro());
