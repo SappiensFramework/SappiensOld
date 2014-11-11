@@ -1,0 +1,123 @@
+<?php
+
+namespace Sappiens\Configuracoes\OrganogramaClassificacao;
+
+class OrganogramaClassificacaoClass extends OrganogramaClassificacaoSql
+{
+    
+    private $chavePrimaria;
+    private $tabela;
+    private $precedencia;
+    private $colunas;
+    private $colunasGrid;
+    
+    public function __construct()
+    {
+        $this->tabela           = 'organograma_classificacao';        
+        $this->precedencia      = 'organogramaClassificacao';        
+        $this->chavePrimaria    = $this->precedencia . 'Cod';
+        $this->colunas = [
+                    $this->precedencia . 'ReferenciaCod',
+                    $this->precedencia . 'Nome',
+                    $this->precedencia . 'Ordem',
+                    $this->precedencia . 'Status'
+        ];
+        $this->colunasGrid = [                                                                                   
+                    $this->precedencia . 'ReferenciaCombinado'  => 'Classificação combinada',                                  
+                    $this->precedencia . 'Ordem'                => 'Ordem',         
+                    $this->precedencia . 'Nome'                 => 'Classificação',                      
+                    $this->precedencia . 'Status'               => 'Status'
+        ];                
+    }   
+
+    public function getParametrosGrid($objForm)
+    {
+        $fil = new \Pixel\Filtro\Filtrar();
+        $crud = new \Pixel\Crud\CrudUtil();
+
+        $padrao = ["pa", "qo", "to"];
+
+        $meusParametros = $crud->getParametrosForm($objForm);
+        $hiddenParametros = $fil->getHiddenParametros($meusParametros);
+
+        return array_merge($padrao, $meusParametros, $hiddenParametros);
+    }
+
+    public function filtrar($objForm)
+    {
+        $grid = new \Pixel\Grid\GridPadrao();
+
+        //Setando Parametros
+        \Zion\Paginacao\Parametros::setParametros("GET", $this->getParametrosGrid($objForm));
+
+        //Grid de Visualização - Configurações
+        $grid->setColunas($this->colunasGrid);
+
+        //Configurações Fixas da Grid
+        $grid->setSql(parent::filtrarSql($objForm,$this->colunasGrid));
+        $grid->setChave($this->chavePrimaria);
+        $grid->setSelecaoMultipla(true);
+        //$grid->setAlinhamento(array('organogramaClassificacaoOrdem' => 'DIREITA'));
+        $grid->setTipoOrdenacao(filter_input(INPUT_GET, 'to'));
+        $grid->setQuemOrdena(filter_input(INPUT_GET, 'qo'));
+        $grid->setPaginaAtual(filter_input(INPUT_GET, 'pa'));
+
+        return $grid->montaGridPadrao();
+    }
+
+    public function cadastrar($objForm)
+    {
+        $crud = new \Pixel\Crud\CrudUtil();
+        return $crud->insert($this->tabela, $this->colunas, $objForm);
+    }
+    
+    public function alterar($objForm)
+    {
+        $crud = new \Pixel\Crud\CrudUtil();
+        return $crud->update($this->tabela, $this->colunas, $objForm, $this->chavePrimaria);
+    }
+    
+    public function remover($cod)
+    {
+        $crud = new \Pixel\Crud\CrudUtil();
+        return $crud->delete($this->tabela, $cod, $this->chavePrimaria);
+    }
+
+    public function setValoresFormManu($cod, $formIntancia)
+    {
+        $util = new \Pixel\Crud\CrudUtil();
+
+        $con = \Zion\Banco\Conexao::conectar();
+
+        $objForm = $formIntancia->getFormManu('alterar', $cod);
+
+        $parametrosSql = $con->execLinhaArray(parent::getDadosSql($cod));
+
+        $util->setParametrosForm($objForm, $parametrosSql, $cod);
+        
+        return $objForm;
+    }
+
+    public function getOrdem($cod)
+    {
+        
+        $con = \Zion\Banco\Conexao::conectar();
+        $param = $con->execLinhaArray(parent::getOrdem($cod, 'referencia'));
+
+        if(empty($param['ordemAtual'])) {
+
+            $param = $con->execLinhaArray(parent::getOrdem($cod));
+            return $param['ordemAtual'] . '.1';
+
+        } else {
+
+            $tam = strlen(strrchr($param['ordemAtual'], '.'));
+            $parcial = substr($param['ordemAtual'], 0, -$tam);
+            $final = substr(strrchr($param['ordemAtual'], '.'), 1)+1;
+            return $parcial . '.' . $final;
+
+        }
+
+    }    
+
+}
