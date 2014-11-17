@@ -32,7 +32,6 @@ class ModuloClass extends ModuloSql
         //Configurações Fixas da Grid
         $grid->setSql(parent::filtrarSql($objForm, $colunas));
         $grid->setChave($this->chavePrimaria);
-        $grid->setAlinhamento(['ufCidadeNomeUfNome' => 'DIREITA']);
 
         return $grid->montaGridPadrao();
     }

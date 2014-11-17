@@ -15,6 +15,8 @@ class ModuloSql
 	             WHERE 1 ";
 
         $sql .= $util->getSqlFiltro($fil, $objForm, $colunas);
+        
+        //echo $sql;
 
         return $sql;
     }

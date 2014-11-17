@@ -9,17 +9,23 @@ class ModuloForm
     {
         $form = new \Pixel\Form\Form();
 
+        $form->config('sisFormFiltro');
+        
+        $campos[] = $form->numero('ufCod', 'Código');
+        
         $campos[] = $form->suggest('ufNome', 'Unidade Federativa')
-                ->setTabela('uf')
+                ->setTabela('uf')                
                 ->setCampoBusca('ufNome')
                 ->setCampoDesc('ufNome'); 
         
-        $campos[] = $form->escolha('usSigla', 'Sigla do Estado')
+        $campos[] = $form->escolha('ufSigla', 'Sigla do Estado')
                 ->setTabela('uf')
                 ->setCampoCod('ufSigla')
                 ->setCampoDesc('ufSigla');
         
         $campos[] = $form->numero('ufIbgeCod', 'Código do IBGE');
+        
+        $campos[] = $form->data('aniversario', 'Aniversário do Estado');
 
         return $form->processarForm($campos);
     }
@@ -34,7 +40,7 @@ class ModuloForm
 
         $form->setAcao($acao);
 
-        $form->config('formManu' . $cod, 'POST')
+        $form->config('formManu' . $cod, 'POST')                
                 ->setHeader('Estados');
 
         $campos[] = $form->hidden('cod')
@@ -67,7 +73,7 @@ class ModuloForm
 
         $campos[] = $form->escolha('ufEscolhaSelect', 'Select em Pixel', true)
                 ->setValor($form->retornaValor('ufEscolhaSelect'))
-                ->setTabela('uf')
+                ->setTabela('uf')                
                 ->setCampoCod('ufCod')
                 ->setCampoDesc('ufNome');
         
