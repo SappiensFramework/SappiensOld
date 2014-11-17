@@ -5,13 +5,38 @@ namespace Sappiens\Grupo\Modulo;
 class ModuloClass extends ModuloSql
 {
 
-    private $chavePrimaria;
-    private $crudUtil;
+    public $chavePrimaria;
+    public $crudUtil;
+    public $tabela;
+    public $precedencia;
+    public $colunas;
+    public $colunasGrid;
 
     public function __construct()
     {
-        $this->chavePrimaria = 'ufCod';
         $this->crudUtil = new \Pixel\Crud\CrudUtil();
+
+        $this->tabela           = 'uf';        
+        $this->precedencia      = 'uf';      
+        $this->chavePrimaria    = $this->precedencia . 'Cod';
+        $this->colunasCrud = [
+                    $this->precedencia . 'Sigla',
+                    $this->precedencia . 'Nome',
+                    $this->precedencia . 'IbgeCod',
+                    $this->precedencia . 'TextArea',
+                    $this->precedencia . 'Descricao',
+                    $this->precedencia . 'EscolhaSelect',
+                    $this->precedencia . 'ChosenSimples',
+                    $this->precedencia . 'Chosenmultiplo[]',
+                    $this->precedencia . 'EscolhaVarios[]',
+                    $this->precedencia . 'EscolhaDois',
+                    $this->precedencia . 'MarqueUm'
+        ];
+        $this->colunasGrid = [
+                    $this->precedencia . 'Cod'      => "Cód",
+                    $this->precedencia . 'Sigla'    => "Sigla",
+                    $this->precedencia . 'Nome'     => "Nome"
+        ];
     }
 
     public function filtrar($objForm)

@@ -571,10 +571,7 @@ class ModuloController extends \Zion\Core\Controller
 
         $exportacao = new \Zion\Exportacao\Exportacao();
 
-        $colunas = [
-            'ufCod' => 'Cód',
-            'ufSigla' => 'Sigla',
-            'ufNome' => 'Nome'];
+        $colunas = $this->moduloClass->colunasGrid;
 
         $exportacao->setDadosRelatorio('Grupo', 'Modulo', $colunas, $this->moduloForm->getFormFiltro());
 
@@ -591,10 +588,7 @@ class ModuloController extends \Zion\Core\Controller
 
         $exportacao = new \Zion\Exportacao\Exportacao();
 
-        $colunas = [
-            'ufCod' => 'Cód',
-            'ufSigla' => 'Sigla',
-            'ufNome' => 'Nome'];
+        $colunas = $this->moduloClass->colunasGrid;
 
         $exportacao->setDadosRelatorio('Grupo', 'Modulo', $colunas, $this->moduloForm->getFormFiltro());
 
@@ -611,10 +605,7 @@ class ModuloController extends \Zion\Core\Controller
 
         $exportacao = new \Zion\Exportacao\Exportacao();
 
-        $colunas = [
-            'ufCod' => 'Cód',
-            'ufSigla' => 'Sigla',
-            'ufNome' => 'Nome'];
+        $colunas = $this->moduloClass->colunasGrid;
 
         $exportacao->setDadosRelatorio('Grupo', 'Modulo', $colunas, $this->moduloForm->getFormFiltro());
 
