@@ -93,8 +93,7 @@ class ModuloForm
                 ->setValorPadrao([50,51,52])
                 ->setTabela('uf')
                 ->setCampoCod('ufCod')
-                ->setCampoDesc('ufNome');
-        
+                ->setCampoDesc('ufNome');        
 
         $campos[] = $form->escolha('ufEscolhaVarios[]', 'Escolha vários', true)
                 ->setValor($form->retornaValor('ufEscolhaVarios[]'))
@@ -128,6 +127,12 @@ class ModuloForm
                 ->setMultiplo(true)
                 ->setExpandido(true)
                 ->setArray(array('S' => 'Aceito os termos'));
+        
+        $campos[] = $form->upload('anexos[]', 'Meus Anexos',"ARQUIVO")
+                ->setThumbnail(true)
+                ->setCodigoReferencia($cod)
+                ->setAlturaMaximaTB(100)
+                ->setMultiple(true);
 
         $campos[] = $form->botaoSalvarPadrao();
 
@@ -140,7 +145,7 @@ class ModuloForm
     {
         $jsStatic = \Pixel\Form\FormJavaScript::iniciar();
 
-        //$jQuery = new \Zion\JQuery\JQuery();                
+        //$jQuery = new \Zion\JQuery\JQuery();        
 
         return $jsStatic->getFunctions();
     }

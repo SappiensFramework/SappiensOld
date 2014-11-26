@@ -8,7 +8,7 @@ class ModuloClass extends ModuloSql
     public $chavePrimaria;
     public $crudUtil;
     public $tabela;
-    public $precedencia;
+    public $prefixo;
     public $colunas;
     public $colunasGrid;
 
@@ -16,26 +16,28 @@ class ModuloClass extends ModuloSql
     {
         $this->crudUtil = new \Pixel\Crud\CrudUtil();
 
-        $this->tabela           = 'uf';        
-        $this->precedencia      = 'uf';      
-        $this->chavePrimaria    = $this->precedencia . 'Cod';
+        $this->tabela = 'uf';
+        $this->prefixo = 'uf';
+        $this->chavePrimaria = $this->prefixo . 'Cod';
+
         $this->colunasCrud = [
-                    $this->precedencia . 'Sigla',
-                    $this->precedencia . 'Nome',
-                    $this->precedencia . 'IbgeCod',
-                    $this->precedencia . 'TextArea',
-                    $this->precedencia . 'Descricao',
-                    $this->precedencia . 'EscolhaSelect',
-                    $this->precedencia . 'ChosenSimples',
-                    $this->precedencia . 'Chosenmultiplo[]',
-                    $this->precedencia . 'EscolhaVarios[]',
-                    $this->precedencia . 'EscolhaDois',
-                    $this->precedencia . 'MarqueUm'
+            $this->prefixo . 'Sigla',
+            $this->prefixo . 'Nome',
+            $this->prefixo . 'IbgeCod',
+            $this->prefixo . 'TextArea',
+            $this->prefixo . 'Descricao',
+            $this->prefixo . 'EscolhaSelect',
+            $this->prefixo . 'ChosenSimples',
+            $this->prefixo . 'Chosenmultiplo[]',
+            $this->prefixo . 'EscolhaVarios[]',
+            $this->prefixo . 'EscolhaDois',
+            $this->prefixo . 'MarqueUm'
         ];
+
         $this->colunasGrid = [
-                    $this->precedencia . 'Cod'      => "Cód",
-                    $this->precedencia . 'Sigla'    => "Sigla",
-                    $this->precedencia . 'Nome'     => "Nome"
+            $this->prefixo . 'Cod' => "Cód",
+            $this->prefixo . 'Sigla' => "Sigla",
+            $this->prefixo . 'Nome' => "Nome"
         ];
     }
 
@@ -44,18 +46,10 @@ class ModuloClass extends ModuloSql
         $grid = new \Pixel\Grid\GridPadrao();
 
         \Zion\Paginacao\Parametros::setParametros("GET", $this->crudUtil->getParametrosGrid($objForm));
+        
+        $grid->setColunas($this->colunasGrid);
 
-        //Grid - Configurações
-        $colunas = [
-            'ufCod' => 'Cód',
-            'ufSigla' => 'Sigla',
-            'ufNome' => 'Nome',
-            'ufDescricao' => 'Descrição'];
-
-        $grid->setColunas($colunas);
-
-        //Configurações Fixas da Grid
-        $grid->setSql(parent::filtrarSql($objForm, $colunas));
+        $grid->setSql(parent::filtrarSql($objForm, $this->colunasGrid));
         $grid->setChave($this->chavePrimaria);
 
         return $grid->montaGridPadrao();
@@ -63,45 +57,17 @@ class ModuloClass extends ModuloSql
 
     public function cadastrar($objForm)
     {
-        $campos = [
-            'ufSigla',
-            'ufNome',
-            'ufIbgeCod',
-            'ufTextArea',
-            'ufDescricao',
-            'ufEscolhaSelect',
-            'ufChosenSimples',
-            'ufChosenmultiplo[]',
-            'ufEscolhaVarios[]',
-            'ufEscolhaDois',
-            'ufMarqueUm'
-        ];
-
-        return $this->crudUtil->insert('uf', $campos, $objForm);
+        return $this->crudUtil->insert($this->tabela, $this->colunasCrud, $objForm);
     }
 
     public function alterar($objForm)
     {
-        $campos = [
-            'ufSigla',
-            'ufNome',
-            'ufIbgeCod',
-            'ufTextArea',
-            'ufDescricao',
-            'ufEscolhaSelect',
-            'ufChosenSimples',
-            'ufChosenmultiplo[]',
-            'ufEscolhaVarios[]',
-            'ufEscolhaDois',
-            'ufMarqueUm'
-        ];
-
-        return $this->crudUtil->update('uf', $campos, $objForm, $this->chavePrimaria);
+        return $this->crudUtil->update($this->tabela, $this->colunasCrud, $objForm, $this->chavePrimaria);
     }
 
     public function remover($cod)
     {
-        return $this->crudUtil->delete('uf', $cod, $this->chavePrimaria);
+        return $this->crudUtil->delete($this->tabela, $cod, $this->chavePrimaria);
     }
 
     public function setValoresFormManu($cod, $formIntancia)
@@ -115,10 +81,10 @@ class ModuloClass extends ModuloSql
         $objetos = $objForm->getObjetos();
 
         //Intervenção para o campo escolha
-        $objetos['ufEscolhaVarios[]']->setValor(explode(',', $parametrosSql['ufEscolhaVarios']));
+        $objetos['ufEscolhaVarios[]']->setValor(\explode(',', $parametrosSql['ufEscolhaVarios']));
 
         //Intervenção para o campo chosen
-        $objetos['ufChosenmultiplo[]']->setValor(explode(',', $parametrosSql['ufChosenmultiplo']));
+        $objetos['ufChosenmultiplo[]']->setValor(\explode(',', $parametrosSql['ufChosenmultiplo']));
 
         $this->crudUtil->setParametrosForm($objForm, $parametrosSql, $cod);
 
