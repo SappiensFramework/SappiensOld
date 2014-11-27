@@ -81,10 +81,10 @@ class ModuloClass extends ModuloSql
         $objetos = $objForm->getObjetos();
 
         //Intervenção para o campo escolha
-        $objetos['ufEscolhaVarios[]']->setValor(\explode(',', $parametrosSql['ufEscolhaVarios']));
+        //$objetos['ufEscolhaVarios[]']->setValor(\explode(',', $parametrosSql['ufEscolhaVarios']));
 
         //Intervenção para o campo chosen
-        $objetos['ufChosenmultiplo[]']->setValor(\explode(',', $parametrosSql['ufChosenmultiplo']));
+        //$objetos['ufChosenmultiplo[]']->setValor(\explode(',', $parametrosSql['ufChosenmultiplo']));
 
         $this->crudUtil->setParametrosForm($objForm, $parametrosSql, $cod);
 
