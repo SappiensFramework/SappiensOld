@@ -9,7 +9,7 @@ class ModuloClass extends ModuloSql
     public $crudUtil;
     public $tabela;
     public $prefixo;
-    public $colunas;
+    public $colunasCrud;
     public $colunasGrid;
 
     public function __construct()
@@ -51,6 +51,7 @@ class ModuloClass extends ModuloSql
 
         $grid->setSql(parent::filtrarSql($objForm, $this->colunasGrid));
         $grid->setChave($this->chavePrimaria);
+        //$grid->setSelecaoMultipla(false);
 
         return $grid->montaGridPadrao();
     }
@@ -81,10 +82,10 @@ class ModuloClass extends ModuloSql
         $objetos = $objForm->getObjetos();
 
         //Intervenção para o campo escolha
-        //$objetos['ufEscolhaVarios[]']->setValor(\explode(',', $parametrosSql['ufEscolhaVarios']));
+        $objetos['ufEscolhaVarios[]']->setValor(\explode(',', $parametrosSql['ufEscolhaVarios']));
 
         //Intervenção para o campo chosen
-        //$objetos['ufChosenmultiplo[]']->setValor(\explode(',', $parametrosSql['ufChosenmultiplo']));
+        $objetos['ufChosenmultiplo[]']->setValor(\explode(',', $parametrosSql['ufChosenmultiplo']));
 
         $this->crudUtil->setParametrosForm($objForm, $parametrosSql, $cod);
 

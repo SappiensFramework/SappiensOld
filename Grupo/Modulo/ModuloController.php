@@ -61,7 +61,7 @@ class ModuloController extends \Zion\Core\Controller
 
         $objForm = $this->moduloForm->getFormManu('cadastrar');
 
-        if (\filter_input(\INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
+        if ($this->metodoPOST()) {
 
             $objForm->validar();
 
@@ -83,9 +83,9 @@ class ModuloController extends \Zion\Core\Controller
     {
         new \Zion\Acesso\Acesso('alterar');
 
-        if (\filter_input(\INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
+        if ($this->metodoPOST()) {
 
-            $objForm = $this->moduloForm->getFormManu('alterar', \filter_input(\INPUT_POST, 'cod'));
+            $objForm = $this->moduloForm->getFormManu('alterar', $this->postCod());
 
             $objForm->validar();
 
@@ -93,12 +93,8 @@ class ModuloController extends \Zion\Core\Controller
 
             $retorno = 'true';
         } else {
-
-            $selecionados = \filter_input(\INPUT_GET, 'sisReg', \FILTER_DEFAULT, \FILTER_REQUIRE_ARRAY);
-
-            if (!\is_array($selecionados)) {
-                throw new \Exception("Nenhum registro selecionado!");
-            }
+            
+            $selecionados = $this->registrosSelecionados();            
 
             $retorno = '';
             foreach ($selecionados as $cod) {
@@ -119,16 +115,12 @@ class ModuloController extends \Zion\Core\Controller
     {
         new \Zion\Acesso\Acesso('remover');
 
-        $selecionados = \filter_input(\INPUT_POST, 'sisReg', \FILTER_DEFAULT, \FILTER_REQUIRE_ARRAY);
+        $selecionados = $this->registrosSelecionados();
         $rSelecionados = \count($selecionados);
         $rApagados = 0;
         $mensagem = [];
 
         try {
-
-            if (!\is_array($selecionados)) {
-                throw new \Exception("Nenhum registro selecionado!");
-            }
 
             foreach ($selecionados as $cod) {
 
@@ -152,11 +144,7 @@ class ModuloController extends \Zion\Core\Controller
     {
         new \Zion\Acesso\Acesso('visualizar');
         
-        $selecionados = \filter_input(\INPUT_GET, 'sisReg', \FILTER_DEFAULT, \FILTER_REQUIRE_ARRAY);
-
-        if (!\is_array($selecionados)) {
-            throw new \Exception("Nenhum registro selecionado!");
-        }
+        $selecionados = $this->registrosSelecionados();
 
         $retorno = '';
         foreach ($selecionados as $cod) {
