@@ -10,7 +10,7 @@
  */
 namespace Sappiens;
 
-header('Content-Type: text/html; charset=utf-8');
+\header('Content-Type: text/html; charset=utf-8');
 
 class Config
 {

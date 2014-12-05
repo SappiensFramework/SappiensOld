@@ -9,17 +9,23 @@ class ModuloForm
     {
         $form = new \Pixel\Form\Form();
 
+        $form->config('sisFormFiltro');
+
+        $campos[] = $form->numero('ufCod', 'Código');
+
         $campos[] = $form->suggest('ufNome', 'Unidade Federativa')
                 ->setTabela('uf')
                 ->setCampoBusca('ufNome')
-                ->setCampoDesc('ufNome'); 
-        
-        $campos[] = $form->escolha('usSigla', 'Sigla do Estado')
+                ->setCampoDesc('ufNome');
+
+        $campos[] = $form->escolha('ufSigla', 'Sigla do Estado')
                 ->setTabela('uf')
                 ->setCampoCod('ufSigla')
                 ->setCampoDesc('ufSigla');
-        
+
         $campos[] = $form->numero('ufIbgeCod', 'Código do IBGE');
+
+        $campos[] = $form->data('aniversario', 'Aniversário do Estado');
 
         return $form->processarForm($campos);
     }
@@ -57,38 +63,35 @@ class ModuloForm
 
         $campos[] = $form->textArea('ufTextArea', 'Descrição com TextArea', true)
                 ->setValor($form->retornaValor('ufTextArea'));
-        
-        $campos[] = $form->textArea('ufDescricao', 'Descrição com XX', true)
-                ->setValor($form->retornaValor('ufDescricao'));
-        
-//        $campos[] = $form->editor('ufDescricao', 'Descrição com Editor', true)
-//                ->setValor($form->retornaValor('ufDescricao'))
-//                ->setMaximoCaracteres(50);
+
+
+        $campos[] = $form->editor('ufDescricao', 'Descrição com Editor', true)
+                ->setValor($form->retornaValor('ufDescricao'))
+                ->setMaximoCaracteres(50);
 
         $campos[] = $form->escolha('ufEscolhaSelect', 'Select em Pixel', true)
                 ->setValor($form->retornaValor('ufEscolhaSelect'))
                 ->setTabela('uf')
                 ->setCampoCod('ufCod')
                 ->setCampoDesc('ufNome');
-        
+
         $campos[] = $form->chosen('ufChosenSimples', 'Chosen Simples com Banco', true)
                 ->setValor($form->retornaValor('ufChosenSimples'))
                 ->setInicio('Selecione esse chosen amiguinho')
                 ->setTabela('uf')
                 ->setCampoCod('ufCod')
                 ->setCampoDesc('ufNome');
-        
+
         $campos[] = $form->chosen('ufChosenmultiplo[]', 'Chosen Multiplo com Banco', true)
                 ->setValor($form->retornaValor('ufChosenmultiplo[]'))
                 ->setInicio('Selecione esse chosen amiguinho')
                 ->setMultiplo(true)
                 ->setSelecaoMinima(2)
                 ->setSelecaoMaxima(3)
-                ->setValorPadrao([50,51,52])
+                ->setValorPadrao([50, 51, 52])
                 ->setTabela('uf')
                 ->setCampoCod('ufCod')
                 ->setCampoDesc('ufNome');
-        
 
         $campos[] = $form->escolha('ufEscolhaVarios[]', 'Escolha vários', true)
                 ->setValor($form->retornaValor('ufEscolhaVarios[]'))
@@ -123,6 +126,12 @@ class ModuloForm
                 ->setExpandido(true)
                 ->setArray(array('S' => 'Aceito os termos'));
 
+        $campos[] = $form->upload('anexos[]', 'Meus Anexos', "ARQUIVO")
+                ->setThumbnail(true)
+                ->setCodigoReferencia($cod)
+                ->setAlturaMaximaTB(100)
+                ->setMultiple(true);
+
         $campos[] = $form->botaoSalvarPadrao();
 
         $campos[] = $form->botaoDescartarPadrao('formManu' . $cod);
@@ -134,7 +143,7 @@ class ModuloForm
     {
         $jsStatic = \Pixel\Form\FormJavaScript::iniciar();
 
-        //$jQuery = new \Zion\JQuery\JQuery();                
+        //$jQuery = new \Zion\JQuery\JQuery();        
 
         return $jsStatic->getFunctions();
     }
