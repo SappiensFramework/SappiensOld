@@ -35,8 +35,8 @@ try {
               )                    
         );
 
-    $tab = $template->getTab('tabWelcome', array('classCss' => 'col-sm-6'), $tabArray);
-    $panel = $template->getPanel('box-welcome', 'Bem-vindo', $tab, ['titleVisible' => true, 'startVisible' => true, 'iconTitle' => 'fa fa-filter']);
+    //$tab = $template->getTab('tabWelcome', array('classCss' => 'col-sm-6'), $tabArray);
+    $panel = $template->getPanel('box-welcome', 'Bem-vindo', '', ['titleVisible' => true, 'startVisible' => true, 'iconTitle' => 'fa fa-filter']);
 
 	$template->setConteudoHeader();
 	$template->setConteudoMain($panel);

@@ -303,7 +303,7 @@ class OrganogramaClassificacaoController extends \Zion\Core\Controller
 
             $getBotoes = new \Pixel\Grid\GridBotoes();
 
-            $getBotoes->setFiltros($this->getFormFiltro());
+            $getBotoes->setFiltros('');
             $botoes = $getBotoes->geraBotoes();
 
             $grid = $this->organogramaClassificacaoClass->filtrar($this->organogramaClassificacaoForm->getFormFiltro());
@@ -451,6 +451,21 @@ class OrganogramaClassificacaoController extends \Zion\Core\Controller
 
         return parent::jsonSucesso($this->organogramaClassificacaoClass->getOrdem($cod));
     }
+
+    protected function getOrganogramaClassificacaoReferenciaCod()
+    {
+        new \Zion\Acesso\Acesso('filtrar');
+        $form = new \Sappiens\Configuracoes\OrganogramaClassificacao\OrganogramaClassificacaoForm();
+
+        $cod = \filter_input(INPUT_GET, 'a');
+
+        $param = $this->organogramaClassificacaoClass->getOrganogramaClassificacaoReferenciaCod($cod);    
+        $formManuPhantom = $form->getFormManuPhantom($param, 'organogramaClassificacaoReferenciaCod');
+
+        $campo  = $formManuPhantom->getFormHtml('organogramaClassificacaoReferenciaCod');
+        $campo .= $formManuPhantom->javaScript()->getLoad(true); 
+        return parent::jsonSucesso($campo);
+    }      
 
 /*
     private function getFiltroTamanho()

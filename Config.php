@@ -35,10 +35,12 @@ class Config
         define('SIS_STRING_CRYPT', 'wzixjdy');
         define('SIS_LINHAS_GRID', '10');
         
-        $_SESSION['UsuarioCod'] = 1;//Usada temporariamente apenas para não busgar os componentes que dependem de UsuarioCod setado
+        $_SESSION['usuarioCod'] = 1;//Usada temporariamente apenas para não busgar os componentes que dependem de UsuarioCod setado
+        $_SESSION['organogramaCod'] = 26;
+        //$_SESSION['OrganogramaClassificacaoCod'] = 8;
         
         self::$SIS_CFG = [
-            'bases'         => array('padrao'=> array(
+            'bases'         => array('padrao' => array(
                 'host'      =>'192.168.25.51',
                 'banco'     =>'onyxprev_sappiens',
                 'usuario'   =>'onyxprev_sapp',

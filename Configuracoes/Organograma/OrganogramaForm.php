@@ -54,17 +54,24 @@ class OrganogramaForm
      */
     public function getFormManu($acao, $cod = null, $extra = null)
     {
+        $class = new \Sappiens\Configuracoes\Organograma\OrganogramaClass();
         $form = new \Pixel\Form\Form();
+        $acesso = new \Zion\Acesso\Acesso();
+        $chOrg = $acesso->permissaoAcao('chOrg');
 
-        $organogramaReferenciaCod = '';
+        $organogramaReferenciaCod = $form->retornaValor('organogramaReferenciaCod');
+        $organogramaClassificacaoTipoCod = '';
         $organogramaOrdem = '[...]';
+
+        $con = \Zion\Banco\Conexao::conectar();
+        $sql = new \Sappiens\Configuracoes\Organograma\OrganogramaSql();
+        $getDados = $con->execLinhaArray($sql->getDadosSql(($acao == "cadastrar") ? $_SESSION['organogramaCod'] : $cod));        
 
         if($acao == 'alterar') {
 
-            $con = \Zion\Banco\Conexao::conectar();
-            $sql = new \Sappiens\Configuracoes\Organograma\OrganogramaSql();
-            $getDados = $con->execLinhaArray($sql->getDadosSql($cod));
             $organogramaReferenciaCod = $getDados['organogramaReferenciaCod'];
+            $getDadosClassificacaoTipo = $con->execLinhaArray($sql->getOrganogramaClassificacaoTipoCodByOrganogramaClassificacaoCod($getDados['organogramaClassificacaoCod']));
+            $organogramaClassificacaoTipoCod = $getDadosClassificacaoTipo['organogramaClassificacaoTipoCod'];
             $organogramaOrdem = $getDados['organogramaOrdem'];
 
         }
@@ -77,47 +84,61 @@ class OrganogramaForm
         $campos[] = $form->hidden('cod')
                 ->setValor($form->retornaValor('cod'));
 
-        $campos[] = $form->chosen('organogramaReferenciaCod', 'Posição precedente', false)
-                ->setValor($form->retornaValor('organogramaReferenciaCod'))
+        $campos[] = $form->chosen('organogramaReferenciaCod', 'Classificação precedente', false)
+                ->setValor($organogramaReferenciaCod)
                 ->setInicio('Selecione...')
                 ->setMultiplo(false)
                 ->setEmColunaDeTamanho('12')
-                ->setTabela('v_organograma')
+                ->setTabela('organograma a, organograma_classificacao b')
                 ->setCampoCod('organogramaCod')
-                ->setOrdena(false)
-                ->setComplemento('onclick="chNxt(\'#organogramaReferenciaCod\',\'#labelAntes_organogramaNome\',\'organogramaOrdem\',\'getOrdem\');"')
+                ->setOrdena(true)
+                ->setWhere("INSTR(a.organogramaAncestral,CONCAT('|', " . $_SESSION['organogramaCod'] . ",'|')) > 0 AND a.organogramaClassificacaoCod = b.organogramaClassificacaoCod")
+                //->setComplemento('onclick="getClassificacaoReordenavel(\'organogramaReferenciaCod\', \'sisFormIdorganogramaClassificacaoTipoCod\',\'getClassificacaoReordenavel\');"')
+                ->setComplemento('onclick="getClassificacaoReordenavel(\'organogramaReferenciaCod\', \'sisFormIdorganogramaClassificacaoTipoCod\',\'getClassificacaoReordenavel\');chNxt(\'#organogramaReferenciaCod\',\'#labelAntes_organogramaNome\',\'organogramaOrdem\',\'getOrdem\');"')
                 //->setCampoDesc('CONCAT(organogramaOrdem, " - ", organogramaReferenciaCombinado)');    
                 //->setCampoDesc('CONCAT(organogramaNome, " - ", organogramaReferenciaCombinado)');
-                ->setCampoDesc('organogramaReferenciaCombinado');
+                ->setCampoDesc('CONCAT(organogramaOrdem, " - ", organogramaNome, " [", b.organogramaClassificacaoNome,"]")');
 
-        $campos[] = $form->hidden('organogramaOrdem')
-                ->setValor($form->retornaValor('organogramaOrdem'));        
 
-        $campos[] = $form->chosen('organogramaClassificacaoTipoCod', 'Tipo de Classificação', true)
-                ->setValor($form->retornaValor('organogramaClassificacaoTipoCod'))
-                ->setInicio('Selecione...')
-                ->setMultiplo(false)
-                ->setEmColunaDeTamanho('12')
-                ->setTabela('organograma_classificacao_tipo')
-                ->setCampoCod('organogramaClassificacaoTipoCod')
-                ->setOrdena(false)
-                ->setComplemento('onclick="chChosen(\'#organogramaClassificacaoTipoCod\',\'#sisContainerOrganogramaClassificacaoCod\',\'getOrganogramaClassificacaoCod\');"')
-                ->setCampoDesc('organogramaClassificacaoTipoNome');    
+        if($acao == 'cadastrar' or ($acao == 'alterar' and $class->getClassificacaoReordenavel($getDados['organogramaCod']))) {
+            if($chOrg) {
 
-                /*
-                ** Campo-fantasma de getFormManuPhantom
-                */
-        $campos[] = $form->chosen('organogramaClassificacaoCod', 'Classificação', true)
-                ->setValor($form->retornaValor('organogramaClassificacaoTipoCod'))
-                ->setContainer('sisContainerOrganogramaClassificacaoCod')
-                ->setInicio('Selecione...')
-                ->setMultiplo(false)
-                ->setEmColunaDeTamanho('12')
-                ->setTabela('organograma_classificacao')
-                ->setCampoCod('organogramaClassificacaoCod')
-                //->setWhere(' organogramaClassificacaoCod = 0')
-                ->setOrdena(false)
-                ->setCampoDesc('CONCAT(organogramaClassificacaoOrdem, " - ", organogramaClassificacaoNome)');                                     
+                $campos[] = $form->hidden('organogramaOrdem')
+                        ->setValor($form->retornaValor('organogramaOrdem'));        
+
+                $campos[] = $form->chosen('organogramaClassificacaoTipoCod', 'Tipo de Classificação', false)
+                        ->setValor($organogramaClassificacaoTipoCod)
+                        ->setInicio('Selecione...')
+                        ->setMultiplo(false)
+                        ->setEmColunaDeTamanho('12')
+                        ->setTabela('organograma_classificacao_tipo')
+                        ->setCampoCod('organogramaClassificacaoTipoCod')
+                        ->setOrdena(false)
+                        ->setComplemento('onclick="chChosen(\'#organogramaClassificacaoTipoCod\',\'#sisContainerOrganogramaClassificacaoCod\',\'getOrganogramaClassificacaoCod\');"')
+                        ->setCampoDesc('organogramaClassificacaoTipoNome');    
+
+            }
+        }
+
+                        /*
+                        ** Campo-fantasma de getFormManuPhantom
+                        */
+                        $organogramaClassificacaoCod = $getDados['organogramaClassificacaoCod'];
+                $campos[] = $form->chosen('organogramaClassificacaoCod', 'Classificação', true)
+                        ->setValor($form->retornaValor('organogramaClassificacaoCod'))
+                        ->setContainer('sisContainerOrganogramaClassificacaoCod')
+                        ->setInicio('Selecione...')
+                        ->setMultiplo(false)
+                        ->setEmColunaDeTamanho('12')
+                        ->setTabela('organograma_classificacao')
+                        ->setCampoCod('organogramaClassificacaoCod')
+                        ->setWhere("INSTR(organogramaClassificacaoAncestral,CONCAT('|', " . $organogramaClassificacaoCod . ",'|')) > 0")
+                        ->setOrdena(false)
+                        //->setDisabled(($acao == "cadastrar" ? 'false' : true))
+                        ->setCampoDesc('organogramaClassificacaoNome');   
+
+            //}   
+        //}                               
 
         $campos[] = $form->texto('organogramaNome', 'Posição', true)
                 ->setLabelAntes($organogramaOrdem)
@@ -151,7 +172,58 @@ class OrganogramaForm
 
         $jQuery = new \Zion\JQuery\JQuery();                
 
-        return $jsStatic->getFunctions();
+        return $jsStatic->getFunctions($jsStatic->setFunctions($this->getMeuJS()));
+    }
+
+    private function getMeuJS()
+    {
+
+        /*
+        ** var a => recebe a id do campo que invocou o evento
+        ** var b => recebe o elemento que sofrerá update
+        ** var c => recebe o metodo
+        */
+        $buffer  = '';
+        $buffer .= 'function getClassificacaoTipo(a,b,c){
+                        var aa = $("#"+a).val();
+                        $.ajax({type: "get", url: "?acao="+c+"&a="+aa, dataType: "json", beforeSend: function() {
+                            $("#"+b).html(\'<i class="fa fa-refresh fa-spin" style="margin-top:10px;"></i>\');
+                        }}).done(function (ret) {
+                            $("#"+b).html(ret.retorno);
+                        }).fail(function () {
+                            sisMsgFailPadrao();
+                        });  
+                    }';
+        $buffer .= 'function getClassificacaoByReferencia(a,b,c){
+                        var aa = $("#"+a).val();
+                        $.ajax({type: "get", url: "?acao="+c+"&a="+aa, dataType: "json", beforeSend: function() {
+                            $("#"+b).html(\'<i class="fa fa-refresh fa-spin" style="margin-top:10px;"></i>\');
+                        }}).done(function (ret) {
+                            $("#"+b).html(ret.retorno);
+                        }).fail(function () {
+                            sisMsgFailPadrao();
+                        });  
+                    }';                    
+        $buffer .= 'function getClassificacaoReordenavel(a,b,c){ 
+                        var aa = $("#"+a).val();
+                        $.ajax({type: "get", url: "?acao="+c+"&a="+aa, dataType: "json", beforeSend: function() {
+                            //$("#"+b).html(\'<i class="fa fa-refresh fa-spin" style="margin-top:10px;"></i>\');
+                        }}).done(function (ret) {
+                            if(ret.retorno === true) {
+                                //alert(ret.retorno);
+                                $("#"+b).removeClass("hidden");                                                       
+                            } else {
+                                //alert(ret.retorno);
+                                //getClassificacaoTipo(a,\'sisContainerOrganogramaClassificacaoCod\',\'getOrganogramaClassificacaoTipoCod\');
+                                getClassificacaoByReferencia(a,\'sisContainerOrganogramaClassificacaoCod\',\'getOrganogramaClassificacaoByReferencia\');
+                                $("#"+b).addClass("hidden");   
+                            }
+                        }).fail(function () {
+                            sisMsgFailPadrao();
+                        });  
+                    }';
+        return $buffer;
+
     }
 
 }
