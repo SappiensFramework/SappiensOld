@@ -51,7 +51,7 @@ class LoginForm
         $buffer .= $this->html->fechaTag('div');
 
         $buffer .= $this->html->abreTagAberta('div', array('class' => 'form-group w-icon'));
-        $buffer .= $this->html->abreTagAberta('input', array('type' => 'text', 'id' => 'username_id', 'name' => 'signin_username', 'class' => 'form-control input-lg', 'placeholder' => 'Email'));
+        $buffer .= $this->html->abreTagAberta('input', array('type' => 'text', 'id' => 'username_id', 'name' => 'signin_username', 'class' => 'form-control input-lg', 'placeholder' => 'Email', 'value' => 'vpozzebon@gmail.com'));
         $buffer .= $this->html->abreTagAberta('span', array('class' => 'fa fa-user signin-form-icon')) . $this->html->fechaTag('span');
         $buffer .= $this->html->fechaTag('div');
 

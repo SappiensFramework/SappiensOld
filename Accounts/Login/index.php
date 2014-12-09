@@ -1,10 +1,9 @@
 <?php
 
-session_start();
-session_destroy();
+define('MODULO', 'Login');
 
 require '../../Config.php';
 
-echo (new \Sappiens\Accounts\Login\LoginController())->controle(\filter_input(\INPUT_POST, 'acao'));
+echo (new \Pixel\Login\LoginController())->controle(\filter_input(\INPUT_POST, 'acao'));
 
 ?>
