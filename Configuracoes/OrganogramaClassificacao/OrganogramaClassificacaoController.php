@@ -296,6 +296,8 @@ class OrganogramaClassificacaoController extends \Zion\Core\Controller
         try {
 
             $template = new \Pixel\Template\Template();
+            $template->setConteudoIconeModulo('fa fa-yelp');
+            $template->setConteudoNomeModulo('Classificação dos níveis do organograma');               
 
             new \Zion\Acesso\Acesso('filtrar');
 

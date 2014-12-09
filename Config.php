@@ -10,6 +10,10 @@
  */
 namespace Sappiens;
 
+session_start();
+
+//if($_SESSION['usuarioCod'] and $_SESSION['organogramaCod']) {}
+
 \header('Content-Type: text/html; charset=utf-8');
 
 class Config
@@ -35,9 +39,8 @@ class Config
         define('SIS_STRING_CRYPT', 'wzixjdy');
         define('SIS_LINHAS_GRID', '10');
         
-        $_SESSION['usuarioCod'] = 1;//Usada temporariamente apenas para não busgar os componentes que dependem de UsuarioCod setado
-        $_SESSION['organogramaCod'] = 26;
-        //$_SESSION['OrganogramaClassificacaoCod'] = 8;
+        //$_SESSION['usuarioCod'] = 1;//Usada temporariamente apenas para não busgar os componentes que dependem de UsuarioCod setado
+        //if(!array_key_exists('organogramaCod', $_SESSION)) $_SESSION['organogramaCod'] = 26;
         
         self::$SIS_CFG = [
             'bases'         => array('padrao' => array(

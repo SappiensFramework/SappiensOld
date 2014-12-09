@@ -296,6 +296,8 @@ class OrganogramaController extends \Zion\Core\Controller
         try {
 
             $template = new \Pixel\Template\Template();
+            $template->setConteudoIconeModulo('fa fa-sitemap');
+            $template->setConteudoNomeModulo('Definição do organograma');            
 
             new \Zion\Acesso\Acesso('filtrar');
 

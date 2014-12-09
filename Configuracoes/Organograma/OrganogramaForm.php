@@ -84,20 +84,32 @@ class OrganogramaForm
         $campos[] = $form->hidden('cod')
                 ->setValor($form->retornaValor('cod'));
 
+        $sqlAdd = '';
+        if($acao == "alterar") $sqlAdd = " AND a.organogramaCod != " . $cod . " ";
         $campos[] = $form->chosen('organogramaReferenciaCod', 'Classificação precedente', false)
                 ->setValor($organogramaReferenciaCod)
                 ->setInicio('Selecione...')
                 ->setMultiplo(false)
                 ->setEmColunaDeTamanho('12')
                 ->setTabela('organograma a, organograma_classificacao b')
-                ->setCampoCod('organogramaCod')
-                ->setOrdena(true)
-                ->setWhere("INSTR(a.organogramaAncestral,CONCAT('|', " . $_SESSION['organogramaCod'] . ",'|')) > 0 AND a.organogramaClassificacaoCod = b.organogramaClassificacaoCod")
+                //->setCampoCod('organogramaCod')
+                ->setCampoCod('campoCod')
+                ->setOrdena(false)
+                //->setWhere("a.organogramaClassificacaoCod = b.organogramaClassificacaoCod AND INSTR(a.organogramaAncestral,CONCAT('|', " . $_SESSION['organogramaCod'] . ",'|')) > 0")
+                
+                ->setSqlCompleto("SELECT a.organogramaCod AS campoCod, IF(a.organogramaOrdem != \"\",CONCAT(a.organogramaOrdem, \" - \", a.organogramaNome, \" [\", b.organogramaClassificacaoNome,\"]\"), a.organogramaNome) AS campoDesc
+                                    FROM organograma a, organograma_classificacao b 
+                                   WHERE INSTR(a.organogramaAncestral,CONCAT('|', " . $_SESSION['organogramaCod'] . ",'|')) > 0 
+                                     AND a.organogramaClassificacaoCod = b.organogramaClassificacaoCod
+                                     $sqlAdd
+                                ORDER BY a.organogramaOrdem")
+                                                
                 //->setComplemento('onclick="getClassificacaoReordenavel(\'organogramaReferenciaCod\', \'sisFormIdorganogramaClassificacaoTipoCod\',\'getClassificacaoReordenavel\');"')
                 ->setComplemento('onclick="getClassificacaoReordenavel(\'organogramaReferenciaCod\', \'sisFormIdorganogramaClassificacaoTipoCod\',\'getClassificacaoReordenavel\');chNxt(\'#organogramaReferenciaCod\',\'#labelAntes_organogramaNome\',\'organogramaOrdem\',\'getOrdem\');"')
                 //->setCampoDesc('CONCAT(organogramaOrdem, " - ", organogramaReferenciaCombinado)');    
                 //->setCampoDesc('CONCAT(organogramaNome, " - ", organogramaReferenciaCombinado)');
-                ->setCampoDesc('CONCAT(organogramaOrdem, " - ", organogramaNome, " [", b.organogramaClassificacaoNome,"]")');
+                //->setCampoDesc('IF(a.organogramaOrdem != "",CONCAT(a.organogramaOrdem, " - ", a.organogramaNome, " [", b.organogramaClassificacaoNome,"]"), a.organogramaNome)');
+                ->setCampoDesc('campoDesc');
 
 
         if($acao == 'cadastrar' or ($acao == 'alterar' and $class->getClassificacaoReordenavel($getDados['organogramaCod']))) {

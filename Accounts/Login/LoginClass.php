@@ -1,8 +1,8 @@
 <?php
 
-namespace Sappiens\Configuracoes\Organograma;
+namespace Sappiens\Accounts\Login;
 
-class OrganogramaClass extends OrganogramaSql
+class LoginClass extends LoginSql
 {
     
     private $chavePrimaria;
@@ -35,6 +35,8 @@ class OrganogramaClass extends OrganogramaSql
                     $this->precedencia  . 'Status'               => 'Status'
         ];                
     }   
+
+    
 
     public function getParametrosGrid($objForm)
     {
@@ -89,10 +91,6 @@ class OrganogramaClass extends OrganogramaSql
     {
         $crud = new \Pixel\Crud\CrudUtil();
 
-        if(!$objForm->get('organogramaOrdem')){
-            $k = array_search('organogramaOrdem', $this->colunas);
-            unset($this->colunas[$k]);            
-        }
         if($objForm->get('organogramaOrdenavel') == "I") $objForm->set('organogramaOrdem', '');
         if(!$this->getClassificacaoReordenavel($objForm->get('cod'))) {
             $k = array_search('organogramaClassificacaoCod', $this->colunas);
@@ -126,30 +124,26 @@ class OrganogramaClass extends OrganogramaSql
         return $objForm;
     }
 
-    public function getOrdem($cod)
+    public function getAuth($l,$p)
     {
         
         $con = \Zion\Banco\Conexao::conectar();
-        $param = $con->execLinhaArray(parent::getOrdem($cod, 'referencia'));
+        $sql = new \Sappiens\Accounts\Login\LoginSql();
 
-        if(strlen($param['ordemAtual']) <= 0) {
+        $getAuth = $con->execLinhaArray($sql->getAuth($l,$p));
 
-            $param = $con->execLinhaArray(parent::getOrdem($cod));
-            if(strlen($param['ordemAtual']) <= 0) {
-                return 1;
-            } else {
-                return $param['ordemAtual'] . '.1';
-            }
+        if(!empty($getAuth['usuarioCod']) and !empty($getAuth['organogramaCod'])) {
 
-        } else {
+            unset($_SESSION['usuarioCod'], $_SESSION['organogramaCod']);
 
-            if(!strstr($param['ordemAtual'], '.')) return $param['ordemAtual']+=1;
-            $tam = strlen(strrchr($param['ordemAtual'], '.'));
-            $parcial = substr($param['ordemAtual'], 0, -$tam);
-            $final = substr(strrchr($param['ordemAtual'], '.'), 1)+1;
-            return $parcial . '.' . $final;
+            $_SESSION['usuarioCod']     = $getAuth['usuarioCod'];
+            $_SESSION['organogramaCod'] = $getAuth['organogramaCod'];
+
+            return true;
 
         }
+
+        return false;
 
     }    
 

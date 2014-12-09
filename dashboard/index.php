@@ -2,6 +2,12 @@
 
 require '../Config.php';
 
+if(!$_SESSION['usuarioCod'] or !$_SESSION['organogramaCod']) {
+  header('location: ../?err=Sessão expirada!');
+}
+
+echo (new \Sappiens\Dashboard\DashboardController())->controle(\filter_input(\INPUT_GET, 'acao'));
+/*
 try {
 
 	$html     = new \Zion\Layout\Html();
@@ -54,5 +60,5 @@ define('DEFAULT_MODULO_NOME', 'Dashboard');
 define('DEFAULT_MODULO_URL', 'Dashboard');
 
 echo $template->getTemplate();
-
+*/
 ?>
