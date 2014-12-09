@@ -12,21 +12,22 @@ class SelecionarClienteForm
     public function getFormModulo()
     {
         $form = new \Pixel\Form\Form();
-/*
+
         $form->config('Form1', 'GET')
-                ->setNovalidate(true)
+                ->setNovalidate(true);
                 //->setHeader('Selecionar cliente')
-                ->setClassCss('navbar-form pull-left')
-                ->setTarget('_blank')
-                ->setAction('recebe.php');
-*/
-        $campos[] = $form->suggest('v_cliente', 'Clientes', false)
-                ->setTabela('v_cliente')
-                ->setCampoCod('clienteCod')
-                ->setCampoDesc('clienteNome')
+                //->setClassCss('navbar-form pull-left')
+                //->setTarget('_blank')
+                //->setAction('recebe.php');
+
+        $campos[] = $form->suggest('organograma', 'organograma', false)
+                ->setTabela('organograma')
+                ->setCampoCod('organogramaCod')
+                ->setCampoDesc('organogramaNome')
                 ->setPlaceHolder('Pesquisar...')
-                //->setClassCss('navbar-form')
-                ->setHiddenValue('clienteCod')
+                ->setCondicao("e INSTR(organogramaAncestral,CONCAT(:|:," . $_SESSION['organogramaCod'] . ",:|:)) > 0")
+                ->setHiddenValue('organogramaCod')
+                ->setOnSelect('javascript:alert("asd");')
                 ->setLayoutPixel(false);
                 //->setEmColunaDeTamanho(12);
 /*

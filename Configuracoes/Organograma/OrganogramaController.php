@@ -296,6 +296,8 @@ class OrganogramaController extends \Zion\Core\Controller
         try {
 
             $template = new \Pixel\Template\Template();
+            $template->setConteudoIconeModulo('fa fa-sitemap');
+            $template->setConteudoNomeModulo('Definição do organograma');            
 
             new \Zion\Acesso\Acesso('filtrar');
 
@@ -303,7 +305,7 @@ class OrganogramaController extends \Zion\Core\Controller
 
             $getBotoes = new \Pixel\Grid\GridBotoes();
 
-            $getBotoes->setFiltros($this->getFormFiltro());
+            $getBotoes->setFiltros('');
             $botoes = $getBotoes->geraBotoes();
 
             $grid = $this->organogramaClass->filtrar($this->organogramaForm->getFormFiltro());
@@ -445,7 +447,7 @@ class OrganogramaController extends \Zion\Core\Controller
 
     protected function getOrdem()
     {
-        new \Zion\Acesso\Acesso('filtrar');
+        //new \Zion\Acesso\Acesso('filtrar');
 
         $cod = \filter_input(INPUT_GET, 'a');
 
@@ -454,8 +456,10 @@ class OrganogramaController extends \Zion\Core\Controller
 
     protected function getOrganogramaClassificacaoCod()
     {
-        new \Zion\Acesso\Acesso('filtrar');
+        //new \Zion\Acesso\Acesso('filtrar');
         $form = new \Sappiens\Configuracoes\Organograma\OrganogramaForm();
+
+        sleep(1);
 
         $cod = \filter_input(INPUT_GET, 'a');
 
@@ -467,136 +471,50 @@ class OrganogramaController extends \Zion\Core\Controller
         return parent::jsonSucesso($campo);
     }    
 
-/*
-    private function getFiltroTamanho()
+    //supostamente, não utilizado
+    protected function getOrganogramaClassificacaoTipoCod()
+    {
+        //new \Zion\Acesso\Acesso('filtrar');
+        $form = new \Sappiens\Configuracoes\Organograma\OrganogramaForm();
+
+        sleep(1);
+
+        $cod = \filter_input(INPUT_GET, 'a');
+
+        $param = $this->organogramaClass->getOrganogramaClassificacaoTipoCod($cod);    
+        $formManuPhantom = $form->getFormManuPhantom($param, 'organogramaClassificacaoCod');
+
+        $campo  = $formManuPhantom->getFormHtml('organogramaClassificacaoCod');
+        $campo .= $formManuPhantom->javaScript()->getLoad(true); 
+        return parent::jsonSucesso($campo);
+    }    
+
+    protected function getOrganogramaClassificacaoByReferencia()
+    {
+        //new \Zion\Acesso\Acesso('filtrar');
+        $form = new \Sappiens\Configuracoes\Organograma\OrganogramaForm();
+
+        sleep(1);
+
+        $cod = \filter_input(INPUT_GET, 'a');
+
+        $param = $this->organogramaClass->getOrganogramaClassificacaoByReferencia($cod);    
+        $formManuPhantom = $form->getFormManuPhantom($param, 'organogramaClassificacaoCod');
+
+        $campo  = $formManuPhantom->getFormHtml('organogramaClassificacaoCod');
+        $campo .= $formManuPhantom->javaScript()->getLoad(true); 
+        return parent::jsonSucesso($campo);
+    }     
+
+    protected function getClassificacaoReordenavel()
     {
 
-        $this->html = new \Zion\Layout\Html();
-        $template = new \Pixel\Template\Template();
-        //$form = new \Pixel\Form\Form();
+        //new \Zion\Acesso\Acesso('filtrar');
 
-        //$form->config('formFiltro', 'GET');
+        $cod = \filter_input(INPUT_GET, 'a');
 
-        $buffer  = '';
-        $buffer  = $this->html->abreTagAberta('form', array('class' => 'form-horizontal'));
-        $buffer .= $this->html->abreTagAberta('div', array('class' => 'form-group'));
-        //$buffer .= $this->html->abreTagAberta('label', array('for' => 'inputFoda', 'class' => 'col-sm-2 control-label')) . 'Termo' . $this->html->fechaTag('label');
-        $buffer .= $this->html->abreTagAberta('div', array('class' => 'col-sm-6'));
-        $buffer .= $this->html->abreTagAberta('div', array('class' => 'input-group'));
-        $buffer .= $this->html->abreTagAberta('div', array('class' => 'input-group-btn'));
-        $buffer .= $this->html->abreTagAberta('button', array('type' => 'button', 'class' => 'btn btn-default', 'tabindex' => '-1'));
-        $buffer .= 'Fornecedor';
-        $buffer .= $this->html->fechaTag('button');
-
-        $buffer .= $this->html->abreTagAberta('button', array('id' => 'sisBtnFil', 'type' => 'button', 'class' => 'btn dropdown-toggle', 'data-toggle' => 'dropdown'));
-        $buffer .= $this->html->abreTagAberta('span', array('id' =>'sisIcFil', 'class' => 'fa fa-caret-down'));
-        $buffer .= '';
-        $buffer .= $this->html->fechaTag('span');
-        $buffer .= $this->html->fechaTag('button');
-
-        $buffer .= $this->html->abreTagAberta('ul', array('class' => 'dropdown-menu'));
-
-        $buffer .= $this->html->abreTagAberta('li');
-            $buffer .= $this->html->abreTagAberta('a', array('href' => '#', 'onclick' => 'sisChFil(\'=\');'));
-                $buffer .= $this->html->abreTagAberta('span', array('class' => 'label label-warning')) . ' = ' . $this->html->fechaTag('span');
-                $buffer .= $this->html->abreTagAberta('span', array('class' => 'recE20px italico')) . 'Igual a' . $this->html->fechaTag('span');
-            $buffer .= $this->html->fechaTag('a');
-        $buffer .= $this->html->fechaTag('li');
-
-        $buffer .= $this->html->abreTagAberta('li');
-            $buffer .= $this->html->abreTagAberta('a', array('href' => '#', 'onclick' => 'sisChFil(\'!=\');'));
-                $buffer .= $this->html->abreTagAberta('span', array('class' => 'label label-warning')) . ' != ' . $this->html->fechaTag('span');
-                $buffer .= $this->html->abreTagAberta('span', array('style' => 'padding-left:16px;', 'class' => 'italico')) . 'Diferente de' . $this->html->fechaTag('span');
-            $buffer .= $this->html->fechaTag('a');
-        $buffer .= $this->html->fechaTag('li');        
-
-        $buffer .= $this->html->abreTagAberta('li', ['class' => 'divider']) . $this->html->fechaTag('li');
-
-        $buffer .= $this->html->abreTagAberta('li');
-            $buffer .= $this->html->abreTagAberta('a', array('href' => '#', 'onclick' => 'sisChFil(\'<>\');'));
-                $buffer .= $this->html->abreTagAberta('span', array('class' => 'label label-warning')) . ' <> ' . $this->html->fechaTag('span');
-                $buffer .= $this->html->abreTagAberta('span', array('style' => 'padding-left:12px;', 'class' => 'italico')) . 'Menor ou maior que' . $this->html->fechaTag('span');
-            $buffer .= $this->html->fechaTag('a');
-        $buffer .= $this->html->fechaTag('li');   
-
-        $buffer .= $this->html->abreTagAberta('li');
-            $buffer .= $this->html->abreTagAberta('a', array('href' => '#', 'onclick' => 'sisChFil(\'<\');'));
-                $buffer .= $this->html->abreTagAberta('span', array('class' => 'label label-warning')) . ' < ' . $this->html->fechaTag('span');
-                $buffer .= $this->html->abreTagAberta('span', array('class' => 'recE20px italico')) . 'Menor que' . $this->html->fechaTag('span');
-            $buffer .= $this->html->fechaTag('a');
-        $buffer .= $this->html->fechaTag('li');        
-
-        $buffer .= $this->html->abreTagAberta('li');
-            $buffer .= $this->html->abreTagAberta('a', array('href' => '#', 'onclick' => 'sisChFil(\'>\');'));
-                $buffer .= $this->html->abreTagAberta('span', array('class' => 'label label-warning')) . ' > ' . $this->html->fechaTag('span');
-                $buffer .= $this->html->abreTagAberta('span', array('class' => 'recE20px italico')) . 'Maior que' . $this->html->fechaTag('span');
-            $buffer .= $this->html->fechaTag('a');
-        $buffer .= $this->html->fechaTag('li');   
-
-        $buffer .= $this->html->abreTagAberta('li');
-            $buffer .= $this->html->abreTagAberta('a', array('href' => '#', 'onclick' => 'sisChFil(\'<=\');'));
-                $buffer .= $this->html->abreTagAberta('span', array('class' => 'label label-warning')) . ' <= ' . $this->html->fechaTag('span');
-                $buffer .= $this->html->abreTagAberta('span', array('style' => 'padding-left:12px;', 'class' => 'italico')) . 'Menor ou igual a' . $this->html->fechaTag('span');
-            $buffer .= $this->html->fechaTag('a');
-        $buffer .= $this->html->fechaTag('li');   
-        
-        $buffer .= $this->html->abreTagAberta('li');
-            $buffer .= $this->html->abreTagAberta('a', array('href' => '#', 'onclick' => 'sisChFil(\'>=\');'));
-                $buffer .= $this->html->abreTagAberta('span', array('class' => 'label label-warning')) . ' >= ' . $this->html->fechaTag('span');
-                $buffer .= $this->html->abreTagAberta('span', array('style' => 'padding-left:12px;', 'class' => 'italico')) . 'Maior ou igual a' . $this->html->fechaTag('span');
-            $buffer .= $this->html->fechaTag('a');
-        $buffer .= $this->html->fechaTag('li');                              
-
-        $buffer .= $this->html->abreTagAberta('li', ['class' => 'divider']) . $this->html->fechaTag('li');         
-
-        $buffer .= $this->html->abreTagAberta('li');
-            $buffer .= $this->html->abreTagAberta('a', array('href' => '#', 'onclick' => 'sisChFil(\'*\');'));
-                $buffer .= $this->html->abreTagAberta('span', array('class' => 'label label-warning')) . ' * ' . $this->html->fechaTag('span');
-                $buffer .= $this->html->abreTagAberta('span', array('class' => 'recE20px italico')) . 'Semelhante' . $this->html->fechaTag('span');
-            $buffer .= $this->html->fechaTag('a');
-        $buffer .= $this->html->fechaTag('li');       
-
-        $buffer .= $this->html->abreTagAberta('li');
-            $buffer .= $this->html->abreTagAberta('a', array('href' => '#', 'onclick' => 'sisChFil(\'A*\');'));
-                $buffer .= $this->html->abreTagAberta('span', array('class' => 'label label-warning')) . ' A* ' . $this->html->fechaTag('span');
-                $buffer .= $this->html->abreTagAberta('span', array('style' => 'padding-left:12px;', 'class' => 'italico')) . 'Semelhante após' . $this->html->fechaTag('span');
-            $buffer .= $this->html->fechaTag('a');
-        $buffer .= $this->html->fechaTag('li');     
-
-        $buffer .= $this->html->abreTagAberta('li');
-            $buffer .= $this->html->abreTagAberta('a', array('href' => '#', 'onclick' => 'sisChFil(\'*A\');'));
-                $buffer .= $this->html->abreTagAberta('span', array('class' => 'label label-warning')) . ' *A ' . $this->html->fechaTag('span');
-                $buffer .= $this->html->abreTagAberta('span', array('style' => 'padding-left:12px;', 'class' => 'italico')) . 'Semelhante antes' . $this->html->fechaTag('span');
-            $buffer .= $this->html->fechaTag('a');
-        $buffer .= $this->html->fechaTag('li');           
-
-        $buffer .= $this->html->abreTagAberta('li', ['class' => 'divider']) . $this->html->fechaTag('li');         
-
-        $buffer .= $this->html->abreTagAberta('li');
-            $buffer .= $this->html->abreTagAberta('a', array('href' => '#', 'onclick' => 'sisChFil(\'E\');'));
-                $buffer .= $this->html->abreTagAberta('span', array('class' => 'label label-warning')) . ' E ' . $this->html->fechaTag('span');
-                $buffer .= $this->html->abreTagAberta('span', array('style' => 'padding-left:20px;', 'class' => 'italico')) . 'Operador "E QUE"' . $this->html->fechaTag('span');
-            $buffer .= $this->html->fechaTag('a');
-        $buffer .= $this->html->fechaTag('li');   
-
-        $buffer .= $this->html->abreTagAberta('li');
-            $buffer .= $this->html->abreTagAberta('a', array('href' => '#', 'onclick' => 'sisChFil(\'OU\');'));
-                $buffer .= $this->html->abreTagAberta('span', array('class' => 'label label-warning')) . ' OU ' . $this->html->fechaTag('span');
-                $buffer .= $this->html->abreTagAberta('span', array('style' => 'padding-left:8px;', 'class' => 'italico')) . 'Operador "OU QUE"' . $this->html->fechaTag('span');
-            $buffer .= $this->html->fechaTag('a');
-        $buffer .= $this->html->fechaTag('li');              
-
-        $buffer .= $this->html->fechaTag('ul');
-        $buffer .= $this->html->fechaTag('div');
-
-        $buffer .= $this->html->abreTagAberta('input', array('id' => 'inputFoda', 'class' => 'form-control', 'placeholder' => 'Digite e torça!'));
-
-        $buffer .= $this->html->fechaTag('div');
-        $buffer .= $this->html->fechaTag('div');
-        $buffer .= $this->html->fechaTag('div');
-        $buffer .= $this->html->fechaTag('form');
+        return parent::jsonSucesso($this->organogramaClass->getClassificacaoReordenavel($cod));        
 
     }    
-*/
 
 }

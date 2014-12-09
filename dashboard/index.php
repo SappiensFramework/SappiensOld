@@ -2,6 +2,12 @@
 
 require '../Config.php';
 
+if(!$_SESSION['usuarioCod'] or !$_SESSION['organogramaCod']) {
+  header('location: ../?err=Sessão expirada!');
+}
+
+echo (new \Sappiens\Dashboard\DashboardController())->controle(\filter_input(\INPUT_GET, 'acao'));
+/*
 try {
 
 	$html     = new \Zion\Layout\Html();
@@ -35,8 +41,8 @@ try {
               )                    
         );
 
-    $tab = $template->getTab('tabWelcome', array('classCss' => 'col-sm-6'), $tabArray);
-    $panel = $template->getPanel('box-welcome', 'Bem-vindo', $tab, ['titleVisible' => true, 'startVisible' => true, 'iconTitle' => 'fa fa-filter']);
+    //$tab = $template->getTab('tabWelcome', array('classCss' => 'col-sm-6'), $tabArray);
+    $panel = $template->getPanel('box-welcome', 'Bem-vindo', '', ['titleVisible' => true, 'startVisible' => true, 'iconTitle' => 'fa fa-filter']);
 
 	$template->setConteudoHeader();
 	$template->setConteudoMain($panel);
@@ -54,5 +60,5 @@ define('DEFAULT_MODULO_NOME', 'Dashboard');
 define('DEFAULT_MODULO_URL', 'Dashboard');
 
 echo $template->getTemplate();
-
+*/
 ?>

@@ -6,24 +6,33 @@ class OrganogramaClassificacaoClass extends OrganogramaClassificacaoSql
 {
     
     private $chavePrimaria;
+    private $chaveEstrangeira;
     private $tabela;
     private $precedencia;
-    private $colunas;
+    private $colunasCrud;
     private $colunasGrid;
     
     public function __construct()
     {
         $this->tabela           = 'organograma_classificacao';        
-        $this->precedencia      = 'organogramaClassificacao';        
+        $this->precedencia      = 'organogramaClassificacao';      
         $this->chavePrimaria    = $this->precedencia . 'Cod';
-        $this->colunas = [
+
+        $this->tabela2          = 'organograma_classificacao_tipo';   
+        $this->precedencia2     = 'organogramaClassificacaoTipo';  
+        $this->chaveEstrangeira = $this->precedencia2 . 'Cod';
+
+        $this->colunasCrud = [
                     $this->precedencia . 'ReferenciaCod',
+                    $this->precedencia . 'Ancestral',
+                    $this->chaveEstrangeira,
                     $this->precedencia . 'Nome',
                     $this->precedencia . 'Ordem',
+                    $this->precedencia . 'Reordenavel',
                     $this->precedencia . 'Status'
         ];
         $this->colunasGrid = [                                                                                   
-                    $this->precedencia . 'ReferenciaCombinado'  => 'Classificação combinada',                                  
+                    //$this->precedencia . 'ReferenciaCombinado'  => 'Classificação combinada',                                  
                     $this->precedencia . 'Ordem'                => 'Ordem',         
                     $this->precedencia . 'Nome'                 => 'Classificação',                      
                     $this->precedencia . 'Status'               => 'Status'
@@ -68,13 +77,39 @@ class OrganogramaClassificacaoClass extends OrganogramaClassificacaoSql
     public function cadastrar($objForm)
     {
         $crud = new \Pixel\Crud\CrudUtil();
-        return $crud->insert($this->tabela, $this->colunas, $objForm);
+        $dadosReferencia = $this->getDadosByReferencia($objForm->get('organogramaClassificacaoReferenciaCod'));
+
+        if(!$objForm->get('organogramaClassificacaoTipoCod')) {
+            $objForm->set('organogramaClassificacaoTipoCod', $dadosReferencia['organogramaClassificacaoTipoCod']);
+        }        
+
+        $organogramaClassificacaoNovo = $crud->insert($this->tabela, $this->colunasCrud, $objForm);
+
+        if($dadosReferencia['organogramaClassificacaoAncestral']) {
+            $objForm->set('organogramaClassificacaoAncestral', "|" . $organogramaClassificacaoNovo . $dadosReferencia['organogramaClassificacaoAncestral']);   
+        }
+
+        $objForm->set('cod', $organogramaClassificacaoNovo);  
+
+        return $crud->update($this->tabela, ['organogramaClassificacaoAncestral'], $objForm, $this->chavePrimaria);
+
     }
     
     public function alterar($objForm)
     {
         $crud = new \Pixel\Crud\CrudUtil();
-        return $crud->update($this->tabela, $this->colunas, $objForm, $this->chavePrimaria);
+
+        if(!$objForm->get('organogramaClassificacaoTipoCod')) {
+            $k = array_search('organogramaClassificacaoTipoCod', $this->colunasCrud);
+            unset($this->colunasCrud[$k]);
+        }        
+
+        $dadosReferencia = $this->getDadosByReferencia($objForm->get('organogramaClassificacaoReferenciaCod')); 
+        $organogramaClassificacaoAncestral = $dadosReferencia['organogramaClassificacaoAncestral'];
+
+        if($organogramaClassificacaoAncestral) $objForm->set('organogramaClassificacaoAncestral', "|" . $objForm->get('cod') . $organogramaClassificacaoAncestral);    
+
+        return $crud->update($this->tabela, $this->colunasCrud, $objForm, $this->chavePrimaria);
     }
     
     public function remover($cod)
@@ -97,7 +132,7 @@ class OrganogramaClassificacaoClass extends OrganogramaClassificacaoSql
         
         return $objForm;
     }
-
+/*
     public function getOrdem($cod)
     {
         
@@ -117,6 +152,58 @@ class OrganogramaClassificacaoClass extends OrganogramaClassificacaoSql
             return $parcial . '.' . $final;
 
         }
+
+    }    
+*/
+
+    public function getOrdem($cod)
+    {
+        
+        $con = \Zion\Banco\Conexao::conectar();
+        $param = $con->execLinhaArray(parent::getOrdem($cod, 'referencia'));
+
+        if(strlen($param['ordemAtual']) <= 0) {
+
+            $param = $con->execLinhaArray(parent::getOrdem($cod));
+            if(strlen($param['ordemAtual']) <= 0) {
+                return 1;
+            } else {
+                return $param['ordemAtual'] . '.1';
+            }
+
+        } else {
+
+            $tam = strlen(strrchr($param['ordemAtual'], '.'));
+            $parcial = substr($param['ordemAtual'], 0, -$tam);
+            $final = substr(strrchr($param['ordemAtual'], '.'), 1)+1;
+            return $parcial . '.' . $final;
+
+        }
+
+    } 
+
+    public function getOrganogramaClassificacaoReferenciaCod($cod)
+    {
+        
+        $con = \Zion\Banco\Conexao::conectar();
+        return $con->paraArray(parent::getOrganogramaClassificacaoReferenciaCod($cod),'valor','chave');
+
+    }      
+
+    private function getDadosByReferencia($cod)
+    {
+
+        $con = \Zion\Banco\Conexao::conectar();
+        return $con->execLinhaArray(parent::getDadosSql($cod));
+
+    }     
+
+    private function getOrganogramaClassificacaoAncestralByOrganogramaClassificacaoReferenciaCod($cod)
+    {
+
+        $con = \Zion\Banco\Conexao::conectar();
+        $dados = $con->execLinhaArray(parent::getDadosSql($cod));
+        return $dados['organogramaClassificacaoAncestral'];
 
     }    
 

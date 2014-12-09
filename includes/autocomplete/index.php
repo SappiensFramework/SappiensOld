@@ -2,5 +2,5 @@
 
 require '../../Config.php';
 
-$complete = new \Zion\Remoto\Complete();
+$complete = new \Pixel\Remoto\Complete();
 echo $complete->listar();

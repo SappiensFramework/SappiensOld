@@ -1,8 +1,8 @@
 <?php
 
-namespace Sappiens\Configuracoes\Organograma;
+namespace Sappiens\Dashboard;
 
-class OrganogramaSql
+class DashboardSql
 {
 
     public function filtrarSql($objForm, $colunas)
@@ -24,12 +24,19 @@ class OrganogramaSql
         return $sql;
     }
 
-    public function getDadosSql($cod)
+    public function getDadosOrganograma($cod)
     {
         return "SELECT *
                   FROM  organograma
                  WHERE  organogramaCod = ".$cod;
     }
+
+    public function getDadosUsuario($cod)
+    {
+        return "SELECT *
+                  FROM  _usuario
+                 WHERE  usuarioCod = ".$cod;
+    }    
 
     public function getOrdem($cod, $modo = '')
     {

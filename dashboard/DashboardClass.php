@@ -1,8 +1,8 @@
 <?php
 
-namespace Sappiens\Configuracoes\Organograma;
+namespace Sappiens\Dashboard;
 
-class OrganogramaClass extends OrganogramaSql
+class DashboardClass extends DashboardSql
 {
     
     private $chavePrimaria;
@@ -35,6 +35,8 @@ class OrganogramaClass extends OrganogramaSql
                     $this->precedencia  . 'Status'               => 'Status'
         ];                
     }   
+
+    
 
     public function getParametrosGrid($objForm)
     {
@@ -89,10 +91,6 @@ class OrganogramaClass extends OrganogramaSql
     {
         $crud = new \Pixel\Crud\CrudUtil();
 
-        if(!$objForm->get('organogramaOrdem')){
-            $k = array_search('organogramaOrdem', $this->colunas);
-            unset($this->colunas[$k]);            
-        }
         if($objForm->get('organogramaOrdenavel') == "I") $objForm->set('organogramaOrdem', '');
         if(!$this->getClassificacaoReordenavel($objForm->get('cod'))) {
             $k = array_search('organogramaClassificacaoCod', $this->colunas);

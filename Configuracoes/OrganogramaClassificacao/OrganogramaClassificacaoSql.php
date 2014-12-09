@@ -10,13 +10,14 @@ class OrganogramaClassificacaoSql
         $fil = new \Pixel\Filtro\Filtrar($objForm);
         $util = new \Pixel\Crud\CrudUtil();
 
-        $sql = "SELECT *,
+        $sql = "SELECT a.*,
                        CASE 
-                            WHEN organogramaClassificacaoStatus = 'A' THEN 'Ativo'
-                            WHEN organogramaClassificacaoStatus = 'I' THEN 'Inativo'
+                            WHEN a.organogramaClassificacaoStatus = 'A' THEN 'Ativo'
+                            WHEN a.organogramaClassificacaoStatus = 'I' THEN 'Inativo'
                        END AS organogramaClassificacaoStatus
-	              FROM v_organograma_classificacao
-	             WHERE 1 ";
+	              FROM organograma_classificacao a, organograma b
+	             WHERE INSTR(a.organogramaClassificacaoAncestral,CONCAT('|', b.OrganogramaClassificacaoCod,'|')) > 0
+                 AND b.organogramaCod = " . $_SESSION['organogramaCod'];
 
         $sql .= $util->getSqlFiltro($fil, $objForm, $colunas);
 
@@ -42,5 +43,19 @@ class OrganogramaClassificacaoSql
                      WHERE organogramaClassificacao".$sqlAdd."Cod = ".$cod;
 
     }
+
+    public function getOrganogramaClassificacaoReferenciaCod($cod)
+    {
+        return "SELECT organogramaClassificacaoCod chave, CONCAT(organogramaClassificacaoNome) valor
+                  FROM organograma_classificacao
+                 WHERE organogramaClassificacaoTipoCod = ".$cod;
+    }     
+
+    public function getDadosOrganogramaByOrganogramaCod($cod)
+    {
+        return "SELECT *
+                  FROM  organograma
+                 WHERE  organogramaCod = ".$cod;
+    }    
 
 }

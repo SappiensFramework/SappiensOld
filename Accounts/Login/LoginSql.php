@@ -1,8 +1,8 @@
 <?php
 
-namespace Sappiens\Configuracoes\Organograma;
+namespace Sappiens\Accounts\Login;
 
-class OrganogramaSql
+class LoginSql
 {
 
     public function filtrarSql($objForm, $colunas)
@@ -24,12 +24,19 @@ class OrganogramaSql
         return $sql;
     }
 
-    public function getDadosSql($cod)
+    public function getAuth($l, $p)
+    {
+        return "SELECT usuarioCod, organogramaCod
+                  FROM _usuario
+                 WHERE usuarioLogin = '" . $l . "' AND usuarioSenha = '" . $p . "' ";
+    }
+
+    public function getDadosUsuario($cod)
     {
         return "SELECT *
-                  FROM  organograma
-                 WHERE  organogramaCod = ".$cod;
-    }
+                  FROM  _usuario
+                 WHERE  usuarioCod = ".$cod;
+    }    
 
     public function getOrdem($cod, $modo = '')
     {
