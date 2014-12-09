@@ -100,8 +100,8 @@ class Config
 
 if(@MODULO != 'Login') {
     if(!$_SESSION['usuarioCod'] or !$_SESSION['organogramaCod']) {
-        header('location: ' . SIS_URL_BASE . 'Accounts/Login?err=Sessão expirada!');
-    }
+        header('location: ' . SIS_URL_BASE . 'Accounts/Login?err=Acesse a sua conta para continuar!');
+    } 
 }
 
 require_once SIS_FM_BASE . 'Lib/Zion/ClassLoader/Loader.php';
