@@ -2,10 +2,6 @@
 
 require '../../Config.php';
 
-if(!$_SESSION['usuarioCod'] or !$_SESSION['organogramaCod']) {
-  header('location: ../../?err=Sessão expirada!');
-}
-
 define('GRUPO', 'Configuracoes');
 define('MODULO', 'Organograma');
 define('DEFAULT_GRUPO_NOME', 'Configuracoes');
