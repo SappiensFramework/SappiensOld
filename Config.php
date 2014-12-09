@@ -35,7 +35,7 @@ class Config
         define('SIS_STRING_CRYPT', 'wzixjdy');
         define('SIS_LINHAS_GRID', '10');
         
-        $_SESSION['UsuarioCod'] = 1;//Usada temporariamente apenas para não busgar os componentes que dependem de UsuarioCod setado
+        $_SESSION['usuarioCod'] = 1;//Usada temporariamente apenas para não busgar os componentes que dependem de UsuarioCod setado
         
         self::$SIS_CFG = [
             'bases'         => array('padrao'=> array(
