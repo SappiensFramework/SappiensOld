@@ -40,7 +40,9 @@ class ModuloForm
 
         $form->setAcao($acao);
 
-        $form->config('formManu' . $cod, 'POST')
+        $nomeForm = 'formManu' . $cod;
+        
+        $form->config($nomeForm, 'POST')
                 ->setHeader('Basicos');
 
         $campos[] = $form->hidden('cod')
@@ -84,7 +86,7 @@ class ModuloForm
 
         $campos[] = $form->botaoSalvarPadrao();
 
-        $campos[] = $form->botaoDescartarTabs($cod);
+        $campos[] = $form->botaoDescartarPadrao();
 
         return $form->processarForm($campos);
     }
@@ -95,7 +97,9 @@ class ModuloForm
 
         $form->setAcao($acao);
 
-        $form->config('formManu2' . $cod, 'POST')
+        $nomeForm = 'formManu2' . $cod;
+        
+        $form->config($nomeForm, 'POST')
                 ->setHeader('Escolhas');
 
         $campos[] = $form->hidden('cod')
@@ -151,7 +155,7 @@ class ModuloForm
 
         $campos[] = $form->botaoSalvarPadrao();
 
-        $campos[] = $form->botaoDescartarTabs($cod);
+        $campos[] = $form->botaoDescartarPadrao();
 
         return $form->processarForm($campos);
     }
