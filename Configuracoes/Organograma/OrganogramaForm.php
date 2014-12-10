@@ -9,16 +9,12 @@ class OrganogramaForm
     {
         $form = new \Pixel\Form\Form();
 
-        $form->config('formFiltro', 'GET');
+        $form->config('sisFormFiltro');
 
-        $campos[] = $form->suggest('uf', 'Unidade Federativa')
-                ->setTabela('uf')                
-                ->setCampoBusca('ufNome')
-                ->setCampoDesc('ufNome')
-                ->setEmColunaDeTamanho(10);
-
-        $campos[] = $form->botaoSubmit('enviar', 'Enviar')
-                ->setClassCss('btn btn-primary');
+        $campos[] = $form->suggest('organogramaNome', 'Organograma')
+                ->setTabela('organograma')
+                ->setCampoBusca('organogramaNome')
+                ->setCampoDesc('organogramaNome');
 
         return $form->processarForm($campos);
     }

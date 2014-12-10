@@ -17,7 +17,7 @@ class OrganogramaSql
                        END AS organogramaStatus
 	              FROM organograma a, organograma_classificacao b
 	             WHERE INSTR(a.organogramaAncestral,CONCAT('|', " . $_SESSION['organogramaCod'] . ",'|')) > 0
-                 AND a.organogramaClassificacaoCod = b.organogramaClassificacaoCod";
+                 AND a.organogramaClassificacaoCod = b.organogramaClassificacaoCod ";
 
         $sql .= $util->getSqlFiltro($fil, $objForm, $colunas);
 
