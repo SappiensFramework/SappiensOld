@@ -10,10 +10,6 @@
  */
 namespace Sappiens;
 
-session_start();
-
-\header('Content-Type: text/html; charset=utf-8');
-
 class Config
 {
 
@@ -22,6 +18,10 @@ class Config
 
     private function __construct()
     {
+        
+        \session_start();
+
+        \header('Content-Type: text/html; charset=utf-8');
 
         $this->setDiretorios('dev');           
 
@@ -126,6 +126,13 @@ class Config
 
     }
 }
+
+function sisErro($errno, $errstr, $errfile, $errline)
+{
+    throw new \Exception("'<pre>'Erro: " . $errno . ' - ' . $errstr . ' - ' . $errfile . ' - ' . $errline.'</pre>');
+}
+
+\set_error_handler("\\Sappiens\\sisErro", \E_WARNING | \E_NOTICE);
 
 \Sappiens\Config::conf();
 
