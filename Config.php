@@ -25,8 +25,6 @@ class Config
 
         $this->setDiretorios('dev');           
 
-        define('SIS_ID_NAMESPACE_PROJETO','Sappiens');
-        define('SIS_NAMESPACE_PROJETO','C:/xampp/htdocs');       
         define('SIS_SLOGAN', 'Simples. Flexível. Totoso.');
         define('SIS_DESCRICAO', SIS_ID_NAMESPACE_PROJETO . ', Plataforma de Gestão Integrada');
         define('SIS_AUTOR', 'The Sappiens Team');
@@ -65,19 +63,45 @@ class Config
 
         if($modo == 'dev') {
 
-            define('SIS_URL_BASE_STATIC','//192.168.25.51/~onyxprev/static/sappiens/');
+            define('SIS_URL_BASE_STATIC', SIS_URL_BASE . 'Static/');
             define('SIS_URL_BASE_DEFAULT','http://localhost');
             define('SIS_FM_BASE', 'C:/xampp/htdocs/Zion/');
             define('SIS_LAYOUT_BASE', 'http://localhost/Zion/Layout/');
-            define('SIS_URL_FM_BASE', 'http://localhost/Zion/');
+            define('SIS_URL_FM_BASE', 'http://localhost/Zion/Static/');
             define('SIS_DEFAULT_AUTOCOMPLETE', SIS_URL_BASE . 'includes/autocomplete/');
 
+            define('SIS_ID_NAMESPACE_PROJETO','Sappiens');
+            define('SIS_NAMESPACE_PROJETO','C:/xampp/htdocs');  
             define('SIS_NAMESPACE_FRAMEWORK', 'C:/xampp/htdocs/Zion/Lib');
             define('SIS_NAMESPACE_TEMPLATE', 'C:/xampp/htdocs/Zion/Lib');
 
-        } elseif($modo == 'test') {
+            self::$SIS_CFG = [
+                'bases'         => array('padrao' => array(
+                    'host'      =>'192.168.25.51',
+                    'banco'     =>'onyxprev_sappiens',
+                    'usuario'   =>'onyxprev_sapp',
+                    'senha'     =>'qwertybracom'))];             
 
-            // NOT IMPLEMENTED
+        } elseif($modo == 'alpha') {
+
+            define('SIS_URL_BASE_STATIC', SIS_URL_BASE . 'Static/');
+            define('SIS_URL_BASE_DEFAULT','//team.sappiens.com.br/alpha');
+            define('SIS_FM_BASE', '/home/sappienscom/public_html/alpha/Zion/');
+            define('SIS_LAYOUT_BASE', 'http://team.sappiens.com.br/alpha/Zion/Layout/');
+            define('SIS_URL_FM_BASE', 'http://team.sappiens.com.br/alpha/Zion/Static/');
+            define('SIS_DEFAULT_AUTOCOMPLETE', SIS_URL_BASE . 'includes/autocomplete/');
+
+            define('SIS_ID_NAMESPACE_PROJETO','Sappiens');
+            define('SIS_NAMESPACE_PROJETO','/home/sappienscom/public_html/alpha');    
+            define('SIS_NAMESPACE_FRAMEWORK', '/home/sappienscom/public_html/alpha/Zion/Lib');
+            define('SIS_NAMESPACE_TEMPLATE', '/home/sappienscom/public_html/alpha/Zion/Lib');
+
+            self::$SIS_CFG = [
+                'bases'         => array('padrao' => array(
+                    'host'      =>'localhost',
+                    'banco'     =>'onyxprev_sappiens',
+                    'usuario'   =>'onyxprev_sapp',
+                    'senha'     =>'qwertybracom'))]; 
 
         } elseif($modo == 'prod') {
 
@@ -90,6 +114,13 @@ class Config
 
             define('SIS_NAMESPACE_FRAMEWORK', '/home/sappiens/public_html/app/Zion/Lib');
             define('SIS_NAMESPACE_TEMPLATE', '/home/sappiens/public_html/app/Zion/Lib');
+
+            self::$SIS_CFG = [
+                'bases'         => array('padrao' => array(
+                    'host'      =>'localhost',
+                    'banco'     =>'onyxprev_sappiens',
+                    'usuario'   =>'onyxprev_sapp',
+                    'senha'     =>'qwertybracom'))];            
 
         }
 
