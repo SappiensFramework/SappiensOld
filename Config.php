@@ -129,7 +129,9 @@ class Config
 
 \Sappiens\Config::conf();
 
-if(@MODULO != 'Login') {
+$modulo = \defined('MODULO') ? MODULO : '';
+
+if($modulo != 'Login') {
     if(!$_SESSION['usuarioCod'] or !$_SESSION['organogramaCod']) {
         header('location: ' . SIS_URL_BASE . 'Accounts/Login?err=Acesse a sua conta para continuar!');
     } 

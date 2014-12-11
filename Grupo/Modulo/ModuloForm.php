@@ -40,8 +40,10 @@ class ModuloForm
 
         $form->setAcao($acao);
 
-        $form->config('formManu' . $cod, 'POST')
-                ->setHeader('Estados');
+        $nomeForm = 'formManu' . $cod;
+        
+        $form->config($nomeForm, 'POST')
+                ->setHeader('Basicos');
 
         $campos[] = $form->hidden('cod')
                 ->setValor($form->retornaValor('cod'));
@@ -80,8 +82,29 @@ class ModuloForm
                 ->setInicio('Selecione esse chosen amiguinho')
                 ->setTabela('uf')
                 ->setCampoCod('ufCod')
-                ->setCampoDesc('ufNome');
+                ->setCampoDesc('ufNome');        
 
+        $campos[] = $form->botaoSalvarPadrao();
+
+        $campos[] = $form->botaoDescartarPadrao();
+
+        return $form->processarForm($campos);
+    }
+
+    public function getFormManu2($acao, $cod = null)
+    {
+        $form = new \Pixel\Form\Form();
+
+        $form->setAcao($acao);
+
+        $nomeForm = 'formManu2' . $cod;
+        
+        $form->config($nomeForm, 'POST')
+                ->setHeader('Escolhas');
+
+        $campos[] = $form->hidden('cod')
+                ->setValor($form->retornaValor('cod'));
+        
         $campos[] = $form->chosen('ufChosenmultiplo[]', 'Chosen Multiplo com Banco', true)
                 ->setValor($form->retornaValor('ufChosenmultiplo[]'))
                 ->setInicio('Selecione esse chosen amiguinho')
@@ -127,18 +150,16 @@ class ModuloForm
                 ->setArray(array('S' => 'Aceito os termos'));
 
         $campos[] = $form->upload('anexos[]', 'Meus Anexos', "ARQUIVO")
-                ->setThumbnail(true)
                 ->setCodigoReferencia($cod)
-                ->setAlturaMaximaTB(100)
                 ->setMultiple(true);
 
         $campos[] = $form->botaoSalvarPadrao();
 
-        $campos[] = $form->botaoDescartarPadrao('formManu' . $cod);
+        $campos[] = $form->botaoDescartarPadrao();
 
         return $form->processarForm($campos);
     }
-
+    
     public function getJSEstatico()
     {
         $jsStatic = \Pixel\Form\FormJavaScript::iniciar();

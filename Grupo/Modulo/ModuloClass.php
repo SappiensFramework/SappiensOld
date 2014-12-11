@@ -86,6 +86,19 @@ class ModuloClass extends ModuloSql
 
         $parametrosSql = $con->execLinhaArray(parent::getDadosSql($cod));
 
+        $this->crudUtil->setParametrosForm($objForm, $parametrosSql, $cod);
+
+        return $objForm;
+    }
+    
+    public function setValoresFormManu2($cod, $formIntancia)
+    {
+        $con = \Zion\Banco\Conexao::conectar();
+
+        $objForm = $formIntancia->getFormManu2('alterar', $cod);
+
+        $parametrosSql = $con->execLinhaArray(parent::getDadosSql($cod));
+
         $objetos = $objForm->getObjetos();
 
         //Intervenção para o campo escolha
