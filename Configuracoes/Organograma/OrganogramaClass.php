@@ -27,13 +27,15 @@ class OrganogramaClass extends OrganogramaSql
                     $this->precedencia . 'Ordenavel',
                     $this->precedencia . 'Status'
         ];
-        $this->colunasGrid = [                                                                                   
-                    //$this->precedencia  . 'ReferenciaCombinado'  => 'Posição combinada',                                  
+        $this->colunasGrid = [                                                                                                              
                     $this->precedencia  . 'Ordem'                => 'Ordem',         
                     $this->precedencia2 . 'Nome'                 => 'Classificação',                     
                     $this->precedencia  . 'Nome'                 => 'Organograma',   
                     $this->precedencia  . 'Status'               => 'Status'
-        ];                
+        ];    
+        $this->filtroDinamico = [
+            $this->precedencia . 'Nome' => ""
+        ];                    
     }   
 
     public function getParametrosGrid($objForm)
@@ -53,14 +55,12 @@ class OrganogramaClass extends OrganogramaSql
     {
         $grid = new \Pixel\Grid\GridPadrao();
 
-        //Setando Parametros
         \Zion\Paginacao\Parametros::setParametros("GET", $this->getParametrosGrid($objForm));
 
-        //Grid de Visualização - Configurações
         $grid->setColunas($this->colunasGrid);
 
-        //Configurações Fixas da Grid
-        $grid->setSql(parent::filtrarSql($objForm,$this->colunasGrid));
+        //$grid->setSql(parent::filtrarSql($objForm,$this->colunasGrid));
+        $grid->setSql(parent::filtrarSql($objForm, $this->filtroDinamico));
         $grid->setChave($this->chavePrimaria);
         $grid->setSelecaoMultipla(true);
         //$grid->setAlinhamento(array('organogramaOrdem' => 'DIREITA'));

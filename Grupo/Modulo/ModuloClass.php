@@ -9,8 +9,9 @@ class ModuloClass extends ModuloSql
     public $crudUtil;
     public $tabela;
     public $prefixo;
-    public $colunasCrud;
-    public $colunasGrid;
+    private $colunasCrud;
+    private $colunasGrid;
+    private $filtroDinamico;
 
     public function __construct()
     {
@@ -39,6 +40,12 @@ class ModuloClass extends ModuloSql
             $this->prefixo . 'Sigla' => "Sigla",
             $this->prefixo . 'Nome' => "Nome"
         ];
+        
+        $this->filtroDinamico = [
+            $this->prefixo . 'Cod' => "",
+            $this->prefixo . 'Sigla' => "",
+            $this->prefixo . 'Nome' => ""
+        ];
     }
 
     public function filtrar($objForm)
@@ -49,7 +56,7 @@ class ModuloClass extends ModuloSql
         
         $grid->setColunas($this->colunasGrid);
 
-        $grid->setSql(parent::filtrarSql($objForm, $this->colunasGrid));
+        $grid->setSql(parent::filtrarSql($objForm, $this->filtroDinamico));
         $grid->setChave($this->chavePrimaria);
         //$grid->setSelecaoMultipla(false);
 
@@ -76,6 +83,19 @@ class ModuloClass extends ModuloSql
         $con = \Zion\Banco\Conexao::conectar();
 
         $objForm = $formIntancia->getFormManu('alterar', $cod);
+
+        $parametrosSql = $con->execLinhaArray(parent::getDadosSql($cod));
+
+        $this->crudUtil->setParametrosForm($objForm, $parametrosSql, $cod);
+
+        return $objForm;
+    }
+    
+    public function setValoresFormManu2($cod, $formIntancia)
+    {
+        $con = \Zion\Banco\Conexao::conectar();
+
+        $objForm = $formIntancia->getFormManu2('alterar', $cod);
 
         $parametrosSql = $con->execLinhaArray(parent::getDadosSql($cod));
 

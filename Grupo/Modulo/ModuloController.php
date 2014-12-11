@@ -98,11 +98,10 @@ class ModuloController extends \Zion\Core\Controller
 
             $retorno = '';
             foreach ($selecionados as $cod) {
-
-                $objForm = $this->moduloClass->setValoresFormManu($cod, $this->moduloForm);
-                $retorno .= $objForm->montaForm();
-                $retorno .= $objForm->javaScript()->getLoad(true);
-                $objForm->javaScript()->resetLoad();
+                
+                $retorno = $this->emTabs($cod,
+                        $this->moduloClass->setValoresFormManu($cod, $this->moduloForm),
+                        $this->moduloClass->setValoresFormManu2($cod, $this->moduloForm));
             }
         }
 
