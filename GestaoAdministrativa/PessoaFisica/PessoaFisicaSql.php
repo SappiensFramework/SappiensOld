@@ -30,4 +30,18 @@ class PessoaFisicaSql
                  WHERE pessoaFisicaCod = ".$cod;
     } 
 
+    public function getCamposSql($cod)
+    {
+        return "SELECT *
+                  FROM pessoa_documento_tipo
+                 WHERE pessoaDocumentoTipoReferenciaCod = ".$cod;
+    }    
+
+    public function getRelacionamento($cod)
+    {
+        return "SELECT *
+                  FROM pessoa_documento_tipo_relacionamento
+                 WHERE pessoaDocumentoTipoCod = ".$cod;
+    }      
+
 }

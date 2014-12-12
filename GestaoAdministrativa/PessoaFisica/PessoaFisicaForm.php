@@ -23,59 +23,6 @@ class PessoaFisicaForm
         return $form->processarForm($campos);
     }
 
-    public function getFormManuPhantom($param, $campo)
-    {
-
-        $form = new \Pixel\Form\Form();
-
-        switch ($campo) {
-
-            case 'organogramaClassificacaoCod':
-                
-            $campos[] = $form->chosen('organogramaClassificacaoCod', 'Classificação', true)
-                    ->setArray($param)
-                    ->setInicio('Selecione...')
-                    ->setMultiplo(false)
-                    ->setEmColunaDeTamanho('12')
-                    ->setLayoutPixel(false)
-                    ->setOrdena(false);
-
-            break;
-            
-        }
-
-        return $form->processarForm($campos);
-
-    }
-
-    /**
-     * 
-     * @return \Pixel\Form\Form
-     */
-    public function getFormManuTab($acao, $cod = null, $extra = null)
-    {
-
-        $form = new \Pixel\Form\Form();
-        $acesso = new \Zion\Acesso\Acesso();     
-        $template = new \Pixel\Template\Template();   
-
-        $tabArray = array(
-            array('tabId' => 1,
-                  'tabActive' => 'active',
-                  'tabTitle' => 'Titulo da tab 1', 
-                  'tabContent' => $this->getFormManu($acao, $cod, $extra)
-                  ),
-            array('tabId' => 2,
-                  'tabActive' => 'none',
-                  'tabTitle' => 'Titulo da tab 2', 
-                  'tabContent' => 'tab2'
-                  )            
-        );
-
-        return $template->getTab('tabWelcome', ['classCss' => 'col-sm-6'], $tabArray);
-
-    } 
-
     /**
      * 
      * @return \Pixel\Form\Form
@@ -89,7 +36,7 @@ class PessoaFisicaForm
         $form->setAcao($acao);
 
         $form->config('formManu' . $cod, 'POST')
-                ->setHeader('Cadastro de pessoa física');
+                ->setHeader('Inicial');
 
         $campos[] = $form->hidden('cod')
                 ->setValor($form->retornaValor('cod'));
@@ -129,21 +76,162 @@ class PessoaFisicaForm
                 ->setMultiplo(false)
                 ->setExpandido(true)
                 ->setArray(['M' => 'Masculino', 'F' => 'Feminino']);                                           
-/*
-        $campos[] = $form->escolha('organogramaStatus', 'Status', true)
-                ->setValor($form->retornaValor('organogramaStatus'))
-                ->setValorPadrao('A')
-                ->setEmColunaDeTamanho('6')
-                ->setMultiplo(false)
-                ->setExpandido(true)
-                ->setArray(['A' => 'Ativo', 'I' => 'Inativo']);                       
-*/
+
         $campos[] = $form->botaoSalvarPadrao();
 
         $campos[] = $form->botaoDescartarPadrao('formManu' . $cod);          
         
         return $form->processarForm($campos);
     }
+
+    public function getFormManuDocumento($acao, $cod = null)
+    {
+        $form = new \Pixel\Form\Form();
+        $html = new \Zion\Layout\Html();
+
+        $form->setAcao($acao);
+
+        $nomeForm = 'formManuDocumento' . $cod;
+        
+        $form->config($nomeForm, 'POST')
+                ->setHeader('Documentos');
+
+        $campos[] = $form->hidden('cod')
+                ->setValor($form->retornaValor('cod'));
+
+        $campos[] = $form->chosen('pessoaDocumentoTipoCod', 'Tipo do documento', true)
+                ->setValor($form->retornaValor('pessoaContatoTipoCod'))
+                ->setInicio('Selecione...')
+                ->setMultiplo(false)
+                ->setEmColunaDeTamanho('10')
+                ->setTabela('pessoa_documento_tipo')
+                ->setCampoCod('pessoaDocumentoTipoCod')
+                ->setOrdena(false)
+                ->setWhere('pessoaTipo LIKE "F" AND pessoaDocumentoTipoReferenciaCod IS NULL')
+                ->setComplemento('onclick="getCampos(\'pessoaDocumentoTipoCod\',\'pessoaDocumentoCamposDinamicos\',\'getCamposDocumentos\',\''.$cod.'\');"')
+                ->setCampoDesc('pessoaDocumentoTipoNome');       
+
+        $campos[] = $form->layout('campos', $html->abreTagAberta('div', array('id' => 'pessoaDocumentoCamposDinamicos')).$html->fechaTag('div'));
+
+/*        $campos[] = $form->texto('pessoaDocumentoNome', 'Documento', true)
+                ->setEmColunaDeTamanho('10')
+                ->setValor($form->retornaValor('pessoaDocumentoNome'));                          
+*/
+        $campos[] = $form->botaoSalvarPadrao();
+
+        $campos[] = $form->botaoDescartarPadrao();
+
+        return $form->processarForm($campos);
+    }    
+
+    public function getFormManuContato($acao, $cod = null)
+    {
+        $form = new \Pixel\Form\Form();
+
+        $form->setAcao($acao);
+
+        $nomeForm = 'formManuContato' . $cod;
+        
+        $form->config($nomeForm, 'POST')
+                ->setHeader('Contatos');
+
+        $campos[] = $form->hidden('cod')
+                ->setValor($form->retornaValor('cod'));
+
+        $campos[] = $form->chosen('pessoaContatoTipoCod', 'Tipo', true)
+                ->setValor($form->retornaValor('pessoaContatoTipoCod'))
+                ->setInicio('Selecione...')
+                ->setMultiplo(false)
+                ->setEmColunaDeTamanho('4')
+                ->setTabela('pessoa_contato_tipo')
+                ->setCampoCod('pessoaContatoTipoCod')
+                ->setOrdena(false)
+                ->setCampoDesc('pessoaContatoTipoNome');       
+
+        $campos[] = $form->texto('pessoaContatoNome', 'Contato', true)
+                ->setEmColunaDeTamanho('7')
+                ->setValor($form->retornaValor('pessoaContatoNome'));                          
+
+        $campos[] = $form->botaoSalvarPadrao();
+
+        $campos[] = $form->botaoDescartarPadrao();
+
+        return $form->processarForm($campos);
+    }    
+
+    public function getFormCampos($param, $codForm)
+    {
+
+        $form = new \Pixel\Form\Form();
+        $pessoaFisicaClass = new \Sappiens\GestaoAdministrativa\PessoaFisica\PessoaFisicaClass();
+
+        $campo = '';
+        $buffer = '';
+
+        $form->config('formManuDocumento'.$codForm);
+
+        while($data = $param->fetch_array()) {
+
+            switch ($data['pessoaDocumentoTipoCampo']) {
+
+                case 'select':
+
+                    $rel = $pessoaFisicaClass->getRelacionamento($data['pessoaDocumentoTipoCod']);
+                        
+                    $campos[] = $form->chosen($rel['pessoaDocumentoTipoRelacionamentoTabelaChave'], $data['pessoaDocumentoTipoNome'], true)
+                            ->setTabela($rel['pessoaDocumentoTipoRelacionamentoTabelaNome'])
+                            ->setCampoCod($rel['pessoaDocumentoTipoRelacionamentoTabelaChave'])
+                            ->setCampoDesc($rel['pessoaDocumentoTipoRelacionamentoTabelaColunaNome'])
+                            ->setInicio('Selecione...')
+                            ->setMultiplo(false)
+                            ->setEmColunaDeTamanho('5')
+                            ->setLayoutPixel(true)
+                            ->setOrdena(false);
+
+                    $formCampos = $form->processarForm($campos);
+                    $campo  = $formCampos->getFormHtml($rel['pessoaDocumentoTipoRelacionamentoTabelaChave']);
+                    $campo .= $formCampos->javaScript()->getLoad(true);         
+                    $buffer .= $campo;                 
+
+                break;
+
+                case 'input':
+
+                    $campos[] = $form->texto($data['pessoaDocumentoTipoNome'], $data['pessoaDocumentoTipoNome'], true)
+                            ->setEmColunaDeTamanho('5')
+                            ->setValor($form->retornaValor($data['pessoaDocumentoTipoNome']));  
+
+                    $formCampos = $form->processarForm($campos);    
+                    $campo  = $formCampos->getFormHtml($data['pessoaDocumentoTipoNome']);   
+                    $campo .= $formCampos->javaScript()->getLoad(true);    
+                    $buffer .= $campo;                                                                        
+
+                break;
+
+                case 'date':
+/*
+                    $campos[] = $form->data('pessoaFisicaDataNascimento', 'Data de nascimento', false)
+                            ->setEmColunaDeTamanho('6')
+                            ->setValor($form->retornaValor('pessoaFisicaDataNascimento'));                 
+*/
+                    $campos[] = $form->data('pessoaDocumentoTipoNome', $data['pessoaDocumentoTipoNome'], true)
+                            ->setEmColunaDeTamanho('5')
+                            ->setValor($form->retornaValor($data['pessoaDocumentoTipoNome']));  
+
+                    $formCampos = $form->processarForm($campos);    
+                    $campo  = $formCampos->getFormHtml('pessoaDocumentoTipoNome');   
+                    $campo .= $formCampos->javaScript()->getLoad(true);    
+                    $buffer .= $campo;                                                                        
+
+                break;                
+                
+            }      
+
+        }
+
+        return $buffer;
+
+    }    
 
     public function getJSEstatico()
     {
@@ -161,12 +249,12 @@ class PessoaFisicaForm
         ** var a => recebe a id do campo que invocou o evento
         ** var b => recebe o elemento que sofrerá update
         ** var c => recebe o metodo
+        ** var d => recebe o cod em edicao
         */
-        $buffer  = '';
-/*        
-        $buffer .= 'function getClassificacaoTipo(a,b,c){
+        $buffer  = '';   
+        $buffer .= 'function getCampos(a,b,c,d){
                         var aa = $("#"+a).val();
-                        $.ajax({type: "get", url: "?acao="+c+"&a="+aa, dataType: "json", beforeSend: function() {
+                        $.ajax({type: "get", url: "?acao="+c+"&a="+aa+"&d="+d, dataType: "json", beforeSend: function() {
                             $("#"+b).html(\'<i class="fa fa-refresh fa-spin" style="margin-top:10px;"></i>\');
                         }}).done(function (ret) {
                             $("#"+b).html(ret.retorno);
@@ -174,6 +262,7 @@ class PessoaFisicaForm
                             sisMsgFailPadrao();
                         });  
                     }';
+/*                    
         $buffer .= 'function getClassificacaoByReferencia(a,b,c){
                         var aa = $("#"+a).val();
                         $.ajax({type: "get", url: "?acao="+c+"&a="+aa, dataType: "json", beforeSend: function() {
