@@ -13,6 +13,10 @@ class PessoaFisicaClass extends PessoaFisicaSql
     
     public function __construct()
     {
+
+        $this->crudUtil = new \Pixel\Crud\CrudUtil();
+        $this->con = \Zion\Banco\Conexao::conectar();
+
         $this->tabela           = 'pessoa_fisica';        
         $this->precedencia      = 'pessoaFisica';      
         $this->tabela2          = 'organograma';        
@@ -37,11 +41,11 @@ class PessoaFisicaClass extends PessoaFisicaSql
     public function getParametrosGrid($objForm)
     {
         $fil = new \Pixel\Filtro\Filtrar();
-        $crud = new \Pixel\Crud\CrudUtil();
+        //$crud = new \Pixel\Crud\CrudUtil();
 
         $padrao = ["pa", "qo", "to"];
 
-        $meusParametros = $crud->getParametrosForm($objForm);
+        $meusParametros = $this->crudUtil->getParametrosForm($objForm);
         $hiddenParametros = $fil->getHiddenParametros($meusParametros);
 
         return array_merge($padrao, $meusParametros, $hiddenParametros);
@@ -71,7 +75,7 @@ class PessoaFisicaClass extends PessoaFisicaSql
 
     public function cadastrar($objForm)
     {
-        $crud = new \Pixel\Crud\CrudUtil();
+        //$crud = new \Pixel\Crud\CrudUtil();
 
         $this->tabelaA          = 'pessoa';        
         $this->precedencia      = 'pessoa';  
@@ -87,7 +91,7 @@ class PessoaFisicaClass extends PessoaFisicaSql
         $objForm->set('pessoaTipo', 'F');
         $objForm->set('pessoaStatus', 'A');
 
-        $pessoaCod = $crud->insert($this->tabelaA, $this->colunasA, $objForm);
+        $pessoaCod = $this->crudUtil->insert($this->tabelaA, $this->colunasA, $objForm);
 
         $this->tabelaB          = 'pessoa_fisica';        
         $this->precedencia      = 'pessoaFisica';  
@@ -107,13 +111,13 @@ class PessoaFisicaClass extends PessoaFisicaSql
         $objForm->set('pessoaCod', $pessoaCod);
         $objForm->set('pessoaFisicaStatus', 'A');        
 
-        return $crud->insert($this->tabelaB, $this->colunasB, $objForm);
+        return $this->crudUtil->insert($this->tabelaB, $this->colunasB, $objForm);
 
     }
     
     public function alterar($objForm)
     {
-        $crud = new \Pixel\Crud\CrudUtil();
+        //$crud = new \Pixel\Crud\CrudUtil();
 /*
         if(!$objForm->get('organogramaOrdem')){
             $k = array_search('organogramaOrdem', $this->colunas);
@@ -128,28 +132,66 @@ class PessoaFisicaClass extends PessoaFisicaSql
         $organogramaAncestral = $this->getOrganogramaAncestralByOrganogramaReferenciaCod($objForm->get('organogramaReferenciaCod'));       
         if($organogramaAncestral) $objForm->set('organogramaAncestral', "|" . $objForm->get('cod') . $organogramaAncestral);    
 */                
-        return $crud->update($this->tabela, $this->colunas, $objForm, $this->chavePrimaria);
+        return $this->crudUtil->update($this->tabela, $this->colunas, $objForm, $this->chavePrimaria);
     }
     
     public function remover($cod)
     {
-        $crud = new \Pixel\Crud\CrudUtil();
-        return $crud->delete($this->tabela, $cod, $this->chavePrimaria);
+        return $this->crudUtil->delete($this->tabela, $cod, $this->chavePrimaria);
     }
 
     public function setValoresFormManu($cod, $formIntancia)
     {
-        $util = new \Pixel\Crud\CrudUtil();
 
-        $con = \Zion\Banco\Conexao::conectar();
+        $objForm = $formIntancia->getFormManu('alterar', $cod);
 
-        $objForm = $formIntancia->getFormManuTab('alterar', $cod);
+        $parametrosSql = $this->con->execLinhaArray(parent::getDadosSql($cod));
 
-        $parametrosSql = $con->execLinhaArray(parent::getDadosSql($cod));
-
-        $util->setParametrosForm($objForm, $parametrosSql, $cod);
+        $this->crudUtil->setParametrosForm($objForm, $parametrosSql, $cod);
         
         return $objForm;
     }
+
+    public function setValoresFormManuDocumento($cod, $formIntancia)
+    {
+
+        $objForm = $formIntancia->getFormManuDocumento('alterar', $cod);
+
+        $parametrosSql = $this->con->execLinhaArray(parent::getDadosSql($cod));
+
+        $objetos = $objForm->getObjetos();
+
+        $this->crudUtil->setParametrosForm($objForm, $parametrosSql, $cod);
+
+        return $objForm;
+    } 
+
+    public function setValoresFormManuContato($cod, $formIntancia)
+    {
+
+        $objForm = $formIntancia->getFormManuContato('alterar', $cod);
+
+        $parametrosSql = $this->con->execLinhaArray(parent::getDadosSql($cod));
+
+        $objetos = $objForm->getObjetos();
+
+        $this->crudUtil->setParametrosForm($objForm, $parametrosSql, $cod);
+
+        return $objForm;
+    }    
+
+    public function getCampos($cod)
+    {
+
+        return $this->con->executar(parent::getCamposSql($cod));
+
+    }
+
+    public function getRelacionamento($cod)
+    {
+
+        return $this->con->execLinhaArray(parent::getRelacionamento($cod));
+
+    }    
 
 }

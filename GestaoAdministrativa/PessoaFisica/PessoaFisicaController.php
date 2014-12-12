@@ -83,9 +83,9 @@ class PessoaFisicaController extends \Zion\Core\Controller
     {
         new \Zion\Acesso\Acesso('alterar');
 
-        if (\filter_input(\INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
+        if ($this->metodoPOST()) {
 
-            $objForm = $this->pessoaFisicaForm->getFormManu('alterar', \filter_input(INPUT_POST, 'cod'));
+            $objForm = $this->pessoaFisicaForm->getFormManu('alterar', $this->postCod());
 
             $objForm->validar();
 
@@ -95,7 +95,7 @@ class PessoaFisicaController extends \Zion\Core\Controller
             
         } else {
 
-            $selecionados = \filter_input(INPUT_GET, 'sisReg', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            $selecionados = $this->registrosSelecionados();            
 
             if (!\is_array($selecionados)) {
                 throw new \Exception("Nenhum registro selecionado!");
@@ -103,11 +103,11 @@ class PessoaFisicaController extends \Zion\Core\Controller
 
             $retorno = '';
             foreach ($selecionados as $cod) {
-
-                $objForm = $this->pessoaFisicaClass->setValoresFormManu($cod, $this->pessoaFisicaForm);
-                $retorno .= $objForm->montaForm();
-                $retorno .= $objForm->javaScript()->getLoad(true);
-                $objForm->javaScript()->resetLoad();
+                
+                $retorno = $this->emTabs($cod,
+                        $this->pessoaFisicaClass->setValoresFormManu($cod, $this->pessoaFisicaForm),
+                        $this->pessoaFisicaClass->setValoresFormManuDocumento($cod, $this->pessoaFisicaForm),
+                        $this->pessoaFisicaClass->setValoresFormManuContato($cod, $this->pessoaFisicaForm));
             }
         }
 
@@ -169,6 +169,21 @@ class PessoaFisicaController extends \Zion\Core\Controller
         return \json_encode([
             'sucesso' => 'true',
             'retorno' => $retorno]);
+    }
+
+    protected function getCamposDocumentos()
+    {
+
+        $form = '';
+        $param = '';
+        $cod = \filter_input(INPUT_GET, 'a');
+        $codForm = \filter_input(INPUT_GET, 'd');
+
+        $param = $this->pessoaFisicaClass->getCampos($cod);    
+        $form = $this->pessoaFisicaForm->getFormCampos($param, $codForm);
+
+        return parent::jsonSucesso($form);
+
     }
 
 }
