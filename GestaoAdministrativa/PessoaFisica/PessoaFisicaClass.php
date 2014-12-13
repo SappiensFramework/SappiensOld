@@ -22,15 +22,6 @@ class PessoaFisicaClass extends PessoaFisicaSql
         $this->tabela2          = 'organograma';        
         $this->precedencia2     = 'organograma';                
         $this->chavePrimaria    = $this->precedencia . 'Cod';
-        $this->colunasCrud = [
-                    $this->precedencia . 'ReferenciaCod',
-                    $this->precedencia . 'Ancestral',
-                    $this->precedencia . 'ClassificacaoCod',
-                    $this->precedencia . 'Nome',
-                    $this->precedencia . 'Ordem',
-                    $this->precedencia . 'Ordenavel',
-                    $this->precedencia . 'Status'
-        ];
         $this->colunasGrid = [                                                                                                                    
                     $this->precedencia  . 'Nome'                 => 'Nome',         
                     $this->precedencia  . 'Sexo'                 => 'Sexo',                     
@@ -117,23 +108,65 @@ class PessoaFisicaClass extends PessoaFisicaSql
     
     public function alterar($objForm)
     {
-        //$crud = new \Pixel\Crud\CrudUtil();
-/*
-        if(!$objForm->get('organogramaOrdem')){
-            $k = array_search('organogramaOrdem', $this->colunas);
-            unset($this->colunas[$k]);            
-        }
-        if($objForm->get('organogramaOrdenavel') == "I") $objForm->set('organogramaOrdem', '');
-        if(!$this->getClassificacaoReordenavel($objForm->get('cod'))) {
-            $k = array_search('organogramaClassificacaoCod', $this->colunas);
-            unset($this->colunas[$k]);
+
+        $this->tabela           = 'pessoa_fisica';        
+        $this->precedencia      = 'pessoaFisica';                  
+        $this->chavePrimaria    = $this->precedencia . 'Cod';
+        $this->colunas = [
+                    $this->precedencia . 'EstadoCivilCod',
+                    $this->precedencia . 'RacaCod',
+                    $this->precedencia . 'Nome',
+                    $this->precedencia . 'DataNascimento',
+                    $this->precedencia . 'Sexo',
+                    $this->precedencia . 'Status'
+        ];         
+
+        //return true;
+        //return $this->crudUtil->update($this->tabela, $this->colunas, $objForm, $this->chavePrimaria);           
+
+    }
+
+    public function alterarDocumento($objForm)
+    {
+
+
+        $this->tabela           = 'pessoa_documento';        
+        $this->precedencia      = 'pessoaDocumento';                  
+        $this->chavePrimaria    = $this->precedencia . 'Cod';
+        $this->colunas = [
+                    $this->precedencia . 'TipoCod'
+        ];
+
+        $campos = $this->getCampos($objForm->get('pessoaDocumentoTipoCod')); 
+
+        //$var = $objForm->get('n');
+        //exit($var);
+
+        //print_r($objForm);
+
+
+        while($data = $campos->fetch_array()) {
+
+            //$var = $objForm->get('pessoaDocumentoTipoCod_' . $data['pessoaDocumentoTipoCod']);
+            //echo $var;
+            //echo $data['pessoaDocumentoTipoCod'];
+            //echo $var;
+            //echo $objForm->get('pessoaDocumentoTipoCod_25');
+
+            if($objForm->get('pessoaDocumentoTipoCod_' . $data['pessoaDocumentoTipoCod'])) {
+
+                $objForm->set('pessoaDocumentoValor', $objForm->get('pessoaDocumentoTipoCod_' . $data['pessoaDocumentoTipoCod']));
+
+                $ins = $this->crudUtil->insert($this->tabela, $this->colunas, $objForm);
+
+            }
+
         }
 
-        $organogramaAncestral = $this->getOrganogramaAncestralByOrganogramaReferenciaCod($objForm->get('organogramaReferenciaCod'));       
-        if($organogramaAncestral) $objForm->set('organogramaAncestral', "|" . $objForm->get('cod') . $organogramaAncestral);    
-*/                
-        return $this->crudUtil->update($this->tabela, $this->colunas, $objForm, $this->chavePrimaria);
-    }
+        return $ins;
+        //return $this->crudUtil->update($this->tabela, $this->colunas, $objForm, $this->chavePrimaria);           
+
+    }    
     
     public function remover($cod)
     {
@@ -187,11 +220,11 @@ class PessoaFisicaClass extends PessoaFisicaSql
 
     }
 
-    public function getRelacionamento($cod)
+    public function getRelacionamento($cod, $modo)
     {
 
-        return $this->con->execLinhaArray(parent::getRelacionamento($cod));
+        return $this->con->execLinhaArray(parent::getRelacionamento($cod, $modo));
 
-    }    
+    }     
 
 }

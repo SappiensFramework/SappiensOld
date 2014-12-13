@@ -37,11 +37,25 @@ class PessoaFisicaSql
                  WHERE pessoaDocumentoTipoReferenciaCod = ".$cod;
     }    
 
-    public function getRelacionamento($cod)
+    public function getRelacionamento($cod, $modo = 'select')
     {
+
+      if($modo == 'select') {
+        
         return "SELECT *
                   FROM pessoa_documento_tipo_relacionamento
                  WHERE pessoaDocumentoTipoCod = ".$cod;
+
+      } elseif($modo == 'input') {
+
+        return "SELECT *
+                  FROM pessoa_documento_tipo
+                 WHERE pessoaDocumentoTipoCod = ".$cod;
+
+      }
+
+      return false;
+
     }      
 
 }

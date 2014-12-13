@@ -34,13 +34,6 @@ class Config
         define('SIS_URL_BASE_TEMPLATE', SIS_VENDOR_TEMPLATE . '/' . SIS_VENDOR_TEMPLATE_VERSION . '/');     
         define('SIS_STRING_CRYPT', 'wzixjdy');
         define('SIS_LINHAS_GRID', '10');
-        
-        self::$SIS_CFG = [
-            'bases'         => array('padrao' => array(
-                'host'      =>'192.168.25.51',
-                'banco'     =>'onyxprev_sappiens',
-                'usuario'   =>'onyxprev_sapp',
-                'senha'     =>'qwertybracom'))];     
 
     }
 
@@ -127,12 +120,6 @@ class Config
     }
 }
 
-function sisErro($errno, $errstr, $errfile, $errline)
-{
-    throw new \Exception("'<pre>'Erro: " . $errno . ' - ' . $errstr . ' - ' . $errfile . ' - ' . $errline.'</pre>');
-}
-
-\set_error_handler("\\Sappiens\\sisErro", \E_WARNING | \E_NOTICE);
 
 \Sappiens\Config::conf();
 
@@ -143,6 +130,13 @@ if($modulo != 'Login') {
         header('location: ' . SIS_URL_BASE . 'Accounts/Login?err=Acesse a sua conta para continuar!');
     } 
 }
+
+function sisErro($errno, $errstr, $errfile, $errline)
+{
+    throw new \Exception("'<pre>'Erro: " . $errno . ' - ' . $errstr . ' - ' . $errfile . ' - ' . $errline.'</pre>');
+}
+
+\set_error_handler("\\Sappiens\\sisErro", \E_WARNING | \E_NOTICE);
 
 require_once SIS_FM_BASE . 'Lib/Zion/ClassLoader/Loader.php';
 
