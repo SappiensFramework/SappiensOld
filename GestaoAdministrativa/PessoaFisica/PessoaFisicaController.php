@@ -85,11 +85,33 @@ class PessoaFisicaController extends \Zion\Core\Controller
 
         if ($this->metodoPOST()) {
 
-            $objForm = $this->pessoaFisicaForm->getFormManu('alterar', $this->postCod());
+            $codForm = $this->postCod();
+            $cod = \filter_input(INPUT_POST, 'pessoaDocumentoTipoCod');
 
-            $objForm->validar();
+            switch (\filter_input(INPUT_POST, 'n')) {
 
-            $this->pessoaFisicaClass->alterar($objForm);
+                case 'inicial':
+                    
+                    //$objForm = $this->pessoaFisicaForm->getFormManu('alterar', $this->postCod());
+                    //$objForm->validar();
+                    //$this->pessoaFisicaClass->alterar($objForm);
+
+                break;
+
+                case 'documento':
+
+                    $objFormHtml = $this->pessoaFisicaForm->getFormManuDocumento('alterar', $this->postCod());
+                    $objFormHtml->validar();
+
+                    $resultCampos = $this->pessoaFisicaClass->getCampos($cod);    
+                    $objForm = $this->pessoaFisicaForm->getObjetoCampos($resultCampos, $cod, $codForm);
+                    //print_r($objForm);
+
+                    $this->pessoaFisicaClass->alterarDocumento($objForm);                    
+                
+                break;
+
+            }
 
             $retorno = 'true';
             
@@ -163,7 +185,11 @@ class PessoaFisicaController extends \Zion\Core\Controller
         foreach ($selecionados as $cod) {
 
             $objForm = $this->pessoaFisicaClass->setValoresFormManu($cod, $this->pessoaFisicaForm);
-            $retorno .= $objForm->montaFormVisualizar();
+            $retorno = $this->emTabs($cod,
+                    $this->pessoaFisicaClass->setValoresFormManu($cod, $this->pessoaFisicaForm),
+                    $this->pessoaFisicaClass->setValoresFormManuDocumento($cod, $this->pessoaFisicaForm),
+                    $this->pessoaFisicaClass->setValoresFormManuContato($cod, $this->pessoaFisicaForm));
+            //$retorno .= $objForm->montaFormVisualizar();
         }
 
         return \json_encode([
@@ -180,7 +206,10 @@ class PessoaFisicaController extends \Zion\Core\Controller
         $codForm = \filter_input(INPUT_GET, 'd');
 
         $param = $this->pessoaFisicaClass->getCampos($cod);    
-        $form = $this->pessoaFisicaForm->getFormCampos($param, $codForm);
+        $form = $this->pessoaFisicaForm->getFormCampos($param, $cod, $codForm);
+
+        //$campo  = $form->getFormHtml('pessoaDocumentoTipoCod16');                 
+        //$campo .= $form->javaScript()->getLoad(true);    
 
         return parent::jsonSucesso($form);
 
