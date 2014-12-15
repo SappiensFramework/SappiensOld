@@ -129,42 +129,58 @@ class PessoaFisicaClass extends PessoaFisicaSql
     public function alterarDocumento($objForm)
     {
 
-
+        $this->con->startTransaction();
         $this->tabela           = 'pessoa_documento';        
         $this->precedencia      = 'pessoaDocumento';                  
         $this->chavePrimaria    = $this->precedencia . 'Cod';
         $this->colunas = [
-                    $this->precedencia . 'TipoCod'
+										 'organogramaCod',
+										 'pessoaCod',
+                    $this->precedencia . 'TipoCod',
+					$this->precedencia . 'Valor'
         ];
+        $retorno = 'true';
 
         $campos = $this->getCampos($objForm->get('pessoaDocumentoTipoCod')); 
 
-        //$var = $objForm->get('n');
-        //exit($var);
-
-        //print_r($objForm);
-
-
         while($data = $campos->fetch_array()) {
 
-            //$var = $objForm->get('pessoaDocumentoTipoCod_' . $data['pessoaDocumentoTipoCod']);
-            //echo $var;
-            //echo $data['pessoaDocumentoTipoCod'];
-            //echo $var;
-            //echo $objForm->get('pessoaDocumentoTipoCod_25');
+            $persistencia = $this->getValorPersistencia($data['pessoaDocumentoTipoCod'], $objForm->get('cod'));
 
-            if($objForm->get('pessoaDocumentoTipoCod_' . $data['pessoaDocumentoTipoCod'])) {
+            if(empty($persistencia['pessoaDocumentoCod'])) {
+                $persistencia['pessoaDocumentoCod'] = '';
+                $persistencia['pessoaDocumentoValor'] = '';
+            }
 
+            if($objForm->get('pessoaDocumentoTipoCod_' . $data['pessoaDocumentoTipoCod']) <> $persistencia['pessoaDocumentoValor']) {
+
+                if(!empty($persistencia['pessoaDocumentoCod'])) {
+
+                    $this->colunasUpdate = [
+                                $this->precedencia . 'Status'
+                    ];
+                    $objForm->set('pessoaDocumentoStatus', 'I');
+
+                    $this->con->executar(parent::setDocumentoInativo($data['pessoaDocumentoTipoCod'], $objForm->get('cod'), $persistencia['pessoaDocumentoCod']));
+
+                }
+
+                if(empty($objForm->get('pessoaDocumentoTipoCod_' . $data['pessoaDocumentoTipoCod']))) continue;
+
+				$objForm->set('organogramaCod', $_SESSION['organogramaCod']);
+				$objForm->set('pessoaCod', $objForm->get('cod'));
+				$objForm->set('pessoaDocumentoTipoCod', $data['pessoaDocumentoTipoCod']);
                 $objForm->set('pessoaDocumentoValor', $objForm->get('pessoaDocumentoTipoCod_' . $data['pessoaDocumentoTipoCod']));
 
-                $ins = $this->crudUtil->insert($this->tabela, $this->colunas, $objForm);
+                $retorno = $this->crudUtil->insert($this->tabela, $this->colunas, $objForm);
 
             }
 
         }
 
-        return $ins;
-        //return $this->crudUtil->update($this->tabela, $this->colunas, $objForm, $this->chavePrimaria);           
+        $this->con->stopTransaction();
+
+        return $retorno;       
 
     }    
     
@@ -225,6 +241,30 @@ class PessoaFisicaClass extends PessoaFisicaSql
 
         return $this->con->execLinhaArray(parent::getRelacionamento($cod, $modo));
 
+    }    
+
+    public function getValor($cod, $pessoaCod, $modo = '')
+    {
+
+        $data = $this->con->execLinhaArray(parent::getValorSql($cod, $pessoaCod, $modo));
+
+        if($modo == "suggest" and !empty($data)) {
+
+            $offset = $data['pessoaDocumentoTipoRelacionamentoTabelaColunaNome'];
+            $suggest = $this->con->execLinhaArray(parent::getValorSuggest($data));
+            return (!empty($suggest[$offset])) ? $suggest[$offset] : '';
+
+        }
+
+        return (!empty($data['pessoaDocumentoValor'])) ? $data['pessoaDocumentoValor'] : '';
+
     }     
+
+    public function getValorPersistencia($cod, $pessoaCod)
+    {
+
+        return $this->con->execLinhaArray(parent::getValorPersistencia($cod, $pessoaCod));
+
+    }      
 
 }

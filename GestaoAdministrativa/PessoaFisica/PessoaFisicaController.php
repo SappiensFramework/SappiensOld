@@ -92,20 +92,27 @@ class PessoaFisicaController extends \Zion\Core\Controller
 
                 case 'inicial':
                     
-                    //$objForm = $this->pessoaFisicaForm->getFormManu('alterar', $this->postCod());
-                    //$objForm->validar();
-                    //$this->pessoaFisicaClass->alterar($objForm);
+                    $objForm = $this->pessoaFisicaForm->getFormManu('alterar', $this->postCod());
+                    $objForm->validar();
+                    $this->pessoaFisicaClass->alterar($objForm);
 
                 break;
 
                 case 'documento':
 
                     $objFormHtml = $this->pessoaFisicaForm->getFormManuDocumento('alterar', $this->postCod());
-                    $objFormHtml->validar();
+                    $objFormHtml->validar();                    
+
+                    $param = $this->pessoaFisicaClass->getCampos($cod);    
+                    $objFormDinamico = $this->pessoaFisicaForm->getObjetoCampos($param, $cod, $codForm);
+                    //print_r($objFormDinamico);
+
+                    $objFormDinamico->validar();
+                    //$this->pessoaFisicaClass->alterarDocumento($objFormHtml); 
 
                     $resultCampos = $this->pessoaFisicaClass->getCampos($cod);    
                     $objForm = $this->pessoaFisicaForm->getObjetoCampos($resultCampos, $cod, $codForm);
-                    //print_r($objForm);
+                    $objForm->validar();
 
                     $this->pessoaFisicaClass->alterarDocumento($objForm);                    
                 
@@ -207,9 +214,6 @@ class PessoaFisicaController extends \Zion\Core\Controller
 
         $param = $this->pessoaFisicaClass->getCampos($cod);    
         $form = $this->pessoaFisicaForm->getFormCampos($param, $cod, $codForm);
-
-        //$campo  = $form->getFormHtml('pessoaDocumentoTipoCod16');                 
-        //$campo .= $form->javaScript()->getLoad(true);    
 
         return parent::jsonSucesso($form);
 
