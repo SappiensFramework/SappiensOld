@@ -68,12 +68,32 @@ class Config
             define('SIS_NAMESPACE_FRAMEWORK', 'C:/xampp/htdocs/Zion/Lib');
             define('SIS_NAMESPACE_TEMPLATE', 'C:/xampp/htdocs/Zion/Lib');
 
-            self::$SIS_CFG = [
-                'bases'         => array('padrao' => array(
-                    'host'      =>'192.168.25.51',
-                    'banco'     =>'onyxprev_sappiens',
-                    'usuario'   =>'onyxprev_sapp',
-                    'senha'     =>'qwertybracom'))];             
+        self::$SIS_CFG = [
+            'bases' => [
+                'padraoW' => [ //Postgress
+                    'host' => 's2.virtuaserver.com.br',
+                    'banco' => 'sappiens_dev',
+                    'usuario' => 'sappiens_user',
+                    'senha' => 'bl4ckh0rs3',
+                    'driver' => 'pdo_pgsql'],
+                'padraoX' => [ //Oracle
+                    'host' => '192.168.25.51',
+                    'banco' => 'SAPPIENS_DEV',
+                    'usuario' => 'SAPPIENS',
+                    'senha' => 'bl4ckh0rs3',
+                    'driver' => 'pdo_pgsql'],
+                'padrao' => [ //Mysql
+                    'host' => 'localhost',
+                    'banco' => 'onyxprev_sappiens',
+                    'usuario' => 'root',
+                    'senha' => '',
+                    'driver' => 'pdo_mysql'],
+                'padraoy' => [ //Sql Server
+                    'host' => 'DEV1\SQLEXPRESS',
+                    'banco' => 'onyxprev_engine',
+                    'usuario' => 'SAPP',
+                    'senha' => 'bl4ckh0rs3',
+                    'driver' => 'pdo_sqlsrv']]];
 
         } elseif($modo == 'alpha') {
 
