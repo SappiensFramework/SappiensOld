@@ -83,10 +83,10 @@ class Config
                     'senha' => 'bl4ckh0rs3',
                     'driver' => 'pdo_pgsql'],
                 'padrao' => [ //Mysql
-                    'host' => 'localhost',
+                    'host' => '192.168.25.51',
                     'banco' => 'onyxprev_sappiens',
-                    'usuario' => 'root',
-                    'senha' => '',
+                    'usuario' => 'onyxprev_sapp',
+                    'senha' => 'qwertybracom',
                     'driver' => 'pdo_mysql'],
                 'padraoy' => [ //Sql Server
                     'host' => 'DEV1\SQLEXPRESS',
@@ -156,7 +156,7 @@ function sisErro($errno, $errstr, $errfile, $errline)
     throw new \Exception("'<pre>'Erro: " . $errno . ' - ' . $errstr . ' - ' . $errfile . ' - ' . $errline.'</pre>');
 }
 
-\set_error_handler("\\Sappiens\\sisErro", \E_WARNING | \E_NOTICE);
+\set_error_handler("\\Sappiens\\sisErro", \E_WARNING);
 
 require_once SIS_FM_BASE . 'Lib/Zion/ClassLoader/Loader.php';
 
