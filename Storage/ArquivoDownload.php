@@ -8,7 +8,7 @@ $con = \Zion\Banco\Conexao::conectar();
 $manipulaArquivo = new \Zion\Arquivo\ManipulaArquivo();
 
 $modo = \filter_input(\INPUT_GET, 'modo');
-$uploadCod = (int) \filter_input(\INPUT_GET, 'uploadCod');
+$uploadCod = (int) \filter_input(\INPUT_GET, 'uploadCod'); 
 
 if ($modo != 'download' and $modo != 'ver') {
     exit("Modo de Visualização inválido");
