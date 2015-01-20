@@ -97,12 +97,32 @@ class Config
             define('SIS_NAMESPACE_TEMPLATE', 'C:/xampp/htdocs/Zion/Lib');
 
             self::$SIS_CFG = [
-                'bases'         => array('padrao' => array(
+            'bases' => [
+                'padraoW' => [ //Postgress
+                    'host' => 's2.virtuaserver.com.br',
+                    'banco' => 'sappiens_dev',
+                    'usuario' => 'sappiens_user',
+                    'senha' => 'bl4ckh0rs3',
+                    'driver' => 'pdo_pgsql'],
+                'padraoX' => [ //Oracle
                     'driver'    =>'pdo_mysql',
                     'host'      =>'192.168.25.51',
+                    'banco' => 'SAPPIENS_DEV',
+                    'usuario' => 'SAPPIENS',
+                    'senha' => 'bl4ckh0rs3',
+                    'driver' => 'pdo_pgsql'],
+                'padrao' => [ //Mysql
+                    'host' => '192.168.25.51',
                     'banco'     =>'onyxprev_sappiens',
                     'usuario'   =>'onyxprev_sapp',
-                    'senha'     =>'qwertybracom'))];             
+                    'senha' => 'qwertybracom',
+                    'driver' => 'pdo_mysql'],
+                'padraoy' => [ //Sql Server
+                    'host' => 'DEV1\SQLEXPRESS',
+                    'banco' => 'onyxprev_engine',
+                    'usuario' => 'SAPP',
+                    'senha' => 'bl4ckh0rs3',
+                    'driver' => 'pdo_sqlsrv']]];
 
         } elseif($modo == 'alpha') {
 
@@ -163,7 +183,7 @@ if($modulo != 'Login') {
 
 function sisErro($errno, $errstr, $errfile, $errline)
 {
-    throw new \Exception("'<pre>'Erro: " . $errno . ' - ' . $errstr . ' - ' . $errfile . ' - ' . $errline.'</pre>');
+    throw new \Exception("<pre>Erro: " . $errno . ' - ' . $errstr . ' - ' . $errfile . ' - ' . $errline.'</pre>');
 }
 
 \set_error_handler("\\Sappiens\\sisErro", \E_WARNING | \E_NOTICE);
