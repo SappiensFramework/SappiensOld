@@ -1,6 +1,34 @@
 <?php
+/*
 
-session_start();
+    Sappiens Framework
+    Copyright (C) 2014, BRA Consultoria
+
+    Website do autor: www.braconsultoria.com.br/sappiens
+    Email do autor: sappiens@braconsultoria.com.br
+
+    Website do projeto, equipe e documentação: www.sappiens.com.br
+   
+    Este programa é software livre; você pode redistribuí-lo e/ou
+    modificá-lo sob os termos da Licença Pública Geral GNU, conforme
+    publicada pela Free Software Foundation, versão 2.
+
+    Este programa é distribuído na expectativa de ser útil, mas SEM
+    QUALQUER GARANTIA; sem mesmo a garantia implícita de
+    COMERCIALIZAÇÃO ou de ADEQUAÇÃO A QUALQUER PROPÓSITO EM
+    PARTICULAR. Consulte a Licença Pública Geral GNU para obter mais
+    detalhes.
+ 
+    Você deve ter recebido uma cópia da Licença Pública Geral GNU
+    junto com este programa; se não, escreva para a Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+    02111-1307, USA.
+
+    Cópias da licença disponíveis em /Sappiens/_doc/licenca
+
+*/
+
+//session_start();
 
 require '../Config.php';
 
@@ -23,13 +51,13 @@ try {
     exit($e->getMessage());
 }
 
-$arquivo = SIS_DIR_BASE . 'Storage/' . \str_replace('-', '/', $dadosArquivo['uploadDataCadastro']) . '/' . $dadosArquivo['uploadNomeFisico'];
+$arquivo = SIS_DIR_BASE . 'Storage/' . \str_replace('-', '/', $dadosArquivo['uploaddatacadastro']) . '/' . $dadosArquivo['uploadnomefisico'];
 
 if (!file_exists($arquivo)) {
     exit("Arquivo não encontrado");
 }
 
-$extensaoAtual = \strtolower($manipulaArquivo->extenssaoArquivo($dadosArquivo['uploadNomeOriginal']));
+$extensaoAtual = \strtolower($manipulaArquivo->extenssaoArquivo($dadosArquivo['uploadnomeoriginal']));
 
 if ($modo == 'ver') { //Visualizar icone do arquivo, se for imagem mostrar ela mesma
     //Extenssões que é possivel ele ver
@@ -58,7 +86,7 @@ if ($modo == 'ver') { //Visualizar icone do arquivo, se for imagem mostrar ela m
     \header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
     \header("Cache-Control: private", false);
     //header("Content-Type:".mime_content_type($arquivo)."");
-    \header("Content-Disposition: attachment; filename=\"" . $dadosArquivo['uploadNomeOriginal'] . "\";");
+    \header("Content-Disposition: attachment; filename=\"" . $dadosArquivo['uploadnomeoriginal'] . "\";");
     \header("Content-Transfer-Encoding: binary");
     \header("Content-Length: " . filesize($arquivo));
 

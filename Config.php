@@ -1,9 +1,37 @@
 <?php
+/*
+
+    Sappiens Framework
+    Copyright (C) 2014, BRA Consultoria
+
+    Website do autor: www.braconsultoria.com.br/sappiens
+    Email do autor: sappiens@braconsultoria.com.br
+
+    Website do projeto, equipe e documentação: www.sappiens.com.br
+   
+    Este programa é software livre; você pode redistribuí-lo e/ou
+    modificá-lo sob os termos da Licença Pública Geral GNU, conforme
+    publicada pela Free Software Foundation, versão 2.
+
+    Este programa é distribuído na expectativa de ser útil, mas SEM
+    QUALQUER GARANTIA; sem mesmo a garantia implícita de
+    COMERCIALIZAÇÃO ou de ADEQUAÇÃO A QUALQUER PROPÓSITO EM
+    PARTICULAR. Consulte a Licença Pública Geral GNU para obter mais
+    detalhes.
+ 
+    Você deve ter recebido uma cópia da Licença Pública Geral GNU
+    junto com este programa; se não, escreva para a Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+    02111-1307, USA.
+
+    Cópias da licença disponíveis em /Sappiens/_doc/licenca
+
+*/
 
 /**
  * @author Pablo Vanni - pablovanni@gmail.com
  * @since 16/05/2006
- * Autualizada Por: Pablo Vanni - pablovanni@gmail.com
+ * Atualizada Por: Pablo Vanni - pablovanni@gmail.com
  * @name Configurações para area administrativa
  * @version 2.0
  * @package Framework
@@ -25,7 +53,7 @@ class Config
 
         $this->setDiretorios('dev');           
 
-        define('SIS_SLOGAN', 'Simples. Flexível. Totoso.');
+        define('SIS_SLOGAN', 'Simples. Flexível. Poderoso.');
         define('SIS_DESCRICAO', SIS_ID_NAMESPACE_PROJETO . ', Plataforma de Gestão Integrada');
         define('SIS_AUTOR', 'The Sappiens Team');
         define('SIS_RELEASE', 'Alpha');
@@ -70,6 +98,7 @@ class Config
 
             self::$SIS_CFG = [
                 'bases'         => array('padrao' => array(
+                    'driver'    =>'pdo_mysql',
                     'host'      =>'192.168.25.51',
                     'banco'     =>'onyxprev_sappiens',
                     'usuario'   =>'onyxprev_sapp',
@@ -91,6 +120,7 @@ class Config
 
             self::$SIS_CFG = [
                 'bases'         => array('padrao' => array(
+                    'driver'    =>'pdo_mysql',
                     'host'      =>'localhost',
                     'banco'     =>'onyxprev_sappiens',
                     'usuario'   =>'onyxprev_sapp',

@@ -1,4 +1,32 @@
 <?php
+/*
+
+    Sappiens Framework
+    Copyright (C) 2014, BRA Consultoria
+
+    Website do autor: www.braconsultoria.com.br/sappiens
+    Email do autor: sappiens@braconsultoria.com.br
+
+    Website do projeto, equipe e documentação: www.sappiens.com.br
+   
+    Este programa é software livre; você pode redistribuí-lo e/ou
+    modificá-lo sob os termos da Licença Pública Geral GNU, conforme
+    publicada pela Free Software Foundation, versão 2.
+
+    Este programa é distribuído na expectativa de ser útil, mas SEM
+    QUALQUER GARANTIA; sem mesmo a garantia implícita de
+    COMERCIALIZAÇÃO ou de ADEQUAÇÃO A QUALQUER PROPÓSITO EM
+    PARTICULAR. Consulte a Licença Pública Geral GNU para obter mais
+    detalhes.
+ 
+    Você deve ter recebido uma cópia da Licença Pública Geral GNU
+    junto com este programa; se não, escreva para a Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+    02111-1307, USA.
+
+    Cópias da licença disponíveis em /Sappiens/_doc/licenca
+
+*/
 
 namespace Sappiens\GestaoAdministrativa\PessoaFisica;
 
@@ -14,6 +42,7 @@ class PessoaFisicaClass extends PessoaFisicaSql
     public function __construct()
     {
 
+        parent::__construct();
         $this->crudUtil = new \Pixel\Crud\CrudUtil();
         $this->con = \Zion\Banco\Conexao::conectar();
 
@@ -121,13 +150,14 @@ class PessoaFisicaClass extends PessoaFisicaSql
                     $this->precedencia . 'Status'
         ];         
 
-        //return true;
-        //return $this->crudUtil->update($this->tabela, $this->colunas, $objForm, $this->chavePrimaria);           
+        return $this->crudUtil->update($this->tabela, $this->colunas, $objForm, $this->chavePrimaria);           
 
     }
 
     public function alterarDocumento($objForm)
     {
+
+        $upload = new \Pixel\Arquivo\ArquivoUpload();
 
         $this->con->startTransaction();
         $this->tabela           = 'pessoa_documento';        
@@ -139,40 +169,51 @@ class PessoaFisicaClass extends PessoaFisicaSql
                     $this->precedencia . 'TipoCod',
 					$this->precedencia . 'Valor'
         ];
-        $retorno = 'true';
+        $retorno = false;
 
         $campos = $this->getCampos($objForm->get('pessoaDocumentoTipoCod')); 
+        $pCod = $objForm->get('pessoaDocumentoTipoCod');
 
-        while($data = $campos->fetch_array()) {
+        $obj = $objForm->getObjetos();
 
-            $persistencia = $this->getValorPersistencia($data['pessoaDocumentoTipoCod'], $objForm->get('cod'));
+        foreach ($obj as $objetos) {
 
-            if(empty($persistencia['pessoaDocumentoCod'])) {
-                $persistencia['pessoaDocumentoCod'] = '';
-                $persistencia['pessoaDocumentoValor'] = '';
-            }
+            if ($objetos->getTipoBase() === 'upload') {
 
-            if($objForm->get('pessoaDocumentoTipoCod_' . $data['pessoaDocumentoTipoCod']) <> $persistencia['pessoaDocumentoValor']) {
+                $objetos->setCodigoReferencia($pCod);
+                $upload->sisUpload($objetos);   
+                $retorno = true;  
 
-                if(!empty($persistencia['pessoaDocumentoCod'])) {
+            } else {
 
-                    $this->colunasUpdate = [
-                                $this->precedencia . 'Status'
-                    ];
-                    $objForm->set('pessoaDocumentoStatus', 'I');
+                if ($objetos->getTipoBase() === 'hidden') continue;
 
-                    $this->con->executar(parent::setDocumentoInativo($data['pessoaDocumentoTipoCod'], $objForm->get('cod'), $persistencia['pessoaDocumentoCod']));
+                $formCampoValor = $objetos->getValor();
+                $formCampoAtributos = $objetos->getAtributos();
+
+                $persistencia = $this->getValorPersistencia($formCampoAtributos['_pCod'], $objForm->get('cod'));
+
+                if(empty($formCampoValor)) continue;
+                if(empty($persistencia['pessoaDocumentoValor'])) $persistencia['pessoaDocumentoValor'] = '';
+
+                if($formCampoValor <> $persistencia['pessoaDocumentoValor']) {
+
+                    if(!empty($persistencia['pessoaDocumentoCod'])) {
+
+                        $objForm->set('pessoaDocumentoStatus', 'I');
+                        $this->con->executar(parent::setDocumentoInativo($formCampoAtributos['_pCod'], $objForm->get('cod'), $persistencia['pessoaDocumentoCod']));
+
+                    }
+
+                    $objForm->set('organogramaCod', $_SESSION['organogramaCod']);
+                    $objForm->set('pessoaCod', $objForm->get('cod'));
+                    $objForm->set('pessoaDocumentoTipoCod', $formCampoAtributos['_pCod']);
+                    $objForm->set('pessoaDocumentoValor', $formCampoValor);
+
+                    $retorno .= $this->crudUtil->insert($this->tabela, $this->colunas, $objForm);                    
+
 
                 }
-
-                if(empty($objForm->get('pessoaDocumentoTipoCod_' . $data['pessoaDocumentoTipoCod']))) continue;
-
-				$objForm->set('organogramaCod', $_SESSION['organogramaCod']);
-				$objForm->set('pessoaCod', $objForm->get('cod'));
-				$objForm->set('pessoaDocumentoTipoCod', $data['pessoaDocumentoTipoCod']);
-                $objForm->set('pessoaDocumentoValor', $objForm->get('pessoaDocumentoTipoCod_' . $data['pessoaDocumentoTipoCod']));
-
-                $retorno = $this->crudUtil->insert($this->tabela, $this->colunas, $objForm);
 
             }
 
@@ -194,7 +235,7 @@ class PessoaFisicaClass extends PessoaFisicaSql
 
         $objForm = $formIntancia->getFormManu('alterar', $cod);
 
-        $parametrosSql = $this->con->execLinhaArray(parent::getDadosSql($cod));
+        $parametrosSql = $this->con->linha(parent::getDadosSql($cod)->execute(), \PDO::FETCH_ASSOC);
 
         $this->crudUtil->setParametrosForm($objForm, $parametrosSql, $cod);
         
@@ -250,13 +291,13 @@ class PessoaFisicaClass extends PessoaFisicaSql
 
         if($modo == "suggest" and !empty($data)) {
 
-            $offset = $data['pessoaDocumentoTipoRelacionamentoTabelaColunaNome'];
+            $offset = $data['pessoadocumentotiporelacionamentotabelacolunanome'];
             $suggest = $this->con->execLinhaArray(parent::getValorSuggest($data));
             return (!empty($suggest[$offset])) ? $suggest[$offset] : '';
 
         }
 
-        return (!empty($data['pessoaDocumentoValor'])) ? $data['pessoaDocumentoValor'] : '';
+        return (!empty($data['pessoadocumentovalor'])) ? $data['pessoadocumentovalor'] : '';
 
     }     
 
