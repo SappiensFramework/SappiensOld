@@ -95,6 +95,10 @@ class ConteudoForm
         $campos[] = $form->editor('websiteCon', 'Conteúdo', true)
                 ->setEmColunaDeTamanho('12')
                 ->setValor($form->retornaValor('websiteCon'));
+                
+        $campos[] = $form->upload('files[]', 'Arquivos', "ARQUIVO")
+                ->setCodigoReferencia($cod)
+                ->setMultiple(true);
 
         $campos[] = $form->data('websiteConData', 'Data de Publicação', false)
                          ->setValor($form->retornaValor('websiteConData'))
