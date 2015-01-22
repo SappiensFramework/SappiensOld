@@ -62,6 +62,7 @@ class Config
             define('SIS_LAYOUT_BASE', 'http://localhost/Zion/Layout/');
             define('SIS_URL_FM_BASE', 'http://localhost/Zion/Static/');
             define('SIS_DEFAULT_AUTOCOMPLETE', SIS_URL_BASE . 'includes/autocomplete/');
+            define('SIS_DEFAULT_DEPENDENCIA', SIS_URL_BASE . 'includes/dependencia/');
 
             define('SIS_ID_NAMESPACE_PROJETO','Sappiens');
             define('SIS_NAMESPACE_PROJETO','C:/xampp/htdocs');  
@@ -103,6 +104,7 @@ class Config
             define('SIS_LAYOUT_BASE', 'http://team.sappiens.com.br/alpha/Zion/Layout/');
             define('SIS_URL_FM_BASE', 'http://team.sappiens.com.br/alpha/Zion/Static/');
             define('SIS_DEFAULT_AUTOCOMPLETE', SIS_URL_BASE . 'includes/autocomplete/');
+            define('SIS_DEFAULT_DEPENDENCIA', SIS_URL_BASE . 'includes/dependencia/');
 
             define('SIS_ID_NAMESPACE_PROJETO','Sappiens');
             define('SIS_NAMESPACE_PROJETO','/home/sappienscom/public_html/alpha');    
@@ -124,6 +126,7 @@ class Config
             define('SIS_LAYOUT_BASE', 'http://app.sappiens.com.br/Zion/Layout/');
             define('SIS_URL_FM_BASE', 'http://app.sappiens.com.br/Zion/');
             define('SIS_DEFAULT_AUTOCOMPLETE', SIS_URL_BASE . 'includes/autocomplete/');
+            define('SIS_DEFAULT_DEPENDENCIA', SIS_URL_BASE . 'includes/dependencia/');
 
             define('SIS_NAMESPACE_FRAMEWORK', '/home/sappiens/public_html/app/Zion/Lib');
             define('SIS_NAMESPACE_TEMPLATE', '/home/sappiens/public_html/app/Zion/Lib');
@@ -148,7 +151,7 @@ $modulo = \defined('MODULO') ? MODULO : '';
 if($modulo != 'Login') {
     if(!$_SESSION['usuarioCod'] or !$_SESSION['organogramaCod']) {
         header('location: ' . SIS_URL_BASE . 'Accounts/Login?err=Acesse a sua conta para continuar!');
-    } 
+    }
 }
 
 function sisErro($errno, $errstr, $errfile, $errline)
