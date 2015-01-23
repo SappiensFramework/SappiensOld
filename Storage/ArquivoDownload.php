@@ -36,6 +36,7 @@ $con = \Zion\Banco\Conexao::conectar();
 $manipulaArquivo = new \Zion\Arquivo\ManipulaArquivo();
 
 $modo = \filter_input(\INPUT_GET, 'modo');
+$thumb = \filter_input(\INPUT_GET, 'thumb');
 $uploadCod = (int) \filter_input(\INPUT_GET, 'uploadCod'); 
 
 if ($modo != 'download' and $modo != 'ver') {
@@ -52,6 +53,7 @@ try {
 }
 
 $arquivo = SIS_DIR_BASE . 'Storage/' . \str_replace('-', '/', $dadosArquivo['uploaddatacadastro']) . '/' . $dadosArquivo['uploadnomefisico'];
+$arquivoThumb = SIS_DIR_BASE . 'Storage/' . \str_replace('-', '/', $dadosArquivo['uploaddatacadastro']) . '/tb/' . $dadosArquivo['uploadnomefisico'];
 
 if (!file_exists($arquivo)) {
     exit("Arquivo não encontrado");
@@ -61,15 +63,15 @@ $extensaoAtual = \strtolower($manipulaArquivo->extenssaoArquivo($dadosArquivo['u
 
 if ($modo == 'ver') { //Visualizar icone do arquivo, se for imagem mostrar ela mesma
     //Extenssões que é possivel ele ver
-    $extensoesVer = ['jpeg', 'gif', 'png'];
+    $extensoesVer = ['jpg', 'jpeg', 'gif', 'png'];
 
     if (\in_array($extensaoAtual, $extensoesVer)) {
         \header('Content-Type: image/' . $extensaoAtual);
-        \readfile($arquivo);
+        \readfile((!$thumb) ? $arquivo : $arquivoThumb);
     } else {
         //Caminho para Uma Imagem Padrão
         \header('Content-Type: image/gif');
-        //\readfile($_SESSION['DirBase'] . 'figuras/icone0.gif');
+        \readfile(SIS_DIR_BASE . 'Arquivos/logo_exemplo.jpg');
     }
 } else { //Download do Arquivo
     //Atualiza Numero de Dowloads

@@ -1,31 +1,31 @@
 <?php
-/*
-
-    Sappiens Framework
-    Copyright (C) 2014, BRA Consultoria
-
-    Website do autor: www.braconsultoria.com.br/sappiens
-    Email do autor: sappiens@braconsultoria.com.br
-
-    Website do projeto, equipe e documentação: www.sappiens.com.br
-   
-    Este programa é software livre; você pode redistribuí-lo e/ou
-    modificá-lo sob os termos da Licença Pública Geral GNU, conforme
-    publicada pela Free Software Foundation, versão 2.
-
-    Este programa é distribuído na expectativa de ser útil, mas SEM
-    QUALQUER GARANTIA; sem mesmo a garantia implícita de
-    COMERCIALIZAÇÃO ou de ADEQUAÇÃO A QUALQUER PROPÓSITO EM
-    PARTICULAR. Consulte a Licença Pública Geral GNU para obter mais
-    detalhes.
- 
-    Você deve ter recebido uma cópia da Licença Pública Geral GNU
-    junto com este programa; se não, escreva para a Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-    02111-1307, USA.
-
-    Cópias da licença disponíveis em /Sappiens/_doc/licenca
-
+/**
+*
+*    Sappiens Framework
+*    Copyright (C) 2014, BRA Consultoria
+*
+*    Website do autor: www.braconsultoria.com.br/sappiens
+*    Email do autor: sappiens@braconsultoria.com.br
+*
+*    Website do projeto, equipe e documentação: www.sappiens.com.br
+*   
+*    Este programa é software livre; você pode redistribuí-lo e/ou
+*    modificá-lo sob os termos da Licença Pública Geral GNU, conforme
+*    publicada pela Free Software Foundation, versão 2.
+*
+*    Este programa é distribuído na expectativa de ser útil, mas SEM
+*    QUALQUER GARANTIA; sem mesmo a garantia implícita de
+*    COMERCIALIZAÇÃO ou de ADEQUAÇÃO A QUALQUER PROPÓSITO EM
+*    PARTICULAR. Consulte a Licença Pública Geral GNU para obter mais
+*    detalhes.
+* 
+*    Você deve ter recebido uma cópia da Licença Pública Geral GNU
+*    junto com este programa; se não, escreva para a Free Software
+*    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+*    02111-1307, USA.
+*
+*    Cópias da licença disponíveis em /Sappiens/_doc/licenca
+*
 */
 
 namespace Sappiens\Configuracoes\Organograma;
@@ -93,10 +93,10 @@ class OrganogramaForm
 
         if($acao == 'alterar') {
 
-            $organogramaReferenciaCod = $getDados['organogramaReferenciaCod'];
-            $getDadosClassificacaoTipo = $con->execLinhaArray($sql->getOrganogramaClassificacaoTipoCodByOrganogramaClassificacaoCod($getDados['organogramaClassificacaoCod']));
-            $organogramaClassificacaoTipoCod = $getDadosClassificacaoTipo['organogramaClassificacaoTipoCod'];
-            $organogramaOrdem = $getDados['organogramaOrdem'];
+            $organogramaReferenciaCod = $getDados['organogramareferenciacod'];
+            $getDadosClassificacaoTipo = $con->execLinhaArray($sql->getOrganogramaClassificacaoTipoCodByOrganogramaClassificacaoCod($getDados['organogramaclassificacaocod']));
+            $organogramaClassificacaoTipoCod = $getDadosClassificacaoTipo['organogramaclassificacaotipocod'];
+            $organogramaOrdem = $getDados['organogramaordem'];
 
         }
 
@@ -116,27 +116,18 @@ class OrganogramaForm
                 ->setMultiplo(false)
                 ->setEmColunaDeTamanho('12')
                 ->setTabela('organograma a, organograma_classificacao b')
-                //->setCampoCod('organogramaCod')
                 ->setCampoCod('campoCod')
                 ->setOrdena(false)
-                //->setWhere("a.organogramaClassificacaoCod = b.organogramaClassificacaoCod AND INSTR(a.organogramaAncestral,CONCAT('|', " . $_SESSION['organogramaCod'] . ",'|')) > 0")
-                
                 ->setSqlCompleto("SELECT a.organogramaCod AS campoCod, IF(a.organogramaOrdem != \"\",CONCAT(a.organogramaOrdem, \" - \", a.organogramaNome, \" [\", b.organogramaClassificacaoNome,\"]\"), a.organogramaNome) AS campoDesc
                                     FROM organograma a, organograma_classificacao b 
                                    WHERE INSTR(a.organogramaAncestral,CONCAT('|', " . $_SESSION['organogramaCod'] . ",'|')) > 0 
                                      AND a.organogramaClassificacaoCod = b.organogramaClassificacaoCod
                                      $sqlAdd
                                 ORDER BY a.organogramaOrdem")
-                                                
-                //->setComplemento('onclick="getClassificacaoReordenavel(\'organogramaReferenciaCod\', \'sisFormIdorganogramaClassificacaoTipoCod\',\'getClassificacaoReordenavel\');"')
                 ->setComplemento('onclick="getClassificacaoReordenavel(\'organogramaReferenciaCod\', \'sisFormIdorganogramaClassificacaoTipoCod\',\'getClassificacaoReordenavel\');chNxt(\'#organogramaReferenciaCod\',\'#labelAntes_organogramaNome\',\'organogramaOrdem\',\'getOrdem\');"')
-                //->setCampoDesc('CONCAT(organogramaOrdem, " - ", organogramaReferenciaCombinado)');    
-                //->setCampoDesc('CONCAT(organogramaNome, " - ", organogramaReferenciaCombinado)');
-                //->setCampoDesc('IF(a.organogramaOrdem != "",CONCAT(a.organogramaOrdem, " - ", a.organogramaNome, " [", b.organogramaClassificacaoNome,"]"), a.organogramaNome)');
                 ->setCampoDesc('campoDesc');
 
-
-        if($acao == 'cadastrar' or ($acao == 'alterar' and $class->getClassificacaoReordenavel($getDados['organogramaCod']))) {
+        if($acao == 'cadastrar' or ($acao == 'alterar' and $class->getClassificacaoReordenavel($getDados['organogramacod']))) {
             if($chOrg) {
 
                 $campos[] = $form->hidden('organogramaOrdem')
@@ -159,7 +150,7 @@ class OrganogramaForm
                         /*
                         ** Campo-fantasma de getFormManuPhantom
                         */
-                        $organogramaClassificacaoCod = $getDados['organogramaClassificacaoCod'];
+                        $organogramaClassificacaoCod = $getDados['organogramaclassificacaocod'];
                 $campos[] = $form->chosen('organogramaClassificacaoCod', 'Classificação', true)
                         ->setValor($form->retornaValor('organogramaClassificacaoCod'))
                         ->setContainer('sisContainerOrganogramaClassificacaoCod')
@@ -171,10 +162,7 @@ class OrganogramaForm
                         ->setWhere("INSTR(organogramaClassificacaoAncestral,CONCAT('|', " . $organogramaClassificacaoCod . ",'|')) > 0")
                         ->setOrdena(false)
                         //->setDisabled(($acao == "cadastrar" ? 'false' : true))
-                        ->setCampoDesc('organogramaClassificacaoNome');   
-
-            //}   
-        //}                               
+                        ->setCampoDesc('organogramaClassificacaoNome');                               
 
         $campos[] = $form->texto('organogramaNome', 'Posição', true)
                 ->setLabelAntes($organogramaOrdem)
