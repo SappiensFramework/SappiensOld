@@ -61,6 +61,7 @@ class CidadeClass extends CidadeSql
                                           'ufNome'               => 'Estado',                          
                     $this->precedencia  . 'Nome'                 => 'Cidade',                          
                     $this->precedencia  . 'IbgeCod'              => 'IbgeCod',
+                    $this->precedencia  . 'Area'                 => 'Area',
                     $this->precedencia  . 'Status'               => 'Status'
         ];    
         $this->filtroDinamico = [
@@ -153,11 +154,11 @@ class CidadeClass extends CidadeSql
 
     }     
 
-    public function getUfCod($cod)
+    public function getUfCod($cod, $modo = '')
     {
 
-        return $this->con->paraArray(parent::getUfCod($cod));
-        
+        return ($modo == "alterar") ? $this->con->execRLinha(parent::getUfCod($cod, $modo)) : $this->con->paraArray(parent::getUfCod($cod, $modo));
+
     }    
 
 }

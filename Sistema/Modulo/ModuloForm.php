@@ -115,9 +115,9 @@ class ModuloForm
             ->setEmColunaDeTamanho(6),
             'acaoModuloIcon' => $objPai->texto('acaoModuloIcon', 'Ícone', true)
             ->setEmColunaDeTamanho(6),
-            'acaoModuloToolTipComPermissao' => $objPai->texto('acaoModuloToolTipComPermissao', 'Tooltip com Permissão', true)
+            'acaoModuloToolTipComPermissao' => $objPai->texto('acaoModuloToolTipComPermissao', 'Tooltip com Permissão', false)
             ->setEmColunaDeTamanho(6),
-            'acaoModuloToolTipeSemPermissao' => $objPai->texto('acaoModuloToolTipeSemPermissao', 'Tooltip sem Permissão', true)
+            'acaoModuloToolTipeSemPermissao' => $objPai->texto('acaoModuloToolTipeSemPermissao', 'Tooltip sem Permissão', false)
             ->setEmColunaDeTamanho(6),
             'acaoModuloFuncaoJS' => $objPai->texto('acaoModuloFuncaoJS', 'Função JS', true)
             ->setEmColunaDeTamanho(6),

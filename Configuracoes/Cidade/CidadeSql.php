@@ -104,10 +104,19 @@ class CidadeSql
 
     }    
 
-    public function getUfCod($cod)
+    public function getUfCod($cod, $modo = '')
     {
 
         $qb = $this->con->link()->createQueryBuilder();
+
+        if($modo == "alterar") {
+
+          return $qb->select('a.ufCod')
+                    ->from('uf_cidade', 'a')
+                    ->where($qb->expr()->eq('a.ufCidadeCod', ':ufCidadeCod'))
+                    ->setParameter('ufCidadeCod', $cod, \PDO::PARAM_INT);
+
+        }
 
         return $qb->select('*')
                   ->from('uf', 'a')
