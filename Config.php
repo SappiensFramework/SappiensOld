@@ -156,10 +156,16 @@ if($modulo != 'Login') {
 
 function sisErro($errno, $errstr, $errfile, $errline)
 {
-    throw new \Exception("<pre>Erro: " . $errno . ' - ' . $errstr . ' - ' . $errfile . ' - ' . $errline.'</pre>');
+    throw new \Exception("<pre>Erro: " . $errno . ' - ' . $errstr . ' - ' . $errfile . ' - ' . $errline);
+}
+
+function sisException($e)
+{
+    exit("<pre>". \Zion\Exception\Exception::getMessageTrace($e) ."</pre>");
 }
 
 \set_error_handler("\\Sappiens\\sisErro", \E_WARNING | \E_NOTICE);
+\set_exception_handler("\\Sappiens\\sisException");
 
 require_once SIS_FM_BASE . 'Lib/Zion/ClassLoader/Loader.php';
 
