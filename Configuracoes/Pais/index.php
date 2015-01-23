@@ -30,9 +30,7 @@
 
 require '../../Config.php';
 
-define('GRUPO', 'Grupo');
-define('MODULO', 'Modulo');
-define('DEFAULT_MODULO_NOME', 'Módulo');
-define('DEFAULT_MODULO_URL', 'Modulo');
+define('GRUPO', 'Configuracoes');
+define('MODULO', 'Pais');
 
-echo (new \Sappiens\Grupo\Modulo\ModuloController())->controle(\filter_input(\INPUT_GET, 'acao'));
+echo (new \Sappiens\Configuracoes\Pais\PaisController())->controle(\filter_input(\INPUT_GET, 'acao'));

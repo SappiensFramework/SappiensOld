@@ -1,4 +1,32 @@
 <?php
+/*
+
+    Sappiens, Framework de Gestão Integrada
+    Copyright (C) 2014, BRA Consultoria
+
+    Website do autor: www.braconsultoria.com.br/sappiens
+    Email do autor: sappiens@braconsultoria.com.br
+
+    Website do projeto, equipe e documentação: www.sappiens.com.br
+   
+    Este programa é software livre; você pode redistribuí-lo e/ou
+    modificá-lo sob os termos da Licença Pública Geral GNU, conforme
+    publicada pela Free Software Foundation, versão 2.
+
+    Este programa é distribuído na expectativa de ser útil, mas SEM
+    QUALQUER GARANTIA; sem mesmo a garantia implícita de
+    COMERCIALIZAÇÃO ou de ADEQUAÇÃO A QUALQUER PROPÓSITO EM
+    PARTICULAR. Consulte a Licença Pública Geral GNU para obter mais
+    detalhes.
+ 
+    Você deve ter recebido uma cópia da Licença Pública Geral GNU
+    junto com este programa; se não, escreva para a Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+    02111-1307, USA.
+
+    Cópias da licença disponíveis em /Sappiens/_doc/licenca
+
+*/
 
 namespace Sappiens\GestaoAdministrativa\PessoaFisica;
 
@@ -91,7 +119,7 @@ class PessoaFisicaForm
         $form = new \Pixel\Form\Form();
         $html = new \Zion\Layout\Html();
 
-        $form->setAcao($acao);
+        $form->setAcao('sisAlterarPadrao($(form).attr("name"),true)');
 
         $nomeForm = 'formManuDocumento' . $cod;
         
@@ -170,25 +198,27 @@ class PessoaFisicaForm
         $campo = '';
         $buffer = '';
 
+        $form->setAcao('sisAlterarPadrao($(form).attr("name"),true)');
         $form->config('formManuDocumento'.$codForm);
 
-        while($data = $param->fetch_array()) {            
+        while($data = $param->fetch()) {            
           
-            switch ($data['pessoaDocumentoTipoCampo']) {
+            switch ($data['pessoadocumentotipocampo']) {
 
                 case 'select':
 
-                    $rel = $pessoaFisicaClass->getRelacionamento($data['pessoaDocumentoTipoCod'], 'select');
-                    $obrigatorio = ($data['pessoaDocumentoTipoCampoObrigatorio'] == 'S') ? true : false;                                  
+                    $rel = $pessoaFisicaClass->getRelacionamento($data['pessoadocumentotipocod'], 'select');
+                    $obrigatorio = ($data['pessoadocumentotipocampoobrigatorio'] == 'S') ? true : false;                                  
                         
-                    $campos[] = $form->chosen('pessoaDocumentoTipoCod_' . $data['pessoaDocumentoTipoCod'], $data['pessoaDocumentoTipoNome'], $obrigatorio)
-                            ->setTabela($rel['pessoaDocumentoTipoRelacionamentoTabelaNome'])
-                            ->setCampoCod($rel['pessoaDocumentoTipoRelacionamentoTabelaChave'])
-                            ->setCampoDesc($rel['pessoaDocumentoTipoRelacionamentoTabelaColunaNome'])
+                    $campos[] = $form->chosen('pessoaDocumentoTipoCod_' . $data['pessoadocumentotipocod'], $data['pessoadocumentotiponome'], $obrigatorio)
+                            ->setTabela($rel['pessoadocumentotiporelacionamentotabelanome'])
+                            ->setCampoCod($rel['pessoadocumentotiporelacionamentotabelachave'])
+                            ->setCampoDesc($rel['pessoadocumentotiporelacionamentotabelacolunanome'])
                             ->setInicio('Selecione...')
-                            ->setValor(\filter_input(INPUT_POST, 'pessoaDocumentoTipoCod_' . $data['pessoaDocumentoTipoCod']))
+                            ->setValor(\filter_input(INPUT_POST, 'pessoaDocumentoTipoCod_' . $data['pessoadocumentotipocod']))
                             ->setMultiplo(false)
                             ->setEmColunaDeTamanho('6')
+                            ->setAtributos(['_pCod' => $data['pessoadocumentotipocod']])
                             ->setLayoutPixel(true)
                             ->setOrdena(false);                           				
 
@@ -196,58 +226,62 @@ class PessoaFisicaForm
 
                 case 'suggest':
 
-                    $rel = $pessoaFisicaClass->getRelacionamento($data['pessoaDocumentoTipoCod'], 'select');
-                    $obrigatorio = ($data['pessoaDocumentoTipoCampoObrigatorio'] == 'S') ? true : false;
+                    $rel = $pessoaFisicaClass->getRelacionamento($data['pessoadocumentotipocod'], 'select');
+                    $obrigatorio = ($data['pessoadocumentotipocampoobrigatorio'] == 'S') ? true : false;
                         
-                    $campos[] = $form->suggest('pessoaDocumentoTipoCod_' . $data['pessoaDocumentoTipoCod'], $data['pessoaDocumentoTipoNome'], $obrigatorio)
-                            ->setTabela($rel['pessoaDocumentoTipoRelacionamentoTabelaNome'])
-                            ->setCampoCod($rel['pessoaDocumentoTipoRelacionamentoTabelaChave'])
-                            ->setCampoDesc($rel['pessoaDocumentoTipoRelacionamentoTabelaColunaNome'])
+                    $campos[] = $form->suggest('pessoaDocumentoTipoCod_' . $data['pessoadocumentotipocod'], $data['pessoadocumentotiponome'], $obrigatorio)
+                            ->setTabela($rel['pessoadocumentotiporelacionamentotabelanome'])
+                            ->setCampoCod($rel['pessoadocumentotiporelacionamentotabelachave'])
+                            ->setCampoDesc($rel['pessoadocumentotiporelacionamentotabelacolunanome'])
                             ->setPlaceHolder('Pesquisar...')
-                            ->setValor(\filter_input(INPUT_POST, 'pessoaDocumentoTipoCod_' . $data['pessoaDocumentoTipoCod']))
-                            ->setHiddenValue('pessoaDocumentoTipoCod_' . $data['pessoaDocumentoTipoCod'])
+                            //->setValor(\filter_input(INPUT_POST, '_pCod'))
+                            ->setValor(\filter_input(INPUT_POST, 'pessoaDocumentoTipoCod_' . $data['pessoadocumentotipocod']))
+                            ->setHiddenValue(true)
                             ->setEmColunaDeTamanho('6')
+                            ->setAtributos(['_pCod' => $data['pessoadocumentotipocod']])
                             ->setLayoutPixel(true);        
 
                 break;                
 
                 case 'texto':
 
-                    $obrigatorio = ($data['pessoaDocumentoTipoCampoObrigatorio'] == 'S') ? true : false;
+                    $obrigatorio = ($data['pessoadocumentotipocampoobrigatorio'] == 'S') ? true : false;
 
-                    $campos[] = $form->texto('pessoaDocumentoTipoCod_' . $data['pessoaDocumentoTipoCod'], $data['pessoaDocumentoTipoNome'], $obrigatorio)
+                    $campos[] = $form->texto('pessoaDocumentoTipoCod_' . $data['pessoadocumentotipocod'], $data['pessoadocumentotiponome'], $obrigatorio)
                             ->setEmColunaDeTamanho('6')
-                            ->setValor(\filter_input(INPUT_POST, 'pessoaDocumentoTipoCod_' . $data['pessoaDocumentoTipoCod']));                                                                     
+                            ->setAtributos(['_pCod' => $data['pessoadocumentotipocod']])
+                            ->setValor(\filter_input(INPUT_POST, 'pessoaDocumentoTipoCod_' . $data['pessoadocumentotipocod']));                                                                     
 
                 break;
 
                 case 'data':
 
-                    $obrigatorio = ($data['pessoaDocumentoTipoCampoObrigatorio'] == 'S') ? true : false;
+                    $obrigatorio = ($data['pessoadocumentotipocampoobrigatorio'] == 'S') ? true : false;
 
-                    $campos[] = $form->data('pessoaDocumentoTipoCod_' . $data['pessoaDocumentoTipoCod'], $data['pessoaDocumentoTipoNome'], $obrigatorio)
+                    $campos[] = $form->data('pessoaDocumentoTipoCod_' . $data['pessoadocumentotipocod'], $data['pessoadocumentotiponome'], $obrigatorio)
                             ->setEmColunaDeTamanho('6')
-                            ->setValor(\filter_input(INPUT_POST, 'pessoaDocumentoTipoCod_' . $data['pessoaDocumentoTipoCod']));                                                                    
+                            ->setAtributos(['_pCod' => $data['pessoadocumentotipocod']])
+                            ->setValor(\filter_input(INPUT_POST, 'pessoaDocumentoTipoCod_' . $data['pessoadocumentotipocod']));                                                                    
 
                 break;       
 
                 case 'cpf':
 
-                    $obrigatorio = ($data['pessoaDocumentoTipoCampoObrigatorio'] == 'S') ? true : false;
+                    $obrigatorio = ($data['pessoadocumentotipocampoobrigatorio'] == 'S') ? true : false;
 
-                    $campos[] = $form->cpf('pessoaDocumentoTipoCod_' . $data['pessoaDocumentoTipoCod'], $data['pessoaDocumentoTipoNome'], $obrigatorio)
+                    $campos[] = $form->cpf('pessoaDocumentoTipoCod_' . $data['pessoadocumentotipocod'], $data['pessoadocumentotiponome'], $obrigatorio)
                             ->setEmColunaDeTamanho('6')
-                            ->setValor(\filter_input(INPUT_POST, 'pessoaDocumentoTipoCod_' . $data['pessoaDocumentoTipoCod']));                                                                      
+                            ->setAtributos(['_pCod' => $data['pessoadocumentotipocod']])
+                            ->setValor(\filter_input(INPUT_POST, 'pessoaDocumentoTipoCod_' . $data['pessoadocumentotipocod']));                                                                      
 
                 break;     
 
                 case 'upload':
 
-                    $obrigatorio = ($data['pessoaDocumentoTipoCampoObrigatorio'] == 'S') ? true : false;
-
-                    $campos[] = $form->upload('pessoaDocumentoTipoCod_' . $data['pessoaDocumentoTipoCod'], $data['pessoaDocumentoTipoNome'], "IMAGEM")
-                            ->setCodigoReferencia(\filter_input(INPUT_POST, 'pessoaDocumentoTipoCod_' . $data['pessoaDocumentoTipoCod']))
+                    $campos[] = $form->upload('pessoaDocumentoTipoCod' . $cod . '[]', $data['pessoadocumentotiponome'], "ARQUIVO")
+                            ->setCodigoReferencia($data['pessoadocumentotiporeferenciacod'])
                             ->setEmColunaDeTamanho('6')
+                            ->setAtributos(['_pCod' => $data['pessoadocumentotipocod']])
                             ->setMultiple(true);                                                                     
 
                 break;                                                       
@@ -277,38 +311,44 @@ class PessoaFisicaForm
         $campo = '';
         $buffer = '';
 
+        $form->setAcao('sisAlterarPadrao($(form).attr("name"),true)');
         $form->config('formManuDocumento'.$codForm);
 
-        while($data = $param->fetch_array()) {
+        //print_r($param);
 
-            switch ($data['pessoaDocumentoTipoCampo']) {
+        while($data = $param->fetch()) {
+
+            //print_r($data);
+
+            switch ($data['pessoadocumentotipocampo']) {
 
                 case 'select':
 
-                    $rel = $pessoaFisicaClass->getRelacionamento($data['pessoaDocumentoTipoCod'], 'select');
-                    $obrigatorio = ($data['pessoaDocumentoTipoCampoObrigatorio'] == 'S') ? true : false;
-                    $valor = $pessoaFisicaClass->getValor($data['pessoaDocumentoTipoCod'], $codForm);   					
+                    $rel = $pessoaFisicaClass->getRelacionamento($data['pessoadocumentotipocod'], 'select');
+                    $obrigatorio = ($data['pessoadocumentotipocampoobrigatorio'] == 'S') ? true : false;
+                    $valor = $pessoaFisicaClass->getValor($data['pessoadocumentotipocod'], $codForm);   					
 
-					$campos[] = $form->hidden('pessoaDocumentoTipoCod_' . $data['pessoaDocumentoTipoCod'])
+					$campos[] = $form->hidden('pessoaDocumentoTipoCod_' . $data['pessoadocumentotipocod'])
 							->setValor($valor); 							
 					
 					$formHidden = $form->processarForm($campos);
-					$campoHidden  = $formHidden->getFormHtml('pessoaDocumentoTipoCod_' . $data['pessoaDocumentoTipoCod']);  				
+					$campoHidden  = $formHidden->getFormHtml('pessoaDocumentoTipoCod_' . $data['pessoadocumentotipocod']);  				
                         
-                    $campos[] = $form->chosen('pessoaDocumentoTipoCod' . $data['pessoaDocumentoTipoCod'], $data['pessoaDocumentoTipoNome'], $obrigatorio)
-                            ->setTabela($rel['pessoaDocumentoTipoRelacionamentoTabelaNome'])
-                            ->setCampoCod($rel['pessoaDocumentoTipoRelacionamentoTabelaChave'])
-                            ->setCampoDesc($rel['pessoaDocumentoTipoRelacionamentoTabelaColunaNome'])
+                    $campos[] = $form->chosen('pessoaDocumentoTipoCod' . $data['pessoadocumentotipocod'], $data['pessoadocumentotiponome'], $obrigatorio)
+                            ->setTabela($rel['pessoadocumentotiporelacionamentotabelanome'])
+                            ->setCampoCod($rel['pessoadocumentotiporelacionamentotabelachave'])
+                            ->setCampoDesc($rel['pessoadocumentotiporelacionamentotabelacolunanome'])
                             ->setInicio('Selecione...')
                             ->setValor($valor)
                             ->setMultiplo(false)
                             ->setEmColunaDeTamanho('6')
+                            ->setAtributos(['_pCod' => $data['pessoadocumentotipocod']])
                             ->setLayoutPixel(true)
-							->setComplemento('onchange="setValue(\'pessoaDocumentoTipoCod'. $data['pessoaDocumentoTipoCod'] .'\', \'pessoaDocumentoTipoCod_'. $data['pessoaDocumentoTipoCod'] .'\');"')
+							->setComplemento('onchange="setValue(\'pessoaDocumentoTipoCod'. $data['pessoadocumentotipocod'] .'\', \'pessoaDocumentoTipoCod_'. $data['pessoadocumentotipocod'] .'\');"')
                             ->setOrdena(false);
 
                     $formSelect = $form->processarForm($campos);
-                    $campoSelect  = $formSelect->getFormHtml('pessoaDocumentoTipoCod' . $data['pessoaDocumentoTipoCod']);
+                    $campoSelect  = $formSelect->getFormHtml('pessoaDocumentoTipoCod' . $data['pessoadocumentotipocod']);
 					$campoSelect .= $formSelect->javaScript()->getLoad(true); 							      
                     $buffer .= $campoHidden . $campoSelect;                 
 
@@ -316,23 +356,25 @@ class PessoaFisicaForm
 
                 case 'suggest':
 
-                    $rel = $pessoaFisicaClass->getRelacionamento($data['pessoaDocumentoTipoCod'], 'select');
-                    $obrigatorio = ($data['pessoaDocumentoTipoCampoObrigatorio'] == 'S') ? true : false;
+                    $rel = $pessoaFisicaClass->getRelacionamento($data['pessoadocumentotipocod'], 'select');
+                    $obrigatorio = ($data['pessoadocumentotipocampoobrigatorio'] == 'S') ? true : false;
 
-                    $valor = $pessoaFisicaClass->getValor($data['pessoaDocumentoTipoCod'], $codForm, 'suggest');
+                    $valor = $pessoaFisicaClass->getValor($data['pessoadocumentotipocod'], $codForm, 'suggest');
+                    $valorId = $pessoaFisicaClass->getValor($data['pessoadocumentotipocod'], $codForm);             
                         
-                    $campos[] = $form->suggest('pessoaDocumentoTipoCod_' . $data['pessoaDocumentoTipoCod'], $data['pessoaDocumentoTipoNome'], $obrigatorio)
-                            ->setTabela($rel['pessoaDocumentoTipoRelacionamentoTabelaNome'])
-                            ->setCampoCod($rel['pessoaDocumentoTipoRelacionamentoTabelaChave'])
-                            ->setCampoDesc($rel['pessoaDocumentoTipoRelacionamentoTabelaColunaNome'])
+                    $campos[] = $form->suggest('pessoaDocumentoTipoCod_' . $data['pessoadocumentotipocod'], $data['pessoadocumentotiponome'], $obrigatorio)
+                            ->setTabela($rel['pessoadocumentotiporelacionamentotabelanome'])
+                            ->setCampoCod($rel['pessoadocumentotiporelacionamentotabelachave'])
+                            ->setCampoDesc($rel['pessoadocumentotiporelacionamentotabelacolunanome'])
                             ->setPlaceHolder('Pesquisar...')
                             ->setValor($valor)
-                            ->setHiddenValue('pessoaDocumentoTipoCod_' . $data['pessoaDocumentoTipoCod'])
+                            ->setAtributos(['_pCod' => $valorId])
+                            ->setHiddenValue('pessoaDocumentoTipoCod_' . $data['pessoadocumentotipocod'])
                             ->setEmColunaDeTamanho('6')
                             ->setLayoutPixel(true);
 
                     $formCampos = $form->processarForm($campos);
-                    $campo  = $formCampos->getFormHtml('pessoaDocumentoTipoCod_' . $data['pessoaDocumentoTipoCod']);
+                    $campo  = $formCampos->getFormHtml('pessoaDocumentoTipoCod_' . $data['pessoadocumentotipocod']);
                     $campo .= $formCampos->javaScript()->getLoad(true);         
                     $buffer .= $campo;                 
 
@@ -340,15 +382,16 @@ class PessoaFisicaForm
 
                 case 'texto':
 
-                    $obrigatorio = ($data['pessoaDocumentoTipoCampoObrigatorio'] == 'S') ? true : false;
-                    $valor = $pessoaFisicaClass->getValor($data['pessoaDocumentoTipoCod'], $codForm);  
+                    $obrigatorio = ($data['pessoadocumentotipocampoobrigatorio'] == 'S') ? true : false;
+                    $valor = $pessoaFisicaClass->getValor($data['pessoadocumentotipocod'], $codForm);  
 
-                    $campos[] = $form->texto('pessoaDocumentoTipoCod_' . $data['pessoaDocumentoTipoCod'], $data['pessoaDocumentoTipoNome'], $obrigatorio)
+                    $campos[] = $form->texto('pessoaDocumentoTipoCod_' . $data['pessoadocumentotipocod'], $data['pessoadocumentotiponome'], $obrigatorio)
                             ->setEmColunaDeTamanho('6')
+                            ->setAtributos(['_pCod' => $data['pessoadocumentotipocod']])
                             ->setValor($valor); 
 
                     $formCampos = $form->processarForm($campos);    
-                    $campo  = $formCampos->getFormHtml('pessoaDocumentoTipoCod_' . $data['pessoaDocumentoTipoCod']);                 
+                    $campo  = $formCampos->getFormHtml('pessoaDocumentoTipoCod_' . $data['pessoadocumentotipocod']);                 
                     $campo .= $formCampos->javaScript()->getLoad(true);    
                     $buffer .= $campo;                                                                        
 
@@ -356,15 +399,16 @@ class PessoaFisicaForm
 
                 case 'data':
 
-                    $obrigatorio = ($data['pessoaDocumentoTipoCampoObrigatorio'] == 'S') ? true : false;
-                    $valor = $pessoaFisicaClass->getValor($data['pessoaDocumentoTipoCod'], $codForm);  
+                    $obrigatorio = ($data['pessoadocumentotipocampoobrigatorio'] == 'S') ? true : false;
+                    $valor = $pessoaFisicaClass->getValor($data['pessoadocumentotipocod'], $codForm);  
 
-                    $campos[] = $form->data('pessoaDocumentoTipoCod_' . $data['pessoaDocumentoTipoCod'], $data['pessoaDocumentoTipoNome'], $obrigatorio)
+                    $campos[] = $form->data('pessoaDocumentoTipoCod_' . $data['pessoadocumentotipocod'], $data['pessoadocumentotiponome'], $obrigatorio)
                             ->setEmColunaDeTamanho('6')
+                            ->setAtributos(['_pCod' => $data['pessoadocumentotipocod']])
                             ->setValor($valor); 
 
                     $formCampos = $form->processarForm($campos);    
-                    $campo  = $formCampos->getFormHtml('pessoaDocumentoTipoCod_' . $data['pessoaDocumentoTipoCod']);   
+                    $campo  = $formCampos->getFormHtml('pessoaDocumentoTipoCod_' . $data['pessoadocumentotipocod']);   
                     $campo .= $formCampos->javaScript()->getLoad(true);    
                     $buffer .= $campo;                                                                        
 
@@ -372,15 +416,16 @@ class PessoaFisicaForm
 
                 case 'cpf':
 
-                    $obrigatorio = ($data['pessoaDocumentoTipoCampoObrigatorio'] == 'S') ? true : false;
-                    $valor = $pessoaFisicaClass->getValor($data['pessoaDocumentoTipoCod'], $codForm);  
+                    $obrigatorio = ($data['pessoadocumentotipocampoobrigatorio'] == 'S') ? true : false;
+                    $valor = $pessoaFisicaClass->getValor($data['pessoadocumentotipocod'], $codForm);  
 
-                    $campos[] = $form->cpf('pessoaDocumentoTipoCod_' . $data['pessoaDocumentoTipoCod'], $data['pessoaDocumentoTipoNome'], $obrigatorio)
+                    $campos[] = $form->cpf('pessoaDocumentoTipoCod_' . $data['pessoadocumentotipocod'], $data['pessoadocumentotiponome'], $obrigatorio)
                             ->setEmColunaDeTamanho('6')
+                            ->setAtributos(['_pCod' => $data['pessoadocumentotipocod']])
                             ->setValor($valor);                             
 
                     $formCampos = $form->processarForm($campos);    
-                    $campo  = $formCampos->getFormHtml('pessoaDocumentoTipoCod_' . $data['pessoaDocumentoTipoCod']);   
+                    $campo  = $formCampos->getFormHtml('pessoaDocumentoTipoCod_' . $data['pessoadocumentotipocod']);   
                     $campo .= $formCampos->javaScript()->getLoad(true);    
                     $buffer .= $campo;                                                                        
 
@@ -388,15 +433,14 @@ class PessoaFisicaForm
 
                 case 'upload':
 
-                    $obrigatorio = ($data['pessoaDocumentoTipoCampoObrigatorio'] == 'S') ? true : false;
-
-                    $campos[] = $form->upload('pessoaDocumentoTipoCod_' . $data['pessoaDocumentoTipoCod'], $data['pessoaDocumentoTipoNome'], "IMAGEM")
-                            ->setCodigoReferencia($cod)
+                    $campos[] = $form->upload('pessoaDocumentoTipoCod' . $cod . '[]', $data['pessoadocumentotiponome'], "ARQUIVO")
+                            ->setCodigoReferencia($data['pessoadocumentotiporeferenciacod'])
                             ->setEmColunaDeTamanho('6')
+                            ->setAtributos(['_pCod' => $data['pessoadocumentotipocod']])
                             ->setMultiple(true);                    
 
                     $formCampos = $form->processarForm($campos);    
-                    $campo  = $formCampos->getFormHtml('pessoaDocumentoTipoCod_' . $data['pessoaDocumentoTipoCod']);   
+                    $campo  = $formCampos->getFormHtml('pessoaDocumentoTipoCod' . $cod . '[]');   
                     $campo .= $formCampos->javaScript()->getLoad(true);    
                     $buffer .= $campo;                                                                        
 
@@ -440,7 +484,16 @@ class PessoaFisicaForm
                     }';  
         $buffer .= 'function setValue(a,b){
 						$("#"+b).val($("#"+a).val());
-                    }';					
+                    }';		
+        $buffer .= 'function getController(a,b,c){
+                        var aa = $("#"+a).val();
+                        $.ajax({type: "get", url: "?acao="+c+"&a="+aa, dataType: "json", beforeSend: function() {
+                        }}).done(function (ret) {
+                            $("#"+b).html(ret.retorno);
+                        }).fail(function () {
+                            sisMsgFailPadrao();
+                        });  
+                    }';                                        			
         return $buffer;
 
     }

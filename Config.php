@@ -1,9 +1,37 @@
 <?php
+/*
+
+    Sappiens Framework
+    Copyright (C) 2014, BRA Consultoria
+
+    Website do autor: www.braconsultoria.com.br/sappiens
+    Email do autor: sappiens@braconsultoria.com.br
+
+    Website do projeto, equipe e documentação: www.sappiens.com.br
+   
+    Este programa é software livre; você pode redistribuí-lo e/ou
+    modificá-lo sob os termos da Licença Pública Geral GNU, conforme
+    publicada pela Free Software Foundation, versão 2.
+
+    Este programa é distribuído na expectativa de ser útil, mas SEM
+    QUALQUER GARANTIA; sem mesmo a garantia implícita de
+    COMERCIALIZAÇÃO ou de ADEQUAÇÃO A QUALQUER PROPÓSITO EM
+    PARTICULAR. Consulte a Licença Pública Geral GNU para obter mais
+    detalhes.
+ 
+    Você deve ter recebido uma cópia da Licença Pública Geral GNU
+    junto com este programa; se não, escreva para a Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+    02111-1307, USA.
+
+    Cópias da licença disponíveis em /Sappiens/_doc/licenca
+
+*/
 
 /**
  * @author Pablo Vanni - pablovanni@gmail.com
  * @since 16/05/2006
- * Autualizada Por: Pablo Vanni - pablovanni@gmail.com
+ * Atualizada Por: Pablo Vanni - pablovanni@gmail.com
  * @name Configurações para area administrativa
  * @version 2.0
  * @package Framework
@@ -23,12 +51,11 @@ class Config
 
         \header('Content-Type: text/html; charset=utf-8');
 
-        $this->setDiretorios('dev');           
+        $this->setCommon('dev');           
 
-        define('SIS_SLOGAN', 'Simples. Flexível. Totoso.');
-        define('SIS_DESCRICAO', SIS_ID_NAMESPACE_PROJETO . ', Plataforma de Gestão Integrada');
+        define('SIS_SLOGAN', 'Simples. Flexível. Poderoso.');
+        define('SIS_DESCRICAO', SIS_ID_NAMESPACE_PROJETO . ' Framework');
         define('SIS_AUTOR', 'The Sappiens Team');
-        define('SIS_RELEASE', 'Alpha');
         define('SIS_VENDOR_TEMPLATE','PixelAdmin');
         define('SIS_VENDOR_TEMPLATE_VERSION','1.3.0');   
         define('SIS_URL_BASE_TEMPLATE', SIS_VENDOR_TEMPLATE . '/' . SIS_VENDOR_TEMPLATE_VERSION . '/');     
@@ -48,7 +75,7 @@ class Config
 
     }
 
-    private function setDiretorios($modo = 'prod')
+    private function setCommon($modo = 'prod')
     {
 
         define('SIS_DIR_BASE', str_replace('\\', '/', dirname(__FILE__)) . '/');
@@ -68,33 +95,46 @@ class Config
             define('SIS_NAMESPACE_PROJETO','C:/xampp/htdocs');  
             define('SIS_NAMESPACE_FRAMEWORK', 'C:/xampp/htdocs/Zion/Lib');
             define('SIS_NAMESPACE_TEMPLATE', 'C:/xampp/htdocs/Zion/Lib');
+            define('SIS_RELEASE', 'Developer');
 
-        self::$SIS_CFG = [
-            'bases' => [
-                'padraoW' => [ //Postgress
-                    'host' => 's2.virtuaserver.com.br',
-                    'banco' => 'sappiens_dev',
-                    'usuario' => 'sappiens_user',
-                    'senha' => 'bl4ckh0rs3',
-                    'driver' => 'pdo_pgsql'],
-                'padraoX' => [ //Oracle
-                    'host' => '192.168.25.51',
-                    'banco' => 'SAPPIENS_DEV',
-                    'usuario' => 'SAPPIENS',
-                    'senha' => 'bl4ckh0rs3',
-                    'driver' => 'pdo_pgsql'],
-                'padrao' => [ //Mysql
-                    'host' => '192.168.25.51',
-                    'banco' => 'onyxprev_sappiens',
-                    'usuario' => 'onyxprev_sapp',
-                    'senha' => 'qwertybracom',
-                    'driver' => 'pdo_mysql'],
-                'padraoy' => [ //Sql Server
-                    'host' => 'DEV1\SQLEXPRESS',
-                    'banco' => 'onyxprev_engine',
-                    'usuario' => 'SAPP',
-                    'senha' => 'bl4ckh0rs3',
-                    'driver' => 'pdo_sqlsrv']]];
+            self::$SIS_CFG = [
+
+                'bases' => [
+
+                    'padraoW' => [ //Postgress
+
+                        'host' => 's2.virtuaserver.com.br',
+                        'banco' => 'sappiens_dev',
+                        'usuario' => 'sappiens_user',
+                        'senha' => 'bl4ckh0rs3',
+                        'driver' => 'pdo_pgsql'],
+
+                    'padraoX' => [ //Oracle
+
+                        'driver'    =>'pdo_mysql',
+                        'host'      =>'192.168.25.51',
+                        'banco' => 'SAPPIENS_DEV',
+                        'usuario' => 'SAPPIENS',
+                        'senha' => 'bl4ckh0rs3',
+                        'driver' => 'pdo_pgsql'],
+
+                    'padrao' => [ //Mysql
+
+                        'host' => '192.168.25.51',
+                        'banco'     =>'onyxprev_sappiens',
+                        'usuario'   =>'onyxprev_sapp',
+                        'senha' => 'qwertybracom',
+                        'driver' => 'pdo_mysql'],
+
+                    'padraoy' => [ //Sql Server
+
+                        'host' => 'DEV1\SQLEXPRESS',
+                        'banco' => 'onyxprev_engine',
+                        'usuario' => 'SAPP',
+                        'senha' => 'bl4ckh0rs3',
+                        'driver' => 'pdo_sqlsrv']
+                ]
+            ];
 
         } elseif($modo == 'alpha') {
 
@@ -110,9 +150,11 @@ class Config
             define('SIS_NAMESPACE_PROJETO','/home/sappienscom/public_html/alpha');    
             define('SIS_NAMESPACE_FRAMEWORK', '/home/sappienscom/public_html/alpha/Zion/Lib');
             define('SIS_NAMESPACE_TEMPLATE', '/home/sappienscom/public_html/alpha/Zion/Lib');
+            define('SIS_RELEASE', 'Alpha');
 
             self::$SIS_CFG = [
                 'bases'         => array('padrao' => array(
+                    'driver'    =>'pdo_mysql',
                     'host'      =>'localhost',
                     'banco'     =>'onyxprev_sappiens',
                     'usuario'   =>'onyxprev_sapp',
@@ -130,6 +172,7 @@ class Config
 
             define('SIS_NAMESPACE_FRAMEWORK', '/home/sappiens/public_html/app/Zion/Lib');
             define('SIS_NAMESPACE_TEMPLATE', '/home/sappiens/public_html/app/Zion/Lib');
+            define('SIS_RELEASE', 'Production');
 
             self::$SIS_CFG = [
                 'bases'         => array('padrao' => array(

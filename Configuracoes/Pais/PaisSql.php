@@ -28,9 +28,9 @@
 *
 */
 
-namespace Sappiens\Grupo\Modulo;
+namespace Sappiens\Configuracoes\Pais;
 
-class ModuloSql
+class PaisSql
 {
 
     private $con;
@@ -42,20 +42,22 @@ class ModuloSql
         $this->con = \Zion\Banco\Conexao::conectar();
         $this->util = new \Pixel\Crud\CrudUtil();
 
-    }     
+    }    
 
     public function filtrarSql($objForm, $colunas)
     {
-        $fil = new \Pixel\Filtro\Filtrar($objForm);
+
         $qb = $this->con->link()->createQueryBuilder();
+        $fil = new \Pixel\Filtro\Filtrar($objForm);
 
         $qb->select('*')
-           ->from('uf', 'a')
-           ->where('1');        
+           ->from('pais', 'a')
+           ->where('1');
 
-        $this->util->getSqlFiltro($fil, $objForm, $colunas, $qb);        
+        $this->util->getSqlFiltro($fil, $objForm, $colunas, $qb);    
 
-        return $qb;
+        return $qb;    
+
     }
 
     public function getDadosSql($cod)
@@ -64,11 +66,40 @@ class ModuloSql
         $qb = $this->con->link()->createQueryBuilder();
 
         $qb->select('*')
-           ->from('uf', 'a')
-           ->where('a.ufCod = :ufCod')
-           ->setParameter('ufCod', $cod, \PDO::PARAM_INT);     
+           ->from('pais', 'a')
+           ->where('paisCod = :paisCod')
+           ->setParameter('paisCod', $cod, \PDO::PARAM_INT);
 
-        return $qb;        
-                
+        return $qb;
+
     }
+
+    public function getDadosGrupoSql()
+    {
+
+        $qb = $this->con->link()->createQueryBuilder();
+
+        $qb->select('*')
+           ->from('_grupo', 'a')
+           ->where('a.grupoPacote = :grupoPacote')
+           ->setParameter('grupoPacote', GRUPO);
+
+        return $qb;     
+
+    }
+
+    public function getDadosModuloSql()
+    {
+
+        $qb = $this->con->link()->createQueryBuilder();
+
+        $qb->select('*')
+           ->from('_modulo', 'a')
+           ->where('a.moduloNome = :moduloNome')
+           ->setParameter('moduloNome', MODULO);
+
+        return $qb;     
+
+    }    
+
 }

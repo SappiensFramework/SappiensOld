@@ -28,118 +28,147 @@
 *
 */
 
-namespace Sappiens\Grupo\Modulo;
+namespace Sappiens\GrupoExemplo\ModuloExemplo;
 
-class ModuloController extends \Zion\Core\Controller
+class ModuloExemploController extends \Zion\Core\Controller
 {
 
-    private $moduloClass;
-    private $moduloForm;
+    private $class;
+    private $form;
 
     public function __construct()
     {
-        $this->moduloClass = new \Sappiens\Grupo\Modulo\ModuloClass();
-        $this->moduloForm = new \Sappiens\Grupo\Modulo\ModuloForm();
-    }
+        $this->class = new \Sappiens\GrupoExemplo\ModuloExemplo\ModuloExemploClass();
+        $this->form = new \Sappiens\GrupoExemplo\ModuloExemplo\ModuloExemploForm();
+    } 
 
     protected function iniciar()
     {
+
         $retorno = '';
 
         try {
 
+            $dadosGrupo  = $this->class->getDadosGrupo();
+            $dadosModulo = $this->class->getDadosModulo();
+
+            define('DEFAULT_GRUPO_NOME', $dadosGrupo['gruponome']);
+            define('DEFAULT_MODULO_NOME', $dadosModulo['modulonomemenu']);
+            define('DEFAULT_MODULO_URL', $dadosModulo['modulonome']);            
+
             $template = new \Pixel\Template\Template();
+            $template->setConteudoIconeModulo($dadosModulo['moduloclass']);
+            $template->setConteudoNomeModulo($dadosModulo['modulodesc']);            
 
             new \Zion\Acesso\Acesso('filtrar');
 
-            $template->setConteudoScripts($this->moduloForm->getJSEstatico());
+            $template->setConteudoScripts($this->form->getJSEstatico());
 
             $getBotoes = new \Pixel\Grid\GridBotoes();
 
             $filtros = new \Pixel\Filtro\FiltroForm();
 
-            $getBotoes->setFiltros($filtros->montaFiltro($this->moduloForm->getFormFiltro()));
+            $getBotoes->setFiltros($filtros->montaFiltro($this->form->getFormFiltro()));
             $botoes = $getBotoes->geraBotoes();
 
-            $grid = $this->moduloClass->filtrar($this->moduloForm->getFormFiltro());
+            $grid = $this->class->filtrar($this->form->getFormFiltro());
 
             $template->setTooltipForm();
             $template->setConteudoBotoes($botoes);
             $template->setConteudoGrid($grid);
+
         } catch (\Exception $ex) {
             
             $retorno = $ex;
+
         }
 
         $template->setConteudoMain($retorno);
 
         return $template->getTemplate();
+
     }
 
     protected function filtrar()
     {
+
         new \Zion\Acesso\Acesso('filtrar');
 
-        return parent::jsonSucesso($this->moduloClass->filtrar($this->moduloForm->getFormFiltro()));
+        return parent::jsonSucesso($this->class->filtrar($this->form->getFormFiltro()));
+
     }
 
     protected function cadastrar()
     {
+
         new \Zion\Acesso\Acesso('cadastrar');
 
-        $objForm = $this->moduloForm->getFormManu('cadastrar');
+        $objForm = $this->form->getFormManu('cadastrar');
 
-        if ($this->metodoPOST()) {
+        if (\filter_input(\INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
 
             $objForm->validar();
 
-            $this->moduloClass->cadastrar($objForm);
+            $this->class->cadastrar($objForm);
 
             $retorno = 'true';
+
         } else {
 
             $retorno = $objForm->montaForm();
             $retorno.= $objForm->javaScript()->getLoad(true);
+
         }
 
         return \json_encode([
             'sucesso' => 'true',
             'retorno' => $retorno]);
+
     }
 
     protected function alterar()
     {
+
         new \Zion\Acesso\Acesso('alterar');
 
-        if ($this->metodoPOST()) {
+        if (\filter_input(\INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
 
-            $objForm = $this->moduloForm->getFormManu('alterar', $this->postCod());
+            $objForm = $this->form->getFormManu('alterar', \filter_input(INPUT_POST, 'cod'));
 
             $objForm->validar();
 
-            $this->moduloClass->alterar($objForm);
+            $this->class->alterar($objForm);
 
             $retorno = 'true';
+
         } else {
-            
-            $selecionados = $this->registrosSelecionados();            
+
+            $selecionados = \filter_input(INPUT_GET, 'sisReg', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+
+            if (!\is_array($selecionados)) {
+                throw new \Exception("Nenhum registro selecionado!");
+            }
 
             $retorno = '';
             foreach ($selecionados as $cod) {
-                
-                $retorno = $this->emTabs($cod,
-                        $this->moduloClass->setValoresFormManu($cod, $this->moduloForm),
-                        $this->moduloClass->setValoresFormManu2($cod, $this->moduloForm));
+
+                $objForm = $this->class->setValoresFormManu($cod, $this->form);
+                $retorno .= $objForm->montaForm();
+                $retorno .= $objForm->javaScript()->getLoad(true);
+                $objForm->javaScript()->resetLoad();
+
             }
         }
 
         return \json_encode([
             'sucesso' => 'true',
             'retorno' => $retorno]);
+
     }
 
     protected function remover()
     {
+
         new \Zion\Acesso\Acesso('remover');
 
         $selecionados = $this->registrosSelecionados();
@@ -151,7 +180,7 @@ class ModuloController extends \Zion\Core\Controller
 
             foreach ($selecionados as $cod) {
 
-                $this->moduloClass->remover($cod);
+                $this->class->remover($cod);
 
                 $rApagados++;
             }
@@ -169,74 +198,28 @@ class ModuloController extends \Zion\Core\Controller
     
     protected function visualizar()
     {
+
         new \Zion\Acesso\Acesso('visualizar');
         
-        $selecionados = $this->registrosSelecionados();
+        $selecionados = \filter_input(INPUT_GET, 'sisReg', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+
+        if (!\is_array($selecionados)) {
+            throw new \Exception("Nenhum registro selecionado!");
+        }
 
         $retorno = '';
+
         foreach ($selecionados as $cod) {
 
-            $objForm = $this->moduloClass->setValoresFormManu($cod, $this->moduloForm);
-            //$retorno .= $objForm->montaFormVisualizar();
-            $retorno = $this->emTabs($cod,
-                    $this->moduloClass->setValoresFormManu($cod, $this->moduloForm),
-                    $this->moduloClass->setValoresFormManu2($cod, $this->moduloForm));            
+            $objForm = $this->class->setValoresFormManu($cod, $this->form);
+            $retorno .= $objForm->montaFormVisualizar();
+
         }
 
         return \json_encode([
             'sucesso' => 'true',
             'retorno' => $retorno]);
-    }
-
-    protected function imprimirPDF()
-    {
-
-        $exportacao = new \Zion\Exportacao\Exportacao();
-
-        $colunas = $this->moduloClass->colunasGrid;
-
-        $exportacao->setDadosRelatorio('Grupo', 'Modulo', $colunas, $this->moduloForm->getFormFiltro());
-
-        if($exportacao->getRelatorio('PDF') === false){
-            return \json_encode([
-                'sucesso' => 'false',
-                'retorno' => "Falha ao gerar PDF!"]);
-        }
-
-    }
-
-    protected function downloadCSV()
-    {
-
-        $exportacao = new \Zion\Exportacao\Exportacao();
-
-        $colunas = $this->moduloClass->colunasGrid;
-
-        $exportacao->setDadosRelatorio('Grupo', 'Modulo', $colunas, $this->moduloForm->getFormFiltro());
-
-        if($exportacao->getRelatorio('CSV') === false){
-            return \json_encode([
-                'sucesso' => 'false',
-                'retorno' => "Falha ao gerar CSV!"]);
-        }
-
-    }
-    
-    protected function downloadXLS()
-    {
-
-        $exportacao = new \Zion\Exportacao\Exportacao();
-
-        $colunas = $this->moduloClass->colunasGrid;
-
-        $exportacao->setDadosRelatorio('Grupo', 'Modulo', $colunas, $this->moduloForm->getFormFiltro());
-
-        if($exportacao->getRelatorio('XLS') === false){
-            return \json_encode([
-                'sucesso' => 'false',
-                'retorno' => "Falha ao gerar XLS!"]);
-        }
-
+        
     }
 
 }
