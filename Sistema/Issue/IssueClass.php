@@ -142,17 +142,41 @@ class IssueClass extends IssueSql
         $parametrosSql = $this->con->execLinhaArray(parent::getDadosSql($cod));
         $objetos = $objForm->getObjetos();
 
-        //Intervenção para o campo escolha
-        //$objetos['moduloExeEscolhaVarios[]']->setValor(\explode(',', $parametrosSql['moduloexeescolhavarios']));
-
-        //Intervenção para o campo chosen
-        //$objetos['moduloExeChosenMultiplo[]']->setValor(\explode(',', $parametrosSql['moduloexechosenmultiplo']));
-
         $this->crudUtil->setParametrosForm($objForm, $parametrosSql, $cod);
 
         return $objForm;
 
     }
+
+    public function setValoresFormManuInteracao($cod, $formInstancia)
+    {
+
+        $objForm = $formInstancia->getFormManuInteracao('alterar', $cod);
+
+        $parametrosSql = $this->con->execLinhaArray(parent::getDadosSql($cod));
+
+        $objetos = $objForm->getObjetos();
+
+        $this->crudUtil->setParametrosForm($objForm, $parametrosSql, $cod);
+
+        return $objForm;
+
+    }     
+
+    public function setValoresFormManuHistorico($cod, $formInstancia)
+    {
+
+        $objForm = $formInstancia->getFormManuHistorico('alterar', $cod);
+
+        $parametrosSql = $this->con->execLinhaArray(parent::getDadosSql($cod));
+
+        $objetos = $objForm->getObjetos();
+
+        $this->crudUtil->setParametrosForm($objForm, $parametrosSql, $cod);
+
+        return $objForm;
+        
+    }     
 
     public function getDadosGrupo()
     {

@@ -135,7 +135,7 @@ class IssueController extends \Zion\Core\Controller
 
         } else {
 
-            $selecionados = \filter_input(INPUT_GET, 'sisReg', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            $selecionados = $this->registrosSelecionados();            
 
             if (!\is_array($selecionados)) {
                 throw new \Exception("Nenhum registro selecionado!");
@@ -144,10 +144,10 @@ class IssueController extends \Zion\Core\Controller
             $retorno = '';
             foreach ($selecionados as $cod) {
 
-                $objForm = $this->class->setValoresFormManu($cod, $this->form);
-                $retorno .= $objForm->montaForm();
-                $retorno .= $objForm->javaScript()->getLoad(true);
-                $objForm->javaScript()->resetLoad();
+                $retorno = $this->emTabs($cod,
+                        $this->class->setValoresFormManu($cod, $this->form),
+                        $this->class->setValoresFormManuInteracao($cod, $this->form),
+                        $this->class->setValoresFormManuHistorico($cod, $this->form));
             }
         }
 

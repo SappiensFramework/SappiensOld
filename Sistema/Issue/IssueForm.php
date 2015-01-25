@@ -129,6 +129,84 @@ class IssueForm
 
     }
 
+    public function getFormManuInteracao($acao, $cod = null)
+    {
+
+        $form = new \Pixel\Form\Form();
+        //$html = new \Zion\Layout\Html();
+
+        $form->setAcao('sisAlterarPadrao($(form).attr("name"),true)');
+
+        $nomeForm = 'formManuInteracao' . $cod;
+
+        $form->config($nomeForm, 'POST')
+                ->setHeader('Nova interação');
+
+        $campos[] = $form->hidden('cod')
+                ->setValor($form->retornaValor('cod'));        
+
+        $campos[] = $form->hidden('n')
+                ->setValor('interacao');          
+
+        $campos[] = $form->textArea('issueIntDesc', 'Interação', true)
+                ->setEmColunaDeTamanho('12')
+                ->setValor($form->retornaValor('issueIntDesc'));    
+
+        $campos[] = $form->texto('issueIntRep', 'Reporter', true)
+                ->setMaximoCaracteres(30)
+                ->setValor($form->retornaValor('issueIntRep'));                    
+
+        $campos[] = $form->upload('anexos[]', 'Anexos', "ARQUIVO")
+                ->setCodigoReferencia($cod)
+                ->setMultiple(true);                                       
+
+        $campos[] = $form->botaoSalvarPadrao();
+
+        $campos[] = $form->botaoDescartarPadrao();
+
+        return $form->processarForm($campos);        
+
+    }   
+
+    public function getFormManuHistorico($acao, $cod = null)
+    {
+
+        $form = new \Pixel\Form\Form();
+        //$html = new \Zion\Layout\Html();
+
+        $form->setAcao('sisAlterarPadrao($(form).attr("name"),true)');
+
+        $nomeForm = 'formManuHistorico' . $cod;
+
+        $form->config($nomeForm, 'POST')
+                ->setHeader('Histórico');
+
+        $campos[] = $form->hidden('cod')
+                ->setValor($form->retornaValor('cod'));        
+
+        $campos[] = $form->hidden('n')
+                ->setValor('interacao');          
+
+        $campos[] = $form->textArea('issueIntDesc', 'Interação', true)
+                ->setEmColunaDeTamanho('12')
+                ->setValor($form->retornaValor('issueIntDesc'));    
+
+        $campos[] = $form->texto('issueIntRep', 'Reporter', true)
+                ->setMaximoCaracteres(30)
+                ->setValor($form->retornaValor('issueIntRep'));                    
+
+        $campos[] = $form->upload('anexos[]', 'Anexos', "ARQUIVO")
+                ->setCodigoReferencia($cod)
+                ->setMultiple(true);                                       
+
+        $campos[] = $form->botaoSalvarPadrao();
+
+        $campos[] = $form->botaoDescartarPadrao();
+
+        return $form->processarForm($campos);        
+
+    }        
+
     public function getJSEstatico()
     {
 
