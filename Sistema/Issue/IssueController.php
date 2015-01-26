@@ -128,9 +128,26 @@ class IssueController extends \Zion\Core\Controller
 
         if (\filter_input(\INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
 
-            $objForm = $this->form->getFormManu('alterar', \filter_input(INPUT_POST, 'cod'));
-            $objForm->validar();
-            $this->class->alterar($objForm);
+            switch (\filter_input(INPUT_POST, 'n')) {
+
+                case 'inicial':
+                    
+                    $objForm = $this->form->getFormManu('alterar', $this->postCod());
+                    $objForm->validar();
+                    $this->class->alterar($objForm);
+
+                break;           
+
+                case 'interacao':
+
+                    $objForm = $this->form->getFormManuInteracao('alterar', $this->postCod());
+                    $objForm->validar();
+                    $this->class->alterarInteracao($objForm);                   
+                
+                break;
+
+            }                 
+
             $retorno = 'true';
 
         } else {
