@@ -28,9 +28,9 @@
 *
 */
 
-namespace Sappiens\Configuracoes\Cidade;
+namespace Sappiens\Sistema\Issue;
 
-class CidadeClass extends CidadeSql
+class IssueClass extends IssueSql
 {
     
     private $chavePrimaria;
@@ -47,25 +47,28 @@ class CidadeClass extends CidadeSql
         $this->crudUtil = new \Pixel\Crud\CrudUtil();
         $this->con = \Zion\Banco\Conexao::conectar();
 
-        $this->tabela           = 'uf_cidade';        
-        $this->precedencia      = 'ufCidade';                   
+        $this->tabela           = '_issue';        
+        $this->precedencia      = 'issue';                   
         $this->chavePrimaria    = $this->precedencia . 'Cod';
         $this->colunasCrud = [
-                                         'ufCod',
+                    $this->precedencia . 'Num',
                     $this->precedencia . 'Nome',
-                    $this->precedencia . 'IbgeCod',
-                    $this->precedencia . 'Area',
+                    $this->precedencia . 'Desc',
+                    $this->precedencia . 'Rep',
+                    $this->precedencia . 'Data',
                     $this->precedencia . 'Status'
         ];
-        $this->colunasGrid = [                 
-                                          'ufNome'               => 'Estado',                          
-                    $this->precedencia  . 'Nome'                 => 'Cidade',                          
-                    $this->precedencia  . 'IbgeCod'              => 'IbgeCod',
-                    $this->precedencia  . 'Area'                 => 'Area',
+        $this->colunasGrid = [                                                                                                              
+                    $this->precedencia  . 'Num'                  => 'Id',                          
+                    $this->precedencia  . 'Nome'                 => 'Issue',                          
+                    $this->precedencia  . 'Rep'                  => 'Reporter',    
+                    $this->precedencia  . 'Data'                 => 'Data',
                     $this->precedencia  . 'Status'               => 'Status'
         ];    
         $this->filtroDinamico = [
-            $this->precedencia . 'Nome'  => ""
+            $this->precedencia . 'Nome'   => "",
+            $this->precedencia . 'Rep'    => "",
+            $this->precedencia . 'Status' => ""
         ];                    
     }   
 
@@ -100,7 +103,7 @@ class CidadeClass extends CidadeSql
         $grid->setTipoOrdenacao(filter_input(INPUT_GET, 'to'));
         $grid->setQuemOrdena(filter_input(INPUT_GET, 'qo'));
         $grid->setPaginaAtual(filter_input(INPUT_GET, 'pa'));
-        $grid->substituaPor($this->precedencia . 'Status', ['A' => 'Ativo', 'I' => 'Inativo']);
+        $grid->substituaPor($this->precedencia . 'Status', ['N' => 'Novo', 'C' => 'Corrigindo', 'T' => 'Testando', 'H' => 'Homologado']);
 
         return $grid->montaGridPadrao();
 
@@ -108,6 +111,11 @@ class CidadeClass extends CidadeSql
 
     public function cadastrar($objForm)
     {
+
+        $cod = $objForm->get('cod');
+        $d = $this->con->execLinhaArray(parent::getIssueNumSql($cod));
+        $objForm->set('issueNum', ($d['issuenum']+=1));
+        $objForm->set('issueStatus', 'N');
 
         return $this->crudUtil->insert($this->tabela, $this->colunasCrud, $objForm);
 
@@ -140,6 +148,36 @@ class CidadeClass extends CidadeSql
 
     }
 
+    public function setValoresFormManuInteracao($cod, $formInstancia)
+    {
+
+        $objForm = $formInstancia->getFormManuInteracao('alterar', $cod);
+
+        $parametrosSql = $this->con->execLinhaArray(parent::getDadosSql($cod));
+
+        $objetos = $objForm->getObjetos();
+
+        $this->crudUtil->setParametrosForm($objForm, $parametrosSql, $cod);
+
+        return $objForm;
+
+    }     
+
+    public function setValoresFormManuHistorico($cod, $formInstancia)
+    {
+
+        $objForm = $formInstancia->getFormManuHistorico('alterar', $cod);
+
+        $parametrosSql = $this->con->execLinhaArray(parent::getDadosSql($cod));
+
+        $objetos = $objForm->getObjetos();
+
+        $this->crudUtil->setParametrosForm($objForm, $parametrosSql, $cod);
+
+        return $objForm;
+        
+    }     
+
     public function getDadosGrupo()
     {
         
@@ -153,12 +191,5 @@ class CidadeClass extends CidadeSql
         return $this->con->execLinhaArray(parent::getDadosModuloSql());
 
     }     
-
-    public function getUfCod($cod, $modo = '')
-    {
-
-        return ($modo == "alterar") ? $this->con->execRLinha(parent::getUfCod($cod, $modo)) : $this->con->paraArray(parent::getUfCod($cod, $modo));
-
-    }    
 
 }

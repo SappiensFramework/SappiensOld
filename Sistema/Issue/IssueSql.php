@@ -28,9 +28,9 @@
 *
 */
 
-namespace Sappiens\Configuracoes\Cidade;
+namespace Sappiens\Sistema\Issue;
 
-class CidadeSql
+class IssueSql
 {
 
     private $con;
@@ -51,8 +51,7 @@ class CidadeSql
         $fil = new \Pixel\Filtro\Filtrar($objForm);
 
         $qb->select('*')
-           ->from('uf_cidade', 'a')
-           ->innerJoin('a', 'uf', 'b', 'a.ufCod = b.ufCod')
+           ->from('_issue', 'a')
            ->where('1');
 
         $this->util->getSqlFiltro($fil, $objForm, $colunas, $qb);    
@@ -67,10 +66,9 @@ class CidadeSql
         $qb = $this->con->link()->createQueryBuilder();
 
         $qb->select('*')
-           ->from('uf_cidade', 'a')
-           ->innerJoin('a', 'uf', 'b', 'a.ufCod = b.ufCod')
-           ->where('ufCidadeCod = :ufCidadeCod')
-           ->setParameters(['ufCidadeCod' => $cod]);
+           ->from('_issue', 'a')
+           ->where('issueCod = :issueCod')
+           ->setParameter('issueCod', $cod, \PDO::PARAM_INT);
 
         return $qb;
 
@@ -104,24 +102,17 @@ class CidadeSql
 
     }    
 
-    public function getUfCod($cod, $modo = '')
+    public function getIssueNumSql($cod)
     {
 
         $qb = $this->con->link()->createQueryBuilder();
 
-        if($modo == "alterar") {
+        $qb->select('MAX(issueNum) issueNum')
+           ->from('_issue', 'a')
+           ->where('issueCod != :issueCod')
+           ->setParameter('issueCod', $cod, \PDO::PARAM_INT);
 
-          return $qb->select('a.ufCod')
-                    ->from('uf_cidade', 'a')
-                    ->where($qb->expr()->eq('a.ufCidadeCod', ':ufCidadeCod'))
-                    ->setParameter('ufCidadeCod', $cod, \PDO::PARAM_INT);
-
-        }
-
-        return $qb->select('*')
-                  ->from('uf', 'a')
-                  ->where($qb->expr()->eq('a.paisCod', ':paisCod'))
-                  ->setParameter('paisCod', $cod, \PDO::PARAM_INT);
+        return $qb;
 
     }    
 

@@ -105,13 +105,16 @@ class CidadeForm
                          ->setDependencia('paisCod', 'getUfCod', __CLASS__);                    
 
         $campos[] = $form->texto('ufCidadeNome', 'Cidade', true)
-                         ->setMaximoCaracteres(30)
-                         ->setCaixa('ALTA')
+                         ->setMaximoCaracteres(100)
                          ->setValor($form->retornaValor('ufCidadeNome'));     
 
-        $campos[] = $form->numero('ufCidadeIbgeCod', 'Código no IBGE', true)
+        $campos[] = $form->numero('ufCidadeIbgeCod', 'Código no IBGE', false)
                          ->setMaximoCaracteres(30)
-                         ->setValor($form->retornaValor('ufCidadeIbgeCod'));                
+                         ->setValor($form->retornaValor('ufCidadeIbgeCod'));   
+
+        $campos[] = $form->numero('ufCidadeArea', 'Área', false)
+                         ->setMaximoCaracteres(20)
+                         ->setValor($form->retornaValor('ufCidadeArea'));                                      
 
         $campos[] = $form->escolha('ufCidadeStatus', 'Status', true)
                          ->setValor($form->retornaValor('ufCidadeStatus'))
@@ -132,6 +135,7 @@ class CidadeForm
     {
 
         $form = new \Pixel\Form\Form();
+        $acao = \filter_input(INPUT_GET, 'acao');
 
         $ufs = $this->class->getUfCod($cod);
         
@@ -145,8 +149,19 @@ class CidadeForm
 
         }
 
+        if($acao == "alterar") {
+
+            $c = \filter_input(INPUT_GET, 'sisReg', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            $ufCod = $this->class->getUfCod($c[0], 'alterar');
+
+        } else {
+
+            $ufCod = $form->retornaValor('ufCod');
+
+        }
+
         $campos[0] = $form->chosen('ufCod', 'Estado')
-                ->setValor($form->retornaValor('ufCod'))
+                ->setValor($ufCod)
                 ->setArray($array);
 
         return $form->processarForm($campos);
