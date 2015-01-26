@@ -100,7 +100,7 @@ class IssueSql
 
         return $qb;     
 
-    }    
+    }        
 
     public function getIssueNumSql($cod)
     {
@@ -110,6 +110,34 @@ class IssueSql
         $qb->select('MAX(issueNum) issueNum')
            ->from('_issue', 'a')
            ->where('issueCod != :issueCod')
+           ->setParameter('issueCod', $cod, \PDO::PARAM_INT);
+
+        return $qb;
+
+    } 
+
+    public function getIssueIntNumSql($cod)
+    {
+
+        $qb = $this->con->link()->createQueryBuilder();
+
+        $qb->select('MAX(issueIntNum) issueIntNum')
+           ->from('_issue_int', 'a')
+           ->where('issueCod = :issueCod')
+           ->setParameter('issueCod', $cod, \PDO::PARAM_INT);
+
+        return $qb;
+
+    }        
+    
+    public function getIssueInteracoesSql($cod)
+    {
+
+        $qb = $this->con->link()->createQueryBuilder();
+
+        $qb->select('*')
+           ->from('_issue_int', 'a')
+           ->where('issueCod = :issueCod')
            ->setParameter('issueCod', $cod, \PDO::PARAM_INT);
 
         return $qb;

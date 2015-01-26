@@ -115,6 +115,7 @@ class IssueClass extends IssueSql
         $cod = $objForm->get('cod');
         $d = $this->con->execLinhaArray(parent::getIssueNumSql($cod));
         $objForm->set('issueNum', ($d['issuenum']+=1));
+        $objForm->set('issueData', date('Y-m-d'));
         $objForm->set('issueStatus', 'N');
 
         return $this->crudUtil->insert($this->tabela, $this->colunasCrud, $objForm);
@@ -127,6 +128,37 @@ class IssueClass extends IssueSql
         return $this->crudUtil->update($this->tabela, $this->colunasCrud, $objForm, $this->chavePrimaria);
 
     }
+
+    public function alterarInteracao($objForm)
+    {
+
+        $upload = new \Pixel\Arquivo\ArquivoUpload();
+
+        $this->con->startTransaction();
+
+        $this->tabela           = '_issue_int';        
+        $this->precedencia      = 'issueInt';                  
+        $this->chavePrimaria    = $this->precedencia . 'Cod';
+        $this->colunasCrud = [
+                                         'issueCod',
+                    $this->precedencia . 'Num',
+                    $this->precedencia . 'Desc',
+                    $this->precedencia . 'Rep',
+                    $this->precedencia . 'Data'
+        ];
+
+        $d = $this->con->execLinhaArray(parent::getIssueIntNumSql($objForm->get('cod')));
+        $objForm->set('issueIntNum', ($d['issueintnum']+=1));
+        $objForm->set('issueCod', $objForm->get('cod'));
+        $objForm->set('issueIntData', date('Y-m-d'));
+
+        $uploadCodReferencia = $this->crudUtil->insert($this->tabela, $this->colunasCrud, $objForm);       
+
+        $this->con->stopTransaction();
+
+        return $uploadCodReferencia;
+
+    }    
     
     public function remover($cod)
     {
@@ -152,9 +184,7 @@ class IssueClass extends IssueSql
     {
 
         $objForm = $formInstancia->getFormManuInteracao('alterar', $cod);
-
         $parametrosSql = $this->con->execLinhaArray(parent::getDadosSql($cod));
-
         $objetos = $objForm->getObjetos();
 
         $this->crudUtil->setParametrosForm($objForm, $parametrosSql, $cod);
@@ -166,15 +196,11 @@ class IssueClass extends IssueSql
     public function setValoresFormManuHistorico($cod, $formInstancia)
     {
 
-        $objForm = $formInstancia->getFormManuHistorico('alterar', $cod);
+        $class = new \stdClass();
+        $class->tabNome = 'Histórico';
+        $class->conteudo = $formInstancia->getFormManuHistorico($cod);
 
-        $parametrosSql = $this->con->execLinhaArray(parent::getDadosSql($cod));
-
-        $objetos = $objForm->getObjetos();
-
-        $this->crudUtil->setParametrosForm($objForm, $parametrosSql, $cod);
-
-        return $objForm;
+        return $class;
         
     }     
 
@@ -191,5 +217,12 @@ class IssueClass extends IssueSql
         return $this->con->execLinhaArray(parent::getDadosModuloSql());
 
     }     
+    
+    public function getIssueInteracoes($cod)
+    {
+        
+        return $this->con->executar(parent::getIssueInteracoesSql($cod));
+        
+    }
 
 }
