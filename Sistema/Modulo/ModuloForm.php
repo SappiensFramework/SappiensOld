@@ -1,4 +1,32 @@
 <?php
+/**
+*
+*    Sappiens Framework
+*    Copyright (C) 2014, BRA Consultoria
+*
+*    Website do autor: www.braconsultoria.com.br/sappiens
+*    Email do autor: sappiens@braconsultoria.com.br
+*
+*    Website do projeto, equipe e documentação: www.sappiens.com.br
+*   
+*    Este programa é software livre; você pode redistribuí-lo e/ou
+*    modificá-lo sob os termos da Licença Pública Geral GNU, conforme
+*    publicada pela Free Software Foundation, versão 2.
+*
+*    Este programa é distribuído na expectativa de ser útil, mas SEM
+*    QUALQUER GARANTIA; sem mesmo a garantia implícita de
+*    COMERCIALIZAÇÃO ou de ADEQUAÇÃO A QUALQUER PROPÓSITO EM
+*    PARTICULAR. Consulte a Licença Pública Geral GNU para obter mais
+*    detalhes.
+* 
+*    Você deve ter recebido uma cópia da Licença Pública Geral GNU
+*    junto com este programa; se não, escreva para a Free Software
+*    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+*    02111-1307, USA.
+*
+*    Cópias da licença disponíveis em /Sappiens/_doc/licenca
+*
+*/
 
 namespace Sappiens\Sistema\Modulo;
 
@@ -60,7 +88,7 @@ class ModuloForm
                 ->setArray([]) //fake input
                 ->setInicio('Sem referência')
                 ->setDependencia('grupoCod', 'getFormModulo', __CLASS__)
-                ->setValor($form->retornaValor('moduloCodReferente'));
+                ->setValor($form->retornaValor('moduloCodReferente'));        
 
         $campos[] = $form->texto('moduloNome', 'Nome do Módulo', true)
                 ->setMaximoCaracteres(70)
@@ -103,9 +131,11 @@ class ModuloForm
         
         $campos[] = $form->masterDetail('acoes','Ações do módulo')
                 ->setTabela('_acao_modulo')
+                ->setCodigo('acaoModuloCod')
                 ->setCampoReferencia('moduloCod')
                 ->setCodigoReferencia($formCod)
                 ->setObjetoPai($objPai)
+                ->setObjetoRemover(new \Sappiens\Sistema\Permissao\PermissaoClass(), 'removerPorAcaoModuloCod')
                 ->setTotalItensInicio(3)
                 ->setAddMin(0)
                 ->setCampos([
@@ -115,9 +145,9 @@ class ModuloForm
             ->setEmColunaDeTamanho(6),
             'acaoModuloIcon' => $objPai->texto('acaoModuloIcon', 'Ícone', true)
             ->setEmColunaDeTamanho(6),
-            'acaoModuloToolTipComPermissao' => $objPai->texto('acaoModuloToolTipComPermissao', 'Tooltip com Permissão', false)
+            'acaoModuloToolTipComPermissao' => $objPai->texto('acaoModuloToolTipComPermissao', 'Tooltip c/ Perm', false)
             ->setEmColunaDeTamanho(6),
-            'acaoModuloToolTipeSemPermissao' => $objPai->texto('acaoModuloToolTipeSemPermissao', 'Tooltip sem Permissão', false)
+            'acaoModuloToolTipeSemPermissao' => $objPai->texto('acaoModuloToolTipeSemPermissao', 'Tooltip s/ Perm', false)
             ->setEmColunaDeTamanho(6),
             'acaoModuloFuncaoJS' => $objPai->texto('acaoModuloFuncaoJS', 'Função JS', true)
             ->setEmColunaDeTamanho(6),
@@ -139,7 +169,7 @@ class ModuloForm
     {
         $form = new \Pixel\Form\Form();
 
-        $campos[] = $form->escolha('moduloCodReferente', 'Módulo de Referência')
+        $campos[] = $form->chosen('moduloCodReferente', 'Módulo de Referência')
                 ->setInicio('Sem referência')
                 ->setTabela('_modulo')
                 ->setCampoCod('moduloCod')

@@ -1,4 +1,32 @@
 <?php
+/**
+*
+*    Sappiens Framework
+*    Copyright (C) 2014, BRA Consultoria
+*
+*    Website do autor: www.braconsultoria.com.br/sappiens
+*    Email do autor: sappiens@braconsultoria.com.br
+*
+*    Website do projeto, equipe e documentação: www.sappiens.com.br
+*   
+*    Este programa é software livre; você pode redistribuí-lo e/ou
+*    modificá-lo sob os termos da Licença Pública Geral GNU, conforme
+*    publicada pela Free Software Foundation, versão 2.
+*
+*    Este programa é distribuído na expectativa de ser útil, mas SEM
+*    QUALQUER GARANTIA; sem mesmo a garantia implícita de
+*    COMERCIALIZAÇÃO ou de ADEQUAÇÃO A QUALQUER PROPÓSITO EM
+*    PARTICULAR. Consulte a Licença Pública Geral GNU para obter mais
+*    detalhes.
+* 
+*    Você deve ter recebido uma cópia da Licença Pública Geral GNU
+*    junto com este programa; se não, escreva para a Free Software
+*    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+*    02111-1307, USA.
+*
+*    Cópias da licença disponíveis em /Sappiens/_doc/licenca
+*
+*/
 
 namespace Sappiens\Sistema\Modulo;
 
@@ -17,7 +45,6 @@ class ModuloClass extends ModuloSql
         parent::__construct();
 
         $this->crudUtil = new \Pixel\Crud\CrudUtil();
-        $this->con = \Zion\Banco\Conexao::conectar();
 
         $this->tabela = '_modulo';
         $this->chavePrimaria = 'moduloCod';
@@ -86,24 +113,35 @@ class ModuloClass extends ModuloSql
 
     public function alterar($objForm)
     {
-        return $this->crudUtil->update($this->tabela, $this->colunasCrud, $objForm, $this->chavePrimaria);
+        return $this->crudUtil->update($this->tabela, $this->colunasCrud, $objForm, [$this->chavePrimaria => $objForm->get('cod')]);
     }
 
     public function remover($cod)
     {
+        $permissao = new \Engine\Sistema\Permissao\PermissaoClass();
         
-        $this->crudUtil->delete('_acao_modulo', $cod, $this->chavePrimaria);
+        if($this->con->existe('_modulo', 'moduloCodReferente', $cod)){
+            throw new \Exception('Não é possível remover este módulo pois ele possui um ou mais módulos dependentes!');
+        }
         
-        return $this->crudUtil->delete($this->tabela, $cod, $this->chavePrimaria);
+        $this->crudUtil->startTransaction();        
+        
+        $permissao->removerPorModuloCod($cod);
+        
+        $this->crudUtil->delete('_acao_modulo', [$this->chavePrimaria => $cod]);
+        
+        $removidos = $this->crudUtil->delete($this->tabela, [$this->chavePrimaria => $cod]);
+        
+        $this->crudUtil->stopTransaction();
+        
+        return $removidos;
     }
 
     public function setValoresFormManu($cod, $formIntancia)
     {
-        $con = \Zion\Banco\Conexao::conectar();
-
         $objForm = $formIntancia->getFormManu('alterar', $cod);
 
-        $parametrosSql = $con->execLinhaArray(parent::getDadosSql($cod));
+        $parametrosSql = $this->con->execLinhaArray(parent::getDadosSql($cod));
 
         $this->crudUtil->setParametrosForm($objForm, $parametrosSql, $cod);
 
@@ -112,15 +150,14 @@ class ModuloClass extends ModuloSql
 
     public function mudaPosicao($moduloCod, $maisMenos)
     {
-        $con = \Zion\Banco\Conexao::conectar();
-        $qb = $con->link()->createQueryBuilder();
+        $qb = $this->con->link()->createQueryBuilder();
 
         $qb->select('moduloPosicao')
                 ->from('_modulo', '')
                 ->where($qb->expr()->eq('moduloCod', ':moduloCod'))
                 ->setParameter('moduloCod', $moduloCod, \PDO::PARAM_INT);
 
-        $posicaoAtual = $con->execRLinha($qb);
+        $posicaoAtual = $this->con->execRLinha($qb);
 
         if ($maisMenos === '+') {
             $novaPosicao = $posicaoAtual + 1;
@@ -138,7 +175,7 @@ class ModuloClass extends ModuloSql
 
         $update = array('moduloPosicao' => array('Inteiro' => $novaPosicao));
 
-        $this->crudUtil->update($this->tabela, ['moduloPosicao'], $update, $this->chavePrimaria, $moduloCod);
+        $this->crudUtil->update($this->tabela, ['moduloPosicao'], $update, [$this->chavePrimaria => $moduloCod] );
 
         return $novaPosicao;
     }
@@ -160,6 +197,6 @@ class ModuloClass extends ModuloSql
         
         return $this->con->execLinhaArray(parent::getDadosModuloSql($modulo));
 
-    }    
+    }      
 
 }

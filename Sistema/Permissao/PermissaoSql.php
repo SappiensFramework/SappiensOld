@@ -28,8 +28,30 @@
 *
 */
 
-require '../../Config.php';
+namespace Sappiens\Sistema\Permissao;
 
-\define('MODULO', 'Modulo');
+class PermissaoSql
+{
+    /**
+     * @var \Zion\Banco\Conexao
+     */
+    protected $con;
 
-echo (new \Sappiens\Sistema\Modulo\ModuloController())->controle(\filter_input(\INPUT_GET, 'acao'));
+    public function __construct()
+    {
+        $this->con = \Zion\Banco\Conexao::conectar();
+    }
+
+    public function getDadosSql($cod)
+    {
+        $qb = $this->con->link()->createQueryBuilder();
+
+        $qb->select('moduloCod', 'grupoCod', 'moduloCodReferente', 'moduloNome', 'moduloNomeMenu', 'moduloDesc', 'moduloVisivelMenu', 'moduloPosicao', 'moduloBase', 'moduloClass')
+                ->from('_modulo', '')
+                ->where($qb->expr()->eq('moduloCod', '?'))
+                ->setParameter(0, $cod);
+        
+        return $qb;
+    }
+
+}
