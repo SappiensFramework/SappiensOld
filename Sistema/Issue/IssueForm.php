@@ -100,17 +100,17 @@ class IssueForm
                 ->setEmColunaDeTamanho('12')
                 ->setDisabled(($acao == "cadastrar" ? false : true))
                 ->setValor($form->retornaValor('issueDesc'));    
-
+/*
         $campos[] = $form->texto('issueRep', 'Reporter', true)
                 ->setMaximoCaracteres(30)
                 ->setDisabled(($acao == "cadastrar" ? false : true))
                 ->setValor($form->retornaValor('issueRep'));                 
-
+*/
         $campos[] = $form->upload('anexos[]', 'Anexos', "ARQUIVO")
                 ->setCodigoReferencia($cod)
                 ->setDisabled(($acao == "cadastrar" ? false : true))
                 ->setMultiple(true);                
-
+/*
         if($acao != "cadastrar") {           
 
             $campos[] = $form->escolha('issueStatus', 'Status', true)
@@ -121,7 +121,7 @@ class IssueForm
                     ->setArray(['N' => 'Novo', 'C' => 'Corrigindo', 'T' => 'Testando', 'H' => 'Homologado']);                       
 
         }
-
+*/
         $campos[] = $form->botaoSalvarEContinuar();
 
         $campos[] = $form->botaoDescartarPadrao('formManu' . $cod);              
@@ -151,13 +151,21 @@ class IssueForm
         $campos[] = $form->textArea('issueIntDesc', 'Interação', true)
                 ->setEmColunaDeTamanho('12')
                 ->setValor($form->retornaValor('issueIntDesc'));    
-
+/*
         $campos[] = $form->texto('issueIntRep', 'Reporter', true)
                 ->setMaximoCaracteres(30)
                 ->setValor($form->retornaValor('issueIntRep'));                    
-
+*/         
+        
         $campos[] = $form->upload('anexos[]', 'Anexos', "ARQUIVO")
                 ->setMultiple(true);                                       
+        
+        $campos[] = $form->escolha('issueStatus', 'Status', true)
+                ->setValor($form->retornaValor('issueStatus'))
+                //->setValorPadrao('A')
+                ->setMultiplo(false)
+                ->setExpandido(true)
+                ->setArray(['C' => 'Corrigindo', 'T' => 'Testando', 'H' => 'Homologado']);        
 
         $campos[] = $form->botaoSalvarPadrao();
 
@@ -174,33 +182,41 @@ class IssueForm
         $trat = \Zion\Tratamento\Tratamento::instancia();
         $class = new \Sappiens\Sistema\Issue\IssueClass();
         
-        $resultSet = $class->getIssueInteracoes($cod);
-        
         $buffer  = '';
-        $buffer .= $html->abreTagAberta('div', array('class' => 'panel widget-support-tickets', 'id' => 'panelHistorico'));
+        $buffer .= '<script>init.push(function () {$(\'#panelBody\').slimScroll({ height: 50, alwaysVisible: true, color: \'#888\', allowPageScroll: true, railVisible: true });});</script>';
+        $buffer .= $html->abreTagAberta('div', ['class' => 'panel widget-support-tickets', 'id' => 'panelHistorico']);
         
-        $buffer .= $html->abreTagAberta('div', array('class' => 'panel-heading'));
-        $buffer .= $html->abreTagAberta('span', array('class' => 'panel-title'));
+        $buffer .= $html->abreTagAberta('div', ['class' => 'panel-heading']);
+        $buffer .= $html->abreTagAberta('span', ['class' => 'panel-title']);
         $buffer .= "Histórico de interações";
         $buffer .= $html->fechaTag('span');
+        //$buffer .= $html->abreTagAberta('div', ['class' => 'panel-heading-controls']);
+        //$buffer .= $html->abreTagAberta('div', ['class' => 'panel-heading-text']);
+        //$buffer .= $html->abreTagAberta('a', ['id' => 'intListRefresh', 'href' => '#', 'onclick' => 'refresh(\'intListRefresh\', \'intList\', \'getIssueInteracoes\', \''.$cod.'\');']);
+        //$buffer .= $html->abreTagAberta('i', ['class' => 'fa fa-refresh']) . $html->fechaTag('i') . $html->fechaTag('a');
+        //$buffer .= $html->fechaTag('div');
+        //$buffer .= $html->fechaTag('div');
         $buffer .= $html->fechaTag('div');
         
-        $buffer .= $html->abreTagAberta('div', ['class' => 'panel-body tab-content-padding']);
-        $buffer .= $html->abreTagAberta('div', ['class' => 'panel-padding no-padding-vr']);
+        $buffer .= $html->abreTagAberta('div', ['id' => 'panelBody', 'class' => 'panel-body tab-content-padding']);
+        $buffer .= $html->abreTagAberta('div', ['id' => 'intList', 'class' => 'panel-padding no-padding-vr']);
+        
+        $resultSet = $class->getIssueInteracoes($cod);        
         
         while($data = $resultSet->fetch()) {  
             
             $issueIntNum  = $data['issueintnum'];
             $issueIntDesc = $data['issueintdesc'];
-            $issueIntRep  = $data['issueintrep'];
-            $issueIntData = $data['issueintdata'];
+            $issueIntRep  = $data['usuarionome'];
+            $issueIntData = $trat->data()->dataHora($data['issueintdata']);
+            $issueIntHist = $data['issueinthist'];
         
             $buffer .= $html->abreTagAberta('div', ['class' => 'ticket']);
-            $buffer .= $html->abreTagAberta('span', ['class' => 'label label-success ticket-label']) . 'Completo' . $html->fechaTag('span');
-            $buffer .= $html->abreTagAberta('a', ['href' => '#', 'class' => 'ticket-title']) . '#' . $issueIntNum . ' - ' . $issueIntDesc . $html->fechaTag('a');
+            $buffer .= $html->abreTagAberta('span', ['class' => 'label label-success ticket-label']) . '#' . $issueIntNum . $html->fechaTag('span');
+            $buffer .= $html->abreTagAberta('a', ['href' => '#', 'class' => 'ticket-title']) . $issueIntDesc . $html->fechaTag('a');
             $buffer .= $html->abreTagAberta('span', ['class' => 'label ticket-label']) . '' . $html->fechaTag('span');
-            $buffer .= $html->abreTagAberta('span', ['class' => 'ticket-info']) . "Respondido por ";
-            $buffer .= $html->abreTagAberta('a', ['href' => '#']) . $issueIntRep . $html->fechaTag('a') . " em " . $trat->data()->converteData($issueIntData);
+            $buffer .= $html->abreTagAberta('span', ['class' => 'ticket-info']) . "Status original alterado de " . $issueIntHist;
+            $buffer .= $html->abreTagAberta('a', ['href' => '#']) . ', por ' . $issueIntRep . $html->fechaTag('a') . " em " . $issueIntData;
             $buffer .= $html->fechaTag('span');
             $buffer .= $html->fechaTag('div');     
             
@@ -220,7 +236,7 @@ class IssueForm
     {
 
         $jsStatic = \Pixel\Form\FormJavaScript::iniciar();
-        $jQuery = new \Zion\JQuery\JQuery();                
+        //$jQuery = new \Zion\JQuery\JQuery();                
 
         return $jsStatic->getFunctions($jsStatic->setFunctions($this->getMeuJS()));
 
@@ -228,9 +244,8 @@ class IssueForm
 
     private function getMeuJS()
     {
-
+        
         $buffer  = '';
-        $buffer .= 'init.push(function () {$(\'#panelHistorico .panel-body > div\').slimScroll({ height: 50, alwaysVisible: true, color: \'#888\',allowPageScroll: true });});';
         return $buffer;
 
     }

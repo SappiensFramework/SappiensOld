@@ -45,46 +45,32 @@ class IssueController extends \Zion\Core\Controller
     protected function iniciar()
     {
         $retorno = '';
-
+        
         try {
 
-            $dadosGrupo  = $this->class->getDadosGrupo();
-            $dadosModulo = $this->class->getDadosModulo();
-
-            define('DEFAULT_GRUPO_NOME', $dadosGrupo['gruponome']);
-            define('DEFAULT_MODULO_NOME', $dadosModulo['modulonomemenu']);
-            define('DEFAULT_MODULO_URL', $dadosModulo['modulonome']);            
-
-            $template = new \Pixel\Template\Template();
-            $template->setConteudoIconeModulo($dadosModulo['moduloclass']);
-            $template->setConteudoNomeModulo($dadosModulo['modulodesc']);            
-
-            new \Zion\Acesso\Acesso('filtrar');
+            $template = new \Pixel\Template\Template();     
+            new \Zion\Acesso\Acesso('filtrar');            
+            
+            $mod = $this->class->getDadosModulo();         
+            $template->setConteudoIconeModulo($mod['moduloclass']);
+            $template->setConteudoNomeModulo($mod['modulodesc']);            
 
             $template->setConteudoScripts($this->form->getJSEstatico());
-
             $getBotoes = new \Pixel\Grid\GridBotoes();
-
             $filtros = new \Pixel\Filtro\FiltroForm();
-
             $getBotoes->setFiltros($filtros->montaFiltro($this->form->getFormFiltro()));
             $botoes = $getBotoes->geraBotoes();
-
             $grid = $this->class->filtrar($this->form->getFormFiltro());
-
             $template->setTooltipForm();
             $template->setConteudoBotoes($botoes);
             $template->setConteudoGrid($grid);
 
         } catch (\Exception $ex) {
-            
             $retorno = $ex;
-
         }
-
+        
         $template->setConteudoMain($retorno);
-
-        return $template->getTemplate();
+        return $template->getTemplate();        
     }
 
     protected function filtrar()
@@ -226,5 +212,15 @@ class IssueController extends \Zion\Core\Controller
             'sucesso' => 'true',
             'retorno' => $retorno]);
     }
+    
+    protected function getIssueInteracoes()
+    {
+
+        $cod = \filter_input(INPUT_GET, 'a');
+        $resultSet = $this->class->getIssueInteracoes($cod); 
+
+        return parent::jsonSucesso($resultSet->fetch());
+
+    }    
 
 }

@@ -30,7 +30,6 @@
 
 require '../../Config.php';
 
-define('GRUPO', 'Sistema');
-define('MODULO', 'Issue');
+\define('MODULO', 'Issue');
 
 echo (new \Sappiens\Sistema\Issue\IssueController())->controle(\filter_input(\INPUT_GET, 'acao'));

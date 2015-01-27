@@ -51,24 +51,24 @@ class IssueClass extends IssueSql
         $this->precedencia      = 'issue';                   
         $this->chavePrimaria    = $this->precedencia . 'Cod';
         $this->colunasCrud = [
+                                         'usuarioCod',
                     $this->precedencia . 'Num',
                     $this->precedencia . 'Nome',
                     $this->precedencia . 'Desc',
-                    $this->precedencia . 'Rep',
                     $this->precedencia . 'Data',
                     $this->precedencia . 'Status'
         ];
         $this->colunasGrid = [                                                                                                              
                     $this->precedencia  . 'Num'                  => 'Id',                          
                     $this->precedencia  . 'Nome'                 => 'Issue',                          
-                    $this->precedencia  . 'Rep'                  => 'Reporter',    
+                                          'usuarioNome'          => 'Usuário',    
                     $this->precedencia  . 'Data'                 => 'Data',
                     $this->precedencia  . 'Status'               => 'Status'
         ];    
         $this->filtroDinamico = [
-            $this->precedencia . 'Nome'   => "",
-            $this->precedencia . 'Rep'    => "",
-            $this->precedencia . 'Status' => ""
+            $this->precedencia . 'Nome'         => "",
+                                 'usuarioNome'  => "",
+            $this->precedencia . 'Status'       => ""
         ];                    
     }   
 
@@ -103,6 +103,7 @@ class IssueClass extends IssueSql
         $grid->setTipoOrdenacao(filter_input(INPUT_GET, 'to'));
         $grid->setQuemOrdena(filter_input(INPUT_GET, 'qo'));
         $grid->setPaginaAtual(filter_input(INPUT_GET, 'pa'));
+        $grid->setFormatarComo($this->precedencia . 'Data', 'DATA');
         $grid->substituaPor($this->precedencia . 'Status', ['N' => 'Novo', 'C' => 'Corrigindo', 'T' => 'Testando', 'H' => 'Homologado']);
 
         return $grid->montaGridPadrao();
@@ -114,6 +115,7 @@ class IssueClass extends IssueSql
 
         $cod = $objForm->get('cod');
         $d = $this->con->execLinhaArray(parent::getIssueNumSql($cod));
+        $objForm->set('usuarioCod', $_SESSION['usuarioCod']);
         $objForm->set('issueNum', ($d['issuenum']+=1));
         $objForm->set('issueData', date('Y-m-d'));
         $objForm->set('issueStatus', 'N');
@@ -141,18 +143,24 @@ class IssueClass extends IssueSql
         $this->chavePrimaria    = $this->precedencia . 'Cod';
         $this->colunasCrud = [
                                          'issueCod',
+                                         'usuarioCod',
                     $this->precedencia . 'Num',
                     $this->precedencia . 'Desc',
-                    $this->precedencia . 'Rep',
+                    $this->precedencia . 'Hist',
                     $this->precedencia . 'Data'
         ];
 
+        $s = $this->con->execLinhaArray(parent::getDadosSql($objForm->get('cod')));
         $d = $this->con->execLinhaArray(parent::getIssueIntNumSql($objForm->get('cod')));
+        
         $objForm->set('issueIntNum', ($d['issueintnum']+=1));
+        $objForm->set('usuarioCod', $_SESSION['usuarioCod']);
         $objForm->set('issueCod', $objForm->get('cod'));
         $objForm->set('issueIntData', date('Y-m-d'));
+        $objForm->set('issueIntHist', $s['issuestatus'] . ' => ' . $objForm->get('issueStatus'));
 
-        $uploadCodReferencia = $this->crudUtil->insert($this->tabela, $this->colunasCrud, $objForm);       
+        $uploadCodReferencia = $this->crudUtil->insert($this->tabela, $this->colunasCrud, $objForm);   
+        $this->crudUtil->update('_issue', ['issueStatus'], $objForm, $objForm->get('cod'));
 
         $this->con->stopTransaction();
 

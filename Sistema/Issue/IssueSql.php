@@ -52,6 +52,7 @@ class IssueSql
 
         $qb->select('*')
            ->from('_issue', 'a')
+           ->innerJoin('a', '_usuario', 'b', 'a.usuarioCod = b.usuarioCod')
            ->where('1');
 
         $this->util->getSqlFiltro($fil, $objForm, $colunas, $qb);    
@@ -67,24 +68,11 @@ class IssueSql
 
         $qb->select('*')
            ->from('_issue', 'a')
+           ->innerJoin('a', '_usuario', 'b', 'a.usuarioCod = b.usuarioCod')
            ->where('issueCod = :issueCod')
            ->setParameter('issueCod', $cod, \PDO::PARAM_INT);
 
         return $qb;
-
-    }
-
-    public function getDadosGrupoSql()
-    {
-
-        $qb = $this->con->link()->createQueryBuilder();
-
-        $qb->select('*')
-           ->from('_grupo', 'a')
-           ->where('a.grupoPacote = :grupoPacote')
-           ->setParameter('grupoPacote', GRUPO);
-
-        return $qb;     
 
     }
 
@@ -137,6 +125,7 @@ class IssueSql
 
         $qb->select('*')
            ->from('_issue_int', 'a')
+           ->innerJoin('a', '_usuario', 'b', 'a.usuarioCod = b.usuarioCod')
            ->where('issueCod = :issueCod')
            ->setParameter('issueCod', $cod, \PDO::PARAM_INT);
 
