@@ -64,7 +64,7 @@ class ConteudoClass extends ConteudoSql
 
         $grid->setSql(parent::filtrarSql($objForm, $this->filtroDinamico));
         $grid->setChave($this->chavePrimaria);
-        $grid->setFormatarComo('websiteConData', 'DATAHORA');
+        $grid->setFormatarComo('websiteConData', 'DATA');
 
         return $grid->montaGridPadrao();
     }
