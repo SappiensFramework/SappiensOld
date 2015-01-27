@@ -103,7 +103,7 @@ class IssueClass extends IssueSql
         $grid->setTipoOrdenacao(filter_input(INPUT_GET, 'to'));
         $grid->setQuemOrdena(filter_input(INPUT_GET, 'qo'));
         $grid->setPaginaAtual(filter_input(INPUT_GET, 'pa'));
-        $grid->setFormatarComo($this->precedencia . 'Data', 'DATA');
+        $grid->setFormatarComo($this->precedencia . 'Data', 'DATAHORA');
         $grid->substituaPor($this->precedencia . 'Status', ['N' => 'Novo', 'C' => 'Corrigindo', 'T' => 'Testando', 'H' => 'Homologado']);
 
         return $grid->montaGridPadrao();
@@ -117,7 +117,7 @@ class IssueClass extends IssueSql
         $d = $this->con->execLinhaArray(parent::getIssueNumSql($cod));
         $objForm->set('usuarioCod', $_SESSION['usuarioCod']);
         $objForm->set('issueNum', ($d['issuenum']+=1));
-        $objForm->set('issueData', date('Y-m-d'));
+        $objForm->set('issueData', date('Y-m-d H:i:s'));
         $objForm->set('issueStatus', 'N');
 
         return $this->crudUtil->insert($this->tabela, $this->colunasCrud, $objForm);
