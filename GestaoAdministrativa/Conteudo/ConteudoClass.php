@@ -64,6 +64,7 @@ class ConteudoClass extends ConteudoSql
 
         $grid->setSql(parent::filtrarSql($objForm, $this->filtroDinamico));
         $grid->setChave($this->chavePrimaria);
+        $grid->setFormatarComo('websiteConData', 'DATAHORA');
 
         return $grid->montaGridPadrao();
     }
@@ -90,7 +91,7 @@ class ConteudoClass extends ConteudoSql
         $objForm = $formInstancia->getFormManu('alterar', $cod);
 
         $parametrosSql = $con->execLinhaArray(parent::getDadosSql($cod));
-//print_r($parametrosSql);
+
         $this->crudUtil->setParametrosForm($objForm, $parametrosSql, $cod);
 
         return $objForm;
