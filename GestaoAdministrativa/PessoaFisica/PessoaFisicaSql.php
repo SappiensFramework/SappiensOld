@@ -1,31 +1,31 @@
 <?php
-/*
-
-    Sappiens, Framework de Gestão Integrada
-    Copyright (C) 2014, BRA Consultoria
-
-    Website do autor: www.braconsultoria.com.br/sappiens
-    Email do autor: sappiens@braconsultoria.com.br
-
-    Website do projeto, equipe e documentação: www.sappiens.com.br
-   
-    Este programa é software livre; você pode redistribuí-lo e/ou
-    modificá-lo sob os termos da Licença Pública Geral GNU, conforme
-    publicada pela Free Software Foundation, versão 2.
-
-    Este programa é distribuído na expectativa de ser útil, mas SEM
-    QUALQUER GARANTIA; sem mesmo a garantia implícita de
-    COMERCIALIZAÇÃO ou de ADEQUAÇÃO A QUALQUER PROPÓSITO EM
-    PARTICULAR. Consulte a Licença Pública Geral GNU para obter mais
-    detalhes.
- 
-    Você deve ter recebido uma cópia da Licença Pública Geral GNU
-    junto com este programa; se não, escreva para a Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-    02111-1307, USA.
-
-    Cópias da licença disponíveis em /Sappiens/_doc/licenca
-
+/**
+*
+*    Sappiens Framework
+*    Copyright (C) 2014, BRA Consultoria
+*
+*    Website do autor: www.braconsultoria.com.br/sappiens
+*    Email do autor: sappiens@braconsultoria.com.br
+*
+*    Website do projeto, equipe e documentação: www.sappiens.com.br
+*   
+*    Este programa é software livre; você pode redistribuí-lo e/ou
+*    modificá-lo sob os termos da Licença Pública Geral GNU, conforme
+*    publicada pela Free Software Foundation, versão 2.
+*
+*    Este programa é distribuído na expectativa de ser útil, mas SEM
+*    QUALQUER GARANTIA; sem mesmo a garantia implícita de
+*    COMERCIALIZAÇÃO ou de ADEQUAÇÃO A QUALQUER PROPÓSITO EM
+*    PARTICULAR. Consulte a Licença Pública Geral GNU para obter mais
+*    detalhes.
+* 
+*    Você deve ter recebido uma cópia da Licença Pública Geral GNU
+*    junto com este programa; se não, escreva para a Free Software
+*    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+*    02111-1307, USA.
+*
+*    Cópias da licença disponíveis em /Sappiens/_doc/licenca
+*
 */
 
 namespace Sappiens\GestaoAdministrativa\PessoaFisica;
@@ -42,9 +42,9 @@ class PessoaFisicaSql
         $this->con = \Zion\Banco\Conexao::conectar();
         $this->util = new \Pixel\Crud\CrudUtil();
 
-    }
+    }  
 
-    public function filtrarSql($objForm, $colunas)
+    public function filtrarSql($objForm, $filtroDinamico = array())
     {
 
         $qb = $this->con->link()->createQueryBuilder();
@@ -52,10 +52,10 @@ class PessoaFisicaSql
 
         $qb->select('*')
            ->from('pessoa_fisica', 'a')
-           ->where('a.organogramaCod = :organogramaCod')
-           ->setParameter('organogramaCod', $_SESSION['organogramaCod'], \PDO::PARAM_INT);
+           ->where($qb->expr()->eq('a.organogramaCod', 'a.organogramaCod'))
+           ->setParameter('a.organogramaCod', $_SESSION['organogramaCod'], \PDO::PARAM_INT);
 
-        $this->util->getSqlFiltro($fil, $objForm, $colunas, $qb);
+        $this->util->getSqlFiltro($fil, $objForm, $filtroDinamico, $qb);
 
         return $qb;
     }
@@ -67,7 +67,7 @@ class PessoaFisicaSql
 
         $qb->select('*')
            ->from('pessoa_fisica', 'a')
-           ->where('a.pessoaFisicaCod = :pessoaFisicaCod')
+           ->where($qb->expr()->eq('a.pessoaFisicaCod', ':pessoaFisicaCod'))
            ->setParameter('pessoaFisicaCod', $cod, \PDO::PARAM_INT);
 
         return $qb;
@@ -130,7 +130,6 @@ class PessoaFisicaSql
                ->where($qb->expr()->eq('a.organogramaCod',':organogramaCod'))
                ->andWhere($qb->expr()->eq('a.pessoaCod',':pessoaCod'))
                ->andWhere($qb->expr()->eq('a.pessoaDocumentoTipoCod',':pessoaDocumentoTipoCod'))
-               //->andWhere('a.pessoaDocumentoTipoCod = b.pessoaDocumentoTipoCod')
                ->andWhere($qb->expr()->like('a.pessoaDocumentoStatus', $qb->expr()->literal('A')))
                ->setParameters(['organogramaCod' => $_SESSION['organogramaCod'], 'pessoaCod' => $pessoaCod, 'pessoaDocumentoTipoCod' => $cod])
                ->orderBy('a.pessoaDocumentoCod', 'DESC');   
@@ -145,7 +144,7 @@ class PessoaFisicaSql
            ->andWhere($qb->expr()->eq('a.pessoaCod',':pessoaCod'))
            ->andWhere($qb->expr()->eq('a.pessoaDocumentoTipoCod',':pessoaDocumentoTipoCod'))
            ->andWhere($qb->expr()->like('a.pessoaDocumentoStatus', $qb->expr()->literal('A')))
-           ->setParameters([':organogramaCod' => $_SESSION['organogramaCod'], ':pessoaCod' => $pessoaCod, ':pessoaDocumentoTipoCod' => $cod])
+           ->setParameters(['organogramaCod' => $_SESSION['organogramaCod'], 'pessoaCod' => $pessoaCod, 'pessoaDocumentoTipoCod' => $cod])
            ->orderBy('a.pessoaDocumentoCod', 'DESC');
 
         return $qb;        
@@ -188,7 +187,7 @@ class PessoaFisicaSql
            ->andWhere($qb->expr()->eq('a.pessoaCod',':pessoaCod'))
            ->andWhere($qb->expr()->eq('a.pessoaDocumentoTipoCod',':pessoaDocumentoTipoCod'))
            ->andWhere($qb->expr()->like('a.pessoaDocumentoStatus', $qb->expr()->literal('A')))
-           ->setParameters([':organogramaCod' => $_SESSION['organogramaCod'], ':pessoaCod' => $pessoaCod, ':pessoaDocumentoTipoCod' => $cod])
+           ->setParameters(['organogramaCod' => $_SESSION['organogramaCod'], 'pessoaCod' => $pessoaCod, 'pessoaDocumentoTipoCod' => $cod])
            ->orderBy('a.pessoaDocumentoCod', 'DESC')
            ->setFirstResult(0)
            ->setMaxResults(1);    
@@ -216,7 +215,7 @@ class PessoaFisicaSql
            ->where($qb->expr()->eq('a.organogramaCod',':organogramaCod'))
            ->andWhere($qb->expr()->eq('a.pessoaCod',':pessoaCod'))
            ->andWhere($qb->expr()->eq('a.pessoaDocumentoTipoCod',':pessoaDocumentoTipoCod'))
-           ->setParameters([':organogramaCod' => $_SESSION['organogramaCod'], ':pessoaCod' => $pessoaCod, ':pessoaDocumentoTipoCod' => $pessoaDocumentoTipoCod]);     
+           ->setParameters(['organogramaCod' => $_SESSION['organogramaCod'], 'pessoaCod' => $pessoaCod, 'pessoaDocumentoTipoCod' => $pessoaDocumentoTipoCod]);     
 
         return $qb;   
 /*
@@ -235,7 +234,8 @@ class PessoaFisicaSql
 
         $qb->update('_upload', 'a')
            ->set('a.uploadCodReferencia', $pessoaDocumentoTipoCod)
-           ->where($qb->expr()->eq('a.uploadCodReferencia',':pessoaDocumentoCod'));  
+           ->where($qb->expr()->eq('a.uploadCodReferencia',':pessoaDocumentoCod'))
+           ->setParameter('pessoaDocumentoCod', $pessoaDocumentoCod);
 
         return $qb;       
 /*

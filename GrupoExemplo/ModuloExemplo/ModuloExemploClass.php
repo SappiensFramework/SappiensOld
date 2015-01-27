@@ -145,14 +145,14 @@ class ModuloExemploClass extends ModuloExemploSql
     public function alterar($objForm)
     {
 
-        return $this->crudUtil->update($this->tabela, $this->colunasCrud, $objForm, $this->chavePrimaria);
+        return $this->crudUtil->update($this->tabela, $this->colunasCrud, $objForm, [$this->chavePrimaria => $objForm->get('cod')]);
 
     }
     
     public function remover($cod)
     {
 
-        return $this->crudUtil->delete($this->tabela, $cod, $this->chavePrimaria);
+        return $this->crudUtil->delete($this->tabela, [$this->chavePrimaria => $cod]);
 
     }
 

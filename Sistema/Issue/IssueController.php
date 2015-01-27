@@ -48,16 +48,17 @@ class IssueController extends \Zion\Core\Controller
         
         try {
 
+            new \Zion\Acesso\Acesso('filtrar');               
+            $modulo = new \Sappiens\Sistema\Modulo\ModuloController();
             $template = new \Pixel\Template\Template();     
-            new \Zion\Acesso\Acesso('filtrar');            
-            
-            $mod = $this->class->getDadosModulo();         
+            $getBotoes = new \Pixel\Grid\GridBotoes();    
+            $filtros = new \Pixel\Filtro\FiltroForm();            
+                
+            $mod = $modulo->getDadosModulo(MODULO);
             $template->setConteudoIconeModulo($mod['moduloclass']);
             $template->setConteudoNomeModulo($mod['modulodesc']);            
-
             $template->setConteudoScripts($this->form->getJSEstatico());
-            $getBotoes = new \Pixel\Grid\GridBotoes();
-            $filtros = new \Pixel\Filtro\FiltroForm();
+            
             $getBotoes->setFiltros($filtros->montaFiltro($this->form->getFormFiltro()));
             $botoes = $getBotoes->geraBotoes();
             $grid = $this->class->filtrar($this->form->getFormFiltro());

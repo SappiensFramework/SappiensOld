@@ -40,5 +40,19 @@ class ModuloSql
         
         return $qb;
     }
+    
+    public function getDadosModuloSql($modulo)
+    {
+
+        $qb = $this->con->link()->createQueryBuilder();
+
+        $qb->select('*')
+           ->from('_modulo', 'a')
+           ->where('a.moduloNome = :moduloNome')
+           ->setParameter('moduloNome', $modulo);
+
+        return $qb;     
+
+    }     
 
 }

@@ -168,4 +168,12 @@ class ModuloController extends \Zion\Core\Controller
             'sucesso' => 'true',
             'retorno' => $posicao]);
     }
+    
+    public function getDadosModulo($modulo)
+    {
+        
+        return $this->moduloClass->getDadosModulo($modulo);
+
+    }
+    
 }

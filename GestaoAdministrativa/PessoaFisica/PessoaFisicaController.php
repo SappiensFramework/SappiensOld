@@ -1,31 +1,31 @@
 <?php
-/*
-
-    Sappiens, Framework de Gestão Integrada
-    Copyright (C) 2014, BRA Consultoria
-
-    Website do autor: www.braconsultoria.com.br/sappiens
-    Email do autor: sappiens@braconsultoria.com.br
-
-    Website do projeto, equipe e documentação: www.sappiens.com.br
-   
-    Este programa é software livre; você pode redistribuí-lo e/ou
-    modificá-lo sob os termos da Licença Pública Geral GNU, conforme
-    publicada pela Free Software Foundation, versão 2.
-
-    Este programa é distribuído na expectativa de ser útil, mas SEM
-    QUALQUER GARANTIA; sem mesmo a garantia implícita de
-    COMERCIALIZAÇÃO ou de ADEQUAÇÃO A QUALQUER PROPÓSITO EM
-    PARTICULAR. Consulte a Licença Pública Geral GNU para obter mais
-    detalhes.
- 
-    Você deve ter recebido uma cópia da Licença Pública Geral GNU
-    junto com este programa; se não, escreva para a Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-    02111-1307, USA.
-
-    Cópias da licença disponíveis em /Sappiens/_doc/licenca
-
+/**
+*
+*    Sappiens Framework
+*    Copyright (C) 2014, BRA Consultoria
+*
+*    Website do autor: www.braconsultoria.com.br/sappiens
+*    Email do autor: sappiens@braconsultoria.com.br
+*
+*    Website do projeto, equipe e documentação: www.sappiens.com.br
+*   
+*    Este programa é software livre; você pode redistribuí-lo e/ou
+*    modificá-lo sob os termos da Licença Pública Geral GNU, conforme
+*    publicada pela Free Software Foundation, versão 2.
+*
+*    Este programa é distribuído na expectativa de ser útil, mas SEM
+*    QUALQUER GARANTIA; sem mesmo a garantia implícita de
+*    COMERCIALIZAÇÃO ou de ADEQUAÇÃO A QUALQUER PROPÓSITO EM
+*    PARTICULAR. Consulte a Licença Pública Geral GNU para obter mais
+*    detalhes.
+* 
+*    Você deve ter recebido uma cópia da Licença Pública Geral GNU
+*    junto com este programa; se não, escreva para a Free Software
+*    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+*    02111-1307, USA.
+*
+*    Cópias da licença disponíveis em /Sappiens/_doc/licenca
+*
 */
 
 namespace Sappiens\GestaoAdministrativa\PessoaFisica;
@@ -33,13 +33,13 @@ namespace Sappiens\GestaoAdministrativa\PessoaFisica;
 class PessoaFisicaController extends \Zion\Core\Controller
 {
 
-    private $pessoaFisicaClass;
-    private $pessoaFisicaForm;
+    private $class;
+    private $form;
 
     public function __construct()
     {
-        $this->pessoaFisicaClass = new \Sappiens\GestaoAdministrativa\PessoaFisica\PessoaFisicaClass();
-        $this->pessoaFisicaForm = new \Sappiens\GestaoAdministrativa\PessoaFisica\PessoaFisicaForm();
+        $this->class = new \Sappiens\GestaoAdministrativa\PessoaFisica\PessoaFisicaClass();
+        $this->form = new \Sappiens\GestaoAdministrativa\PessoaFisica\PessoaFisicaForm();
     }
 
     protected function iniciar()
@@ -48,24 +48,24 @@ class PessoaFisicaController extends \Zion\Core\Controller
 
         try {
 
-            $template = new \Pixel\Template\Template();
-            $template->setConteudoIconeModulo('fa fa-user');
-            $template->setConteudoNomeModulo('Pessoa física');            
-
-            new \Zion\Acesso\Acesso('filtrar');
-
-            $template->setConteudoScripts($this->pessoaFisicaForm->getJSEstatico());
-
-            $getBotoes = new \Pixel\Grid\GridBotoes();
-
-            $getBotoes->setFiltros('');
+            new \Zion\Acesso\Acesso('filtrar');               
+            $modulo = new \Sappiens\Sistema\Modulo\ModuloController();
+            $template = new \Pixel\Template\Template();     
+            $getBotoes = new \Pixel\Grid\GridBotoes();    
+            $filtros = new \Pixel\Filtro\FiltroForm();            
+                
+            $mod = $modulo->getDadosModulo(MODULO);
+            $template->setConteudoIconeModulo($mod['moduloclass']);
+            $template->setConteudoNomeModulo($mod['modulodesc']);            
+            $template->setConteudoScripts($this->form->getJSEstatico());
+            
+            $getBotoes->setFiltros($filtros->montaFiltro($this->form->getFormFiltro()));
             $botoes = $getBotoes->geraBotoes();
-
-            $grid = $this->pessoaFisicaClass->filtrar($this->pessoaFisicaForm->getFormFiltro());
-
+            $grid = $this->class->filtrar($this->form->getFormFiltro());
             $template->setTooltipForm();
             $template->setConteudoBotoes($botoes);
             $template->setConteudoGrid($grid);
+            
         } catch (\Exception $ex) {
             
             $retorno = $ex;
@@ -80,19 +80,19 @@ class PessoaFisicaController extends \Zion\Core\Controller
     {
         new \Zion\Acesso\Acesso('filtrar');
 
-        return parent::jsonSucesso($this->pessoaFisicaClass->filtrar($this->pessoaFisicaForm->getFormFiltro()));
+        return parent::jsonSucesso($this->class->filtrar($this->form->getFormFiltro()));
     }
 
     protected function cadastrar()
     {
         new \Zion\Acesso\Acesso('cadastrar');
 
-        $objForm = $this->pessoaFisicaForm->getFormManu('cadastrar');
+        $objForm = $this->form->getFormManu('cadastrar');
 
         if (\filter_input(\INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
 
             $objForm->validar();
-            $this->pessoaFisicaClass->cadastrar($objForm);
+            $this->class->cadastrar($objForm);
             $retorno = 'true';
 
         } else {
@@ -120,30 +120,30 @@ class PessoaFisicaController extends \Zion\Core\Controller
 
                 case 'inicial':
                     
-                    $objForm = $this->pessoaFisicaForm->getFormManu('alterar', $this->postCod());
+                    $objForm = $this->form->getFormManu('alterar', $this->postCod());
                     $objForm->validar();
-                    $this->pessoaFisicaClass->alterar($objForm);
+                    $this->class->alterar($objForm);
 
                 break;
 
                 case 'documento':
 
                     //print_r($_FILES);
-                    $objFormHtml = $this->pessoaFisicaForm->getFormManuDocumento('alterar', $this->postCod());
+                    $objFormHtml = $this->form->getFormManuDocumento('alterar', $this->postCod());
                     $objFormHtml->validar();                    
 
-                    $param = $this->pessoaFisicaClass->getCampos($cod);    
-                    $objFormDinamico = $this->pessoaFisicaForm->getObjetoCampos($param, $cod, $codForm);
+                    $param = $this->class->getCampos($cod);    
+                    $objFormDinamico = $this->form->getObjetoCampos($param, $cod, $codForm);
                     //print_r($objFormDinamico);
 
                     $objFormDinamico->validar();
                     //$this->pessoaFisicaClass->alterarDocumento($objFormHtml); 
 
-                    $resultCampos = $this->pessoaFisicaClass->getCampos($cod);    
-                    $objForm = $this->pessoaFisicaForm->getObjetoCampos($resultCampos, $cod, $codForm);
+                    $resultCampos = $this->class->getCampos($cod);    
+                    $objForm = $this->form->getObjetoCampos($resultCampos, $cod, $codForm);
                     $objForm->validar();
 
-                    $this->pessoaFisicaClass->alterarDocumento($objForm);                    
+                    $this->class->alterarDocumento($objForm);                    
                 
                 break;
 
@@ -163,9 +163,9 @@ class PessoaFisicaController extends \Zion\Core\Controller
             foreach ($selecionados as $cod) {
                 
                 $retorno = $this->emTabs($cod,
-                        $this->pessoaFisicaClass->setValoresFormManu($cod, $this->pessoaFisicaForm),
-                        $this->pessoaFisicaClass->setValoresFormManuDocumento($cod, $this->pessoaFisicaForm),
-                        $this->pessoaFisicaClass->setValoresFormManuContato($cod, $this->pessoaFisicaForm));
+                        $this->class->setValoresFormManu($cod, $this->form),
+                        $this->class->setValoresFormManuDocumento($cod, $this->form),
+                        $this->class->setValoresFormManuContato($cod, $this->form));
             }
         }
 
@@ -191,7 +191,7 @@ class PessoaFisicaController extends \Zion\Core\Controller
 
             foreach ($selecionados as $cod) {
 
-                $this->pessoaFisicaClass->remover($cod);
+                $this->class->remover($cod);
 
                 $rApagados++;
             }
@@ -220,11 +220,11 @@ class PessoaFisicaController extends \Zion\Core\Controller
         $retorno = '';
         foreach ($selecionados as $cod) {
 
-            $objForm = $this->pessoaFisicaClass->setValoresFormManu($cod, $this->pessoaFisicaForm);
+            $objForm = $this->class->setValoresFormManu($cod, $this->form);
             $retorno = $this->emTabs($cod,
-                    $this->pessoaFisicaClass->setValoresFormManu($cod, $this->pessoaFisicaForm),
-                    $this->pessoaFisicaClass->setValoresFormManuDocumento($cod, $this->pessoaFisicaForm),
-                    $this->pessoaFisicaClass->setValoresFormManuContato($cod, $this->pessoaFisicaForm));
+                    $this->class->setValoresFormManu($cod, $this->form),
+                    $this->class->setValoresFormManuDocumento($cod, $this->form),
+                    $this->class->setValoresFormManuContato($cod, $this->form));
             //$retorno .= $objForm->montaFormVisualizar();
         }
 
@@ -241,8 +241,8 @@ class PessoaFisicaController extends \Zion\Core\Controller
         $cod = \filter_input(INPUT_GET, 'a');
         $codForm = \filter_input(INPUT_GET, 'd');
 
-        $param = $this->pessoaFisicaClass->getCampos($cod); 
-        $form = $this->pessoaFisicaForm->getFormCampos($param, $cod, $codForm);
+        $param = $this->class->getCampos($cod); 
+        $form = $this->form->getFormCampos($param, $cod, $codForm);
 
         return parent::jsonSucesso($form);
 

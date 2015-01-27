@@ -17,6 +17,7 @@ class ModuloClass extends ModuloSql
         parent::__construct();
 
         $this->crudUtil = new \Pixel\Crud\CrudUtil();
+        $this->con = \Zion\Banco\Conexao::conectar();
 
         $this->tabela = '_modulo';
         $this->chavePrimaria = 'moduloCod';
@@ -153,5 +154,12 @@ class ModuloClass extends ModuloSql
     {
         return '<i class="' . $moduloClass . '"></i>';
     }
+    
+    public function getDadosModulo($modulo)
+    {
+        
+        return $this->con->execLinhaArray(parent::getDadosModuloSql($modulo));
+
+    }    
 
 }
