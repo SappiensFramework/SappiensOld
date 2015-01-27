@@ -12,13 +12,13 @@ class DominioSql
 
         $qb = $this->con->link()->createQueryBuilder();
         
-        $sql = $qb->select("websiteDomCod", "organogramaCod", "websiteDom", "websiteDomEmail", "websiteDomNomeAbreviado", "websiteDomNomeExtenso", "websiteDomDescricao", "websiteDomPalavrasChave", "websiteDomStatus")
+        $qb->select("websiteDomCod", "organogramaCod", "websiteDom", "websiteDomEmail", "websiteDomNomeAbreviado", "websiteDomNomeExtenso", "websiteDomDescricao", "websiteDomPalavrasChave", "websiteDomStatus")
                   ->from("website_dom")
                   ->where($qb->expr()->isNotNull("websiteDomCod"));
 
-        $sql .= $util->getSqlFiltro($fil, $objForm, $filtroDinamico, $this->con->link()->createQueryBuilder());        
+        $util->getSqlFiltro($fil, $objForm, $filtroDinamico, $qb);        
         
-        return $sql;
+        return $qb;
     }
 
     public function getDadosSql($cod)
