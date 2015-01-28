@@ -52,8 +52,8 @@ class PessoaFisicaSql
 
         $qb->select('*')
            ->from('pessoa_fisica', 'a')
-           ->where($qb->expr()->eq('a.organogramaCod', 'a.organogramaCod'))
-           ->setParameter('a.organogramaCod', $_SESSION['organogramaCod'], \PDO::PARAM_INT);
+           ->where($qb->expr()->eq('a.organogramaCod', ':organogramaCod'))
+           ->setParameter('organogramaCod', $_SESSION['organogramaCod'], \PDO::PARAM_INT);
 
         $this->util->getSqlFiltro($fil, $objForm, $filtroDinamico, $qb);
 
