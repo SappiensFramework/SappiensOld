@@ -167,21 +167,38 @@ class PessoaFisicaForm
 
         $campos[] = $form->hidden('cod')
                 ->setValor($form->retornaValor('cod'));
-
-        $campos[] = $form->chosen('pessoaContatoTipoCod', 'Tipo', true)
-                ->setValor($form->retornaValor('pessoaContatoTipoCod'))
-                ->setInicio('Selecione...')
-                ->setMultiplo(false)
-                ->setEmColunaDeTamanho('4')
-                ->setTabela('pessoa_contato_tipo')
-                ->setCampoCod('pessoaContatoTipoCod')
-                ->setOrdena(false)
-                ->setCampoDesc('pessoaContatoTipoNome');       
-
-        $campos[] = $form->texto('pessoaContatoNome', 'Contato', true)
-                ->setEmColunaDeTamanho('7')
-                ->setValor($form->retornaValor('pessoaContatoNome'));                          
-
+        
+        $objPai = new \Pixel\Form\Form();
+        $objPai->setAcao($acao);
+        
+        $campos[] = $form->masterDetail('email','Email')
+                ->setTabela('pessoa_email')
+                ->setCodigo('pessoaEmailCod')
+                ->setCampoReferencia('pessoaCod')
+                ->setCodigoReferencia($cod)
+                ->setObjetoPai($objPai)
+                ->setTotalItensInicio(1)
+                ->setAddTexto('Novo email')
+                ->setAddMin(1)
+                ->setCampos([                   
+                    'pessoaEmail' => $objPai->email('pessoaEmail', 'Email', true)
+                    ->setEmColunaDeTamanho(12)                    
+                ]);    
+        
+        $campos[] = $form->masterDetail('telefone','Telefone')
+                ->setTabela('pessoa_telefone')
+                ->setCodigo('pessoaTelefoneCod')
+                ->setCampoReferencia('pessoaCod')
+                ->setCodigoReferencia($cod)
+                ->setObjetoPai($objPai)
+                ->setTotalItensInicio(1)
+                ->setAddTexto('Novo telefone')
+                ->setAddMin(1)
+                ->setCampos([                   
+                    'pessoaTelefone' => $objPai->telefone('pessoaTelefone', 'Telefone', true)
+                    ->setEmColunaDeTamanho(6)                    
+                ]);         
+        
         $campos[] = $form->botaoSalvarPadrao();
 
         $campos[] = $form->botaoDescartarPadrao();
