@@ -237,7 +237,7 @@ class PessoaFisicaSql
            ->where($qb->expr()->eq('a.uploadCodReferencia',':pessoaDocumentoCod'))
            ->setParameter('pessoaDocumentoCod', $pessoaDocumentoCod);
 
-        return $qb;       
+        return $qb;
 /*
         return "UPDATE _upload
                    SET uploadCodReferencia = " . $pessoaDocumentoTipoCod . "
