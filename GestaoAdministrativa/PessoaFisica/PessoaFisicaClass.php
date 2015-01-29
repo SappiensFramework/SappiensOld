@@ -234,6 +234,25 @@ class PessoaFisicaClass extends PessoaFisicaSql
 
     }    
     
+    public function alterarContato($objForm)
+    {
+
+        $this->tabela           = 'pessoa_fisica';        
+        $this->precedencia      = 'pessoaFisica';                  
+        $this->chavePrimaria    = $this->precedencia . 'Cod';
+        $this->colunas = [
+                    $this->precedencia . 'EstadoCivilCod',
+                    $this->precedencia . 'RacaCod',
+                    $this->precedencia . 'Nome',
+                    $this->precedencia . 'DataNascimento',
+                    $this->precedencia . 'Sexo',
+                    $this->precedencia . 'Status'
+        ];         
+
+        return $this->crudUtil->update($this->tabela, $this->colunas, $objForm, [$this->chavePrimaria => $objForm->get('cod')]);           
+
+    }    
+    
     public function remover($cod)
     {
         
