@@ -59,7 +59,7 @@ class Config
         define('SIS_VENDOR_TEMPLATE','PixelAdmin');
         define('SIS_VENDOR_TEMPLATE_VERSION','1.3.0');   
         define('SIS_URL_BASE_TEMPLATE', SIS_VENDOR_TEMPLATE . '/' . SIS_VENDOR_TEMPLATE_VERSION . '/');     
-        define('SIS_STRING_CRYPT', 'wzixjdy');
+        define('SIS_STRING_CRYPT', '91278404eafff215ba0e9a400d652475');
         define('SIS_LINHAS_GRID', '10');
 
     }
