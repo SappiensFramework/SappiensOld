@@ -58,7 +58,7 @@ class Config
         /**
          * 
          * ATENÇÃO!!! ATTENTION!!! AVISO!!!
-         * Personalização necessária nos métodos abaixo!
+         * Personalização necessária nos métodos abaixo:
          * @setCommon();
          * @setDatabase();
          * @author Vinicius Pozzebon <vpozzebon@gmail.com>
@@ -116,7 +116,7 @@ class Config
                     'host'      => '192.168.25.51',
                     'banco'     => 'onyxprev_sappiens',
                     'usuario'   => 'onyxprev_sapp',
-                    'senha'     => 'qwertybracom',
+                    'senha'     => '***',
                     'driver'    => 'pdo_mysql'
                     
                 ],                
