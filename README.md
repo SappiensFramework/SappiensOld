@@ -9,6 +9,12 @@ Apresentação
 
 O Sappiens Framework é uma aplicação RAD (Rapid Application Development) de código-fonte livre, escrita em PHP, com suporte nativo aos SGBD´s MySQL, Oracle, SQL Server e PostgreSQL.
 
+Instalação
+
+Para aprender a instalar o Sappiens Framework, acesse o endereço:
+
+http://dev.sappiens.com.br/w/?title=Instalando
+
 História
 
 Para conhecer a história do Sappiens Framework, acesse o endereço:

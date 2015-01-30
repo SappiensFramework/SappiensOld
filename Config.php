@@ -114,8 +114,8 @@ class Config
                 'padrao' => [
 
                     'host'      => '192.168.25.51',
-                    'banco'     => 'onyxprev_sappiens',
-                    'usuario'   => 'onyxprev_sapp',
+                    'banco'     => 'sappiens',
+                    'usuario'   => 'sapp',
                     'senha'     => '***',
                     'driver'    => 'pdo_mysql'
                     
@@ -154,7 +154,7 @@ class Config
                 'padraoy' => [
 
                     'host'      => 'DEV1\SQLEXPRESS',
-                    'banco'     => 'onyxprev_engine',
+                    'banco'     => 'engine',
                     'usuario'   => 'SAPP',
                     'senha'     => '***',
                     'driver'    => 'pdo_sqlsrv'
