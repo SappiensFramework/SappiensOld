@@ -61,7 +61,7 @@ class ConteudoForm
                 ->setOrdena(false)
                 ->setSqlCompleto("SELECT a.organogramaCod AS campoCod, IF(a.organogramaOrdem != \"\",CONCAT(a.organogramaOrdem, \" - \", a.organogramaNome, \" [\", b.organogramaClassificacaoNome,\"]\"), a.organogramaNome) AS campoDesc
                                     FROM organograma a, organograma_classificacao b 
-                                   WHERE INSTR(a.organogramaAncestral,CONCAT('|', " . $_SESSION['organogramaCod'] . ",'|')) > 0 
+                                   WHERE INSTR(a.organogramaAncestral, CONCAT('|', " . $_SESSION['organogramaCod'] . ",'|')) > 0 
                                      AND a.organogramaClassificacaoCod = b.organogramaClassificacaoCod
                                 ORDER BY a.organogramaOrdem")
                 ->setCampoDesc('campoDesc');
