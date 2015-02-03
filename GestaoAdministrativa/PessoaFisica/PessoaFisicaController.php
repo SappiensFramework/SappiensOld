@@ -146,6 +146,14 @@ class PessoaFisicaController extends \Zion\Core\Controller
                     $this->class->alterarDocumento($objForm);                    
                 
                 break;
+            
+                case 'contato':
+                    
+                    $objForm = $this->form->getFormManuContato('alterar', $this->postCod());
+                    $objForm->validar();
+                    $this->class->alterarContato($objForm);
+
+                break;            
 
             }
 
