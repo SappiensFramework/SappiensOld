@@ -279,3 +279,5 @@
 .tachado{
 	text-decoration:line-through;
 }
+/* MasterDetail*/
+#sisMasterDetailacoes {margin-top:20px;}.btn-remover-registro{ position:absolute !important; top:-1px; right:-1px;}.bloco-registro {background-color: #fdfdfd; border:1px solid #ececec; margin-bottom: 35px; padding: 35px 25px 15px 0px; position:relative;}
