@@ -1,32 +1,4 @@
 <?php
-/**
-*
-*    Sappiens Framework
-*    Copyright (C) 2014, BRA Consultoria
-*
-*    Website do autor: www.braconsultoria.com.br/sappiens
-*    Email do autor: sappiens@braconsultoria.com.br
-*
-*    Website do projeto, equipe e documentação: www.sappiens.com.br
-*   
-*    Este programa é software livre; você pode redistribuí-lo e/ou
-*    modificá-lo sob os termos da Licença Pública Geral GNU, conforme
-*    publicada pela Free Software Foundation, versão 2.
-*
-*    Este programa é distribuído na expectativa de ser útil, mas SEM
-*    QUALQUER GARANTIA; sem mesmo a garantia implícita de
-*    COMERCIALIZAÇÃO ou de ADEQUAÇÃO A QUALQUER PROPÓSITO EM
-*    PARTICULAR. Consulte a Licença Pública Geral GNU para obter mais
-*    detalhes.
-* 
-*    Você deve ter recebido uma cópia da Licença Pública Geral GNU
-*    junto com este programa; se não, escreva para a Free Software
-*    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-*    02111-1307, USA.
-*
-*    Cópias da licença disponíveis em /Sappiens/_doc/licenca
-*
-*/
 
 namespace Sappiens\Sistema\Permissao;
 
@@ -41,16 +13,21 @@ class PermissaoSql
     {
         $this->con = \Zion\Banco\Conexao::conectar();
     }
-
-    public function getDadosSql($cod)
+    
+    public function permissoesPerfil($moduloCod, $perfilCod)
     {
         $qb = $this->con->link()->createQueryBuilder();
 
-        $qb->select('moduloCod', 'grupoCod', 'moduloCodReferente', 'moduloNome', 'moduloNomeMenu', 'moduloDesc', 'moduloVisivelMenu', 'moduloPosicao', 'moduloBase', 'moduloClass')
-                ->from('_modulo', '')
-                ->where($qb->expr()->eq('moduloCod', '?'))
-                ->setParameter(0, $cod);
-        
+        $qb->select(['d.acaoModuloCod'])
+                ->from('_perfil', 'b')
+                ->innerJoin('b', '_permissao', 'c', 'b.perfilCod = c.PerfilCod')
+                ->innerJoin('c', '_acao_modulo', 'd', 'c.acaoModuloCod = d.acaoModuloCod')
+                ->innerJoin('d', '_modulo', 'e', 'd.moduloCod = e.moduloCod')
+                ->where($qb->expr()->eq('b.perfilCod', ':perfilCod'))
+                ->andWhere($qb->expr()->eq('e.moduloCod', ':moduloCod'))
+                ->setParameter('perfilCod', $perfilCod, \PDO::PARAM_INT)
+                ->setParameter('moduloCod', $moduloCod, \PDO::PARAM_INT);
+
         return $qb;
     }
 

@@ -38,5 +38,18 @@ class GrupoSql
 
         return $qb;
     }
+    
+    public function gruposSql()
+    {
+        $qb = $this->con->link()->createQueryBuilder();
 
+        $qb->select(['grupoCod',
+                    'grupoNome',
+                    'grupoPacote',
+                    'grupoClass'])
+                ->from('_grupo', '')
+                ->orderBy('grupoPosicao', 'ASC');
+
+        return $qb;
+    }
 }

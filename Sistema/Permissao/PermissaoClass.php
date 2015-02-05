@@ -1,32 +1,4 @@
 <?php
-/**
-*
-*    Sappiens Framework
-*    Copyright (C) 2014, BRA Consultoria
-*
-*    Website do autor: www.braconsultoria.com.br/sappiens
-*    Email do autor: sappiens@braconsultoria.com.br
-*
-*    Website do projeto, equipe e documentação: www.sappiens.com.br
-*   
-*    Este programa é software livre; você pode redistribuí-lo e/ou
-*    modificá-lo sob os termos da Licença Pública Geral GNU, conforme
-*    publicada pela Free Software Foundation, versão 2.
-*
-*    Este programa é distribuído na expectativa de ser útil, mas SEM
-*    QUALQUER GARANTIA; sem mesmo a garantia implícita de
-*    COMERCIALIZAÇÃO ou de ADEQUAÇÃO A QUALQUER PROPÓSITO EM
-*    PARTICULAR. Consulte a Licença Pública Geral GNU para obter mais
-*    detalhes.
-* 
-*    Você deve ter recebido uma cópia da Licença Pública Geral GNU
-*    junto com este programa; se não, escreva para a Free Software
-*    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-*    02111-1307, USA.
-*
-*    Cópias da licença disponíveis em /Sappiens/_doc/licenca
-*
-*/
 
 namespace Sappiens\Sistema\Permissao;
 
@@ -48,19 +20,30 @@ class PermissaoClass extends PermissaoSql
         $this->chavePrimaria = 'permissaoCod';
 
         $this->colunasCrud = [
-            'usuarioCod',
-            'acaoModuloCod'
+            'acaoModuloCod',
+            'perfilCod'
         ];
     }
 
     public function cadastrar($objForm)
     {
-        return $this->crudUtil->insert($this->tabela, $this->colunasCrud, $objForm);
+        $acaoModulo = \filter_input(\INPUT_POST, 'acaoModulo', \FILTER_DEFAULT, \FILTER_REQUIRE_ARRAY);
+
+        foreach ($acaoModulo as $acaoModuloCod) {
+            $objForm->set('acaoModuloCod', $acaoModuloCod, 'Inteiro');
+            $this->crudUtil->insert($this->tabela, $this->colunasCrud, $objForm);
+        }
     }
 
     public function alterar($objForm)
     {
-        return $this->crudUtil->update($this->tabela, $this->colunasCrud, $objForm, [$this->chavePrimaria => $objForm->get('cod')]);
+        $this->removerPorPerfilCod($objForm->get('perfilCod'));
+        $this->cadastrar($objForm);
+    }
+
+    public function removerPorPerfilCod($cod)
+    {
+        return $this->crudUtil->delete($this->tabela, ['perfilCod' => $cod]);
     }
 
     public function removerPorAcaoModuloCod($acaoModuloCod)
@@ -76,11 +59,98 @@ class PermissaoClass extends PermissaoSql
                 ->where($qb->expr()->eq('moduloCod', '?'))
                 ->setParameter(0, $moduloCod);
 
-        $resultados = $this->con->paraArray($qb);
+        $resultados = $this->con->paraArray($qb,'acaoModuloCod');
 
-        foreach ($resultados as $acaoModuloCod) {
+        foreach ($resultados as $acaoModuloCod) {            
             $this->removerPorAcaoModuloCod($acaoModuloCod);
         }
+    }
+
+    public function montaPermissao($acao, $perfilCod)
+    {
+        $html = new \Zion\Layout\Html();
+        $modulo = new \Sappiens\Sistema\Modulo\ModuloClass();
+        $acaoModulo = new \Sappiens\Sistema\AcaoModulo\AcaoModuloClass();
+        $form = new \Pixel\Form\Form();
+
+        $grupos = $this->con->paraArray((new \Sappiens\Sistema\Grupo\GrupoClass())->gruposSql());
+
+        $buffer = $html->abreTagAberta('div', ['class' => 'displaytable']);
+        foreach ($grupos as $dadosGrupo) {
+
+            $buffer .= $html->abreTagAberta('div', ['class' => 'panel permissoes-usuario']);
+            $buffer .= $html->abreTagAberta('div', ['class' => 'panel-heading']);
+            $buffer .= $html->abreTagAberta('span', ['class' => 'panel-title', 'onclick' => 'toggleBody(this);']);
+            $buffer .= $html->abreTagFechada('i', ['class' => 'fa fa-plus-square-o']);
+            $buffer .= $dadosGrupo['gruponome'];
+            $buffer .= $html->fechaTag('span');
+
+            $buffer .= $html->abreTagAberta('div', ['class' => 'acoes-marcar']);
+            $buffer .= $html->abreTagAberta('button', ['class' => 'btn btn-success btn-sm marca', 'type' => 'button', 'onclick' => 'contar(this);']);
+            $buffer .= $html->abreTagFechada('i', ['class' => 'fa fa-check']);
+            $buffer .= 'Marcar Todos';
+            $buffer .= $html->abreTagFechada('span', ['class' => 'labels label-s']);
+            $buffer .= $html->fechaTag('button');
+            $buffer .= $html->abreTagAberta('button', ['class' => 'btn btn-danger btn-sm desmarca', 'type' => 'button', 'onclick' => 'contar(this);']);
+            $buffer .= $html->abreTagAberta('strong');
+            $buffer .= 'x';
+            $buffer .= $html->fechaTag('strong');
+            $buffer .= 'Desmarcar Todos';
+            $buffer .= $html->abreTagFechada('span', ['class' => 'labels label-no']);
+            $buffer .= $html->fechaTag('button');
+            $buffer .= $html->fechaTag('div');
+            $buffer .= $html->fechaTag('div');
+
+            $buffer .= $html->abreTagAberta('div', ['class' => 'panel-body']);
+            $buffer .= $html->abreTagAberta('form', ['class' => 'form-inline']);
+            $buffer .= $html->abreTagAberta('ul', ['class' => 'list-no-style']);
+
+            $modulos = $this->con->paraArray($modulo->modulosDoGrupoSql($dadosGrupo['grupocod']));
+
+            foreach ($modulos as $dadosModulo) {
+
+                $escolha = [];
+
+                $moduloCod = $dadosModulo['modulocod'];
+                $acoes = $this->con->paraArray($acaoModulo->acoesDoModuloSql($moduloCod), 'acaoModuloPermissao', 'acaoModuloCod');
+
+                $permissaoUsuario = [];
+                if ($acao == 'alterar') {
+                    $permissaoUsuario = $this->con->paraArray(parent::permissoesPerfil($moduloCod, $perfilCod), 'acaoModuloCod', 'acaoModuloCod');
+                }
+
+                $disabled = $acao == 'visualizar' ? true : false;
+
+                $escolha[] = $form->escolha('acaoModulo[]', $dadosModulo['modulonome'])
+                        ->setExpandido(true)
+                        ->setMultiplo(true)
+                        ->setLayoutPixel(false)
+                        ->setDisabled($disabled)
+                        ->setValorPadrao($permissaoUsuario)
+                        ->setOrderBy(['acaoModuloPosicao' => 'ASC'])
+                        ->setOrdena(false)
+                        ->setArray($acoes);
+
+                $buffer .= $html->abreTagAberta('li', ['class' => 'iten-com-checkbox']);
+                $buffer .= $html->abreTagAberta('div', ['class' => 'col-md-2', 'onclick' => 'marcarLinha(this);']);
+                $buffer .= $dadosModulo['modulonome'];
+                $buffer .= $html->fechaTag('div');
+
+                $buffer .= $html->abreTagAberta('div', ['class' => 'col-md-10']);
+                $buffer .= $form->processarForm($escolha)->getFormHtml('acaoModulo[]');
+                $buffer .= $html->fechaTag('div');
+                $buffer .= $html->fechaTag('li');
+            }
+
+            $buffer .= $html->fechaTag('ul');
+            $buffer .= $html->fechaTag('div');
+            $buffer .= $html->fechaTag('div');
+        }
+
+        $buffer .= $html->fechaTag('form');
+        $buffer .= $html->fechaTag('div');
+
+        return $buffer;
     }
 
 }

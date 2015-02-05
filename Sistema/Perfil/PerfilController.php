@@ -1,17 +1,17 @@
 <?php
 
-namespace Sappiens\Sistema\Modulo;
+namespace Sappiens\Sistema\Perfil;
 
-class ModuloController extends \Zion\Core\Controller
+class PerfilController extends \Zion\Core\Controller
 {
 
-    private $moduloClass;
-    private $moduloForm;
+    private $usuarioClass;
+    private $usuarioForm;
 
     public function __construct()
     {
-        $this->moduloClass = new \Sappiens\Sistema\Modulo\ModuloClass();
-        $this->moduloForm = new \Sappiens\Sistema\Modulo\ModuloForm();
+        $this->usuarioClass = new \Sappiens\Sistema\Perfil\PerfilClass();
+        $this->usuarioForm = new \Sappiens\Sistema\Perfil\PerfilForm();
     }
 
     protected function iniciar()
@@ -23,23 +23,25 @@ class ModuloController extends \Zion\Core\Controller
             $template = new \Pixel\Template\Template();
 
             new \Zion\Acesso\Acesso('filtrar');
-            
-            $template->setConteudoScripts($this->moduloForm->getJSEstatico());
+
+            $template->setConteudoScripts($this->usuarioForm->getJSEstatico());
+            $conteudo = '<style type="text/css">.iten-com-checkbox div { padding:8px; }.iten-com-checkbox {margin-top:-4px;}.iten-com-checkbox:hover {background:#f5f5f5 !important; cursor:pointer;}.list-no-style .iten-com-checkbox:nth-child(even) {border-bottom:1px solid #f5f5f5; border-top:1px solid #f5f5f5; background:#fbfbfb;}.list-no-style .checkbox-inline {padding-top:0px;}.list-no-style li {width: 100%; display: inline-block !important;}.list-no-style {-webkit-user-select: none; -ms-user-select: none; -o-user-select: none; user-select: none; -moz-user-select: none; }#sisContainerManu div .panel .panel-body {display:none;}.displaytable{display:table; width:100%;}.list-no-style{margin-bottom:0px; list-style:none;padding-left:20px}.list-no-style li strong{display:block;margin-left:11px;border-bottom:1px solid #e9e9e9;padding:5px 0}.list-no-style ::selected{background-color:#fff}.panel-title{cursor:pointer}.permissoes-usuario-todos button{position:relative}.permissoes-usuario-todos .labels{background-color:transparent;padding-left:5px;margin-left:0;line-height:0;font-size:10px;font-weight:700}.list-no-style label{margin-left:9px}.acoes-marcar{margin-top:-3.5px;display:table;float:right}.marca{margin-left:30px}.desmarca{margin-left:5px}</style>';
+            $template->setConteudoHeader($conteudo);
 
             $iBotoes = new \Pixel\Grid\GridBotoes();
 
             $filtros = new \Pixel\Filtro\FiltroForm();
 
-            $iBotoes->setFiltros($filtros->montaFiltro($this->moduloForm->getFormFiltro()));
+            $iBotoes->setFiltros($filtros->montaFiltro($this->usuarioForm->getFormFiltro()));
             $botoes = $iBotoes->geraBotoes();
 
-            $grid = $this->moduloClass->filtrar($this->moduloForm->getFormFiltro());
+            $grid = $this->usuarioClass->filtrar($this->usuarioForm->getFormFiltro());
 
             $template->setTooltipForm();
             $template->setConteudoBotoes($botoes);
             $template->setConteudoGrid($grid);
         } catch (\Exception $ex) {
-            
+
             $retorno = $ex;
         }
 
@@ -52,20 +54,20 @@ class ModuloController extends \Zion\Core\Controller
     {
         new \Zion\Acesso\Acesso('filtrar');
 
-        return parent::jsonSucesso($this->moduloClass->filtrar($this->moduloForm->getFormFiltro()));
+        return parent::jsonSucesso($this->usuarioClass->filtrar($this->usuarioForm->getFormFiltro()));
     }
 
     protected function cadastrar()
     {
         new \Zion\Acesso\Acesso('cadastrar');
 
-        $objForm = $this->moduloForm->getFormManu('cadastrar');
+        $objForm = $this->usuarioForm->getFormManu('cadastrar');
 
         if ($this->metodoPOST()) {
 
             $objForm->validar();
 
-            $this->moduloClass->cadastrar($objForm);
+            $this->usuarioClass->cadastrar($objForm);
 
             $retorno = 'true';
         } else {
@@ -85,21 +87,21 @@ class ModuloController extends \Zion\Core\Controller
 
         if ($this->metodoPOST()) {
 
-            $objForm = $this->moduloForm->getFormManu('alterar', $this->postCod());
+            $objForm = $this->usuarioForm->getFormManu('alterar', $this->postCod());
 
             $objForm->validar();
 
-            $this->moduloClass->alterar($objForm);
+            $this->usuarioClass->alterar($objForm);
 
             $retorno = 'true';
         } else {
-            
-            $selecionados = $this->registrosSelecionados();            
+
+            $selecionados = $this->registrosSelecionados();
 
             $retorno = '';
             foreach ($selecionados as $cod) {
 
-                $objForm = $this->moduloClass->setValoresFormManu($cod, $this->moduloForm);
+                $objForm = $this->usuarioClass->setValoresFormManu($cod, $this->usuarioForm);
                 $retorno .= $objForm->montaForm();
                 $retorno .= $objForm->javaScript()->getLoad(true);
                 $objForm->javaScript()->resetLoad();
@@ -115,7 +117,7 @@ class ModuloController extends \Zion\Core\Controller
     {
         new \Zion\Acesso\Acesso('remover');
 
-        $selecionados = $this->registrosSelecionados();        
+        $selecionados = $this->registrosSelecionados();
         $rSelecionados = \count($selecionados);
         $rApagados = 0;
         $mensagem = [];
@@ -124,7 +126,7 @@ class ModuloController extends \Zion\Core\Controller
 
             foreach ($selecionados as $cod) {
 
-                $this->moduloClass->remover($cod);
+                $this->usuarioClass->remover($cod);
 
                 $rApagados++;
             }
@@ -139,17 +141,17 @@ class ModuloController extends \Zion\Core\Controller
             'apagados' => $rApagados,
             'retorno' => \implode("\\n", $mensagem)]);
     }
-    
+
     protected function visualizar()
     {
         new \Zion\Acesso\Acesso('visualizar');
-        
+
         $selecionados = $this->registrosSelecionados();
 
         $retorno = '';
         foreach ($selecionados as $cod) {
 
-            $objForm = $this->moduloClass->setValoresFormManu($cod, $this->moduloForm);
+            $objForm = $this->usuarioClass->setValoresFormManu($cod, $this->usuarioForm, 'visualizar');
             $retorno .= $objForm->montaFormVisualizar();
         }
 
@@ -157,15 +159,5 @@ class ModuloController extends \Zion\Core\Controller
             'sucesso' => 'true',
             'retorno' => $retorno]);
     }
-    
-    protected function mudaPosicao()
-    {
-        new \Zion\Acesso\Acesso('alterar');
-        
-        $posicao = $this->moduloClass->mudaPosicao(\filter_input(\INPUT_GET, 'moduloCod'), \filter_input(\INPUT_GET, 'maisMenos'));
-        
-        return \json_encode([
-            'sucesso' => 'true',
-            'retorno' => $posicao]);
-    }
+
 }

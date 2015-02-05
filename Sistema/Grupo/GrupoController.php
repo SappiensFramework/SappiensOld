@@ -23,12 +23,14 @@ class GrupoController extends \Zion\Core\Controller
             $template = new \Pixel\Template\Template();
 
             new \Zion\Acesso\Acesso('filtrar');
-
+            
             $template->setConteudoScripts($this->grupoForm->getJSEstatico());
 
             $iBotoes = new \Pixel\Grid\GridBotoes();
-            
-            $iBotoes->setFiltros('');
+
+            $filtros = new \Pixel\Filtro\FiltroForm();
+
+            $iBotoes->setFiltros($filtros->montaFiltro($this->grupoForm->getFormFiltro()));
             $botoes = $iBotoes->geraBotoes();
 
             $grid = $this->grupoClass->filtrar($this->grupoForm->getFormFiltro());

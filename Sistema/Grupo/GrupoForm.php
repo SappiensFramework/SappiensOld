@@ -7,9 +7,16 @@ class GrupoForm
 
     public function getFormFiltro()
     {
-        $form = new \Pixel\Form\Form();      
+        $form = new \Pixel\Form\FormFiltro();    
+        
+        $form->config('sisFormFiltro');
+        
+        $campos[] = $form->suggest('grupoNome', 'Modulo','')
+                ->setTabela('_grupo')
+                ->setCampoBusca('grupoNome')
+                ->setCampoDesc('grupoNome');
 
-        return $form->processarForm([]);
+        return $form->processarForm($campos);
     }
 
     /**

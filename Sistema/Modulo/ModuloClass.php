@@ -1,32 +1,4 @@
 <?php
-/**
-*
-*    Sappiens Framework
-*    Copyright (C) 2014, BRA Consultoria
-*
-*    Website do autor: www.braconsultoria.com.br/sappiens
-*    Email do autor: sappiens@braconsultoria.com.br
-*
-*    Website do projeto, equipe e documentação: www.sappiens.com.br
-*   
-*    Este programa é software livre; você pode redistribuí-lo e/ou
-*    modificá-lo sob os termos da Licença Pública Geral GNU, conforme
-*    publicada pela Free Software Foundation, versão 2.
-*
-*    Este programa é distribuído na expectativa de ser útil, mas SEM
-*    QUALQUER GARANTIA; sem mesmo a garantia implícita de
-*    COMERCIALIZAÇÃO ou de ADEQUAÇÃO A QUALQUER PROPÓSITO EM
-*    PARTICULAR. Consulte a Licença Pública Geral GNU para obter mais
-*    detalhes.
-* 
-*    Você deve ter recebido uma cópia da Licença Pública Geral GNU
-*    junto com este programa; se não, escreva para a Free Software
-*    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-*    02111-1307, USA.
-*
-*    Cópias da licença disponíveis em /Sappiens/_doc/licenca
-*
-*/
 
 namespace Sappiens\Sistema\Modulo;
 
@@ -118,14 +90,14 @@ class ModuloClass extends ModuloSql
 
     public function remover($cod)
     {
-        $permissao = new \Engine\Sistema\Permissao\PermissaoClass();
+        $permissao = new \Sappiens\Sistema\Permissao\PermissaoClass();
         
         if($this->con->existe('_modulo', 'moduloCodReferente', $cod)){
             throw new \Exception('Não é possível remover este módulo pois ele possui um ou mais módulos dependentes!');
         }
         
         $this->crudUtil->startTransaction();        
-        
+
         $permissao->removerPorModuloCod($cod);
         
         $this->crudUtil->delete('_acao_modulo', [$this->chavePrimaria => $cod]);
@@ -191,12 +163,5 @@ class ModuloClass extends ModuloSql
     {
         return '<i class="' . $moduloClass . '"></i>';
     }
-    
-    public function getDadosModulo($modulo)
-    {
-        
-        return $this->con->execLinhaArray(parent::getDadosModuloSql($modulo));
-
-    }      
 
 }

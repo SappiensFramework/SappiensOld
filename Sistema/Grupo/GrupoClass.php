@@ -68,12 +68,12 @@ class GrupoClass extends GrupoSql
 
     public function alterar($objForm)
     {
-        return $this->crudUtil->update($this->tabela, $this->colunasCrud, $objForm, $this->chavePrimaria);
+        return $this->crudUtil->update($this->tabela, $this->colunasCrud, $objForm, [$this->chavePrimaria => $objForm->get('cod')]);
     }
 
     public function remover($cod)
     {
-        return $this->crudUtil->delete($this->tabela, $cod, $this->chavePrimaria);
+        return $this->crudUtil->delete($this->tabela, [$this->chavePrimaria => $cod]);
     }
 
     public function setValoresFormManu($cod, $formIntancia)
@@ -117,7 +117,7 @@ class GrupoClass extends GrupoSql
 
         $update = array('grupoPosicao' => array('Inteiro' => $novaPosicao));
 
-        $this->crudUtil->update($this->tabela, ['grupoPosicao'], $update, $this->chavePrimaria, $grupoCod);
+        $this->crudUtil->update($this->tabela, ['grupoPosicao'], $update, [$this->chavePrimaria => $grupoCod] );
 
         return $novaPosicao;
     }

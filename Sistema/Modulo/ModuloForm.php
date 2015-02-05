@@ -1,32 +1,4 @@
 <?php
-/**
-*
-*    Sappiens Framework
-*    Copyright (C) 2014, BRA Consultoria
-*
-*    Website do autor: www.braconsultoria.com.br/sappiens
-*    Email do autor: sappiens@braconsultoria.com.br
-*
-*    Website do projeto, equipe e documentação: www.sappiens.com.br
-*   
-*    Este programa é software livre; você pode redistribuí-lo e/ou
-*    modificá-lo sob os termos da Licença Pública Geral GNU, conforme
-*    publicada pela Free Software Foundation, versão 2.
-*
-*    Este programa é distribuído na expectativa de ser útil, mas SEM
-*    QUALQUER GARANTIA; sem mesmo a garantia implícita de
-*    COMERCIALIZAÇÃO ou de ADEQUAÇÃO A QUALQUER PROPÓSITO EM
-*    PARTICULAR. Consulte a Licença Pública Geral GNU para obter mais
-*    detalhes.
-* 
-*    Você deve ter recebido uma cópia da Licença Pública Geral GNU
-*    junto com este programa; se não, escreva para a Free Software
-*    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-*    02111-1307, USA.
-*
-*    Cópias da licença disponíveis em /Sappiens/_doc/licenca
-*
-*/
 
 namespace Sappiens\Sistema\Modulo;
 
@@ -35,29 +7,25 @@ class ModuloForm
 
     public function getFormFiltro()
     {
-        $form = new \Pixel\Form\Form();
+        $form = new \Pixel\Form\FormFiltro();
 
         $form->config('sisFormFiltro');
 
-        $campos[] = $form->suggest('moduloNome', 'Modulo')
+        $campos[] = $form->suggest('moduloNome', 'Modulo', 'a')
                 ->setTabela('_modulo')
                 ->setCampoBusca('moduloNome')
-                ->setCampoDesc('moduloNome')
-                ->setAliasSql('a');
+                ->setCampoDesc('moduloNome');
 
-        $campos[] = $form->escolha('grupoCod', 'Grupo')
+        $campos[] = $form->escolha('grupoCod', 'Grupo', 'b')
                 ->setTabela('_grupo')
                 ->setCampoCod('grupoCod')
-                ->setCampoDesc('grupoNome')
-                ->setAliasSql('b');
+                ->setCampoDesc('grupoNome');
 
-        $campos[] = $form->escolha('moduloVisivelMenu', 'Visivel no menu?')
+        $campos[] = $form->escolha('moduloVisivelMenu', 'Visivel no menu?', 'a')
                 ->setTabela('_grupo')
-                ->setArray(['S' => 'Sim', 'N' => 'Não'])
-                ->setAliasSql('a');
+                ->setArray(['S' => 'Sim', 'N' => 'Não']);
 
-        $campos[] = $form->numero('moduloPosicao', 'Posição')
-                ->setAliasSql('a');
+        $campos[] = $form->numero('moduloPosicao', 'Posição', 'a');
 
         return $form->processarForm($campos);
     }
@@ -88,7 +56,7 @@ class ModuloForm
                 ->setArray([]) //fake input
                 ->setInicio('Sem referência')
                 ->setDependencia('grupoCod', 'getFormModulo', __CLASS__)
-                ->setValor($form->retornaValor('moduloCodReferente'));        
+                ->setValor($form->retornaValor('moduloCodReferente'));
 
         $campos[] = $form->texto('moduloNome', 'Nome do Módulo', true)
                 ->setMaximoCaracteres(70)
@@ -125,38 +93,112 @@ class ModuloForm
                 ->setIconFA('fa-font')
                 ->setValor($form->retornaValor('moduloClass'));
 
-        
+
         $objPai = new \Pixel\Form\Form();
         $objPai->setAcao($acao);
-        
-        $campos[] = $form->masterDetail('acoes','Ações do módulo')
+
+        $inicio = [
+            0 => [
+                'acaoModuloPermissao' => 'Atualizar',
+                'acaoModuloIdPermissao' => 'filtrar',
+                'acaoModuloIcon' => 'fa fa-repeat',
+                'acaoModuloToolTipComPermissao' => '',
+                'acaoModuloToolTipeSemPermissao' => '',
+                'acaoModuloFuncaoJS' => 'sisFiltrarPadrao()',
+                'acaoModuloPosicao' => '1',
+                'acaoModuloApresentacao' => 'E'
+            ],
+            1 => [
+                'acaoModuloPermissao' => 'Visualizar',
+                'acaoModuloIdPermissao' => 'visualizar',
+                'acaoModuloIcon' => 'fa fa-search',
+                'acaoModuloToolTipComPermissao' => '',
+                'acaoModuloToolTipeSemPermissao' => '',
+                'acaoModuloFuncaoJS' => 'sisVisualizarPadrao()',
+                'acaoModuloPosicao' => '2',
+                'acaoModuloApresentacao' => 'E'
+            ],
+            2 => [
+                'acaoModuloPermissao' => 'Cadastrar',
+                'acaoModuloIdPermissao' => 'cadastrar',
+                'acaoModuloIcon' => 'fa fa-plus',
+                'acaoModuloToolTipComPermissao' => '',
+                'acaoModuloToolTipeSemPermissao' => '',
+                'acaoModuloFuncaoJS' => 'sisCadastrarLayoutPadrao()',
+                'acaoModuloPosicao' => '3',
+                'acaoModuloApresentacao' => 'E'
+            ],
+            3 => [
+                'acaoModuloPermissao' => 'Alterar',
+                'acaoModuloIdPermissao' => 'alterar',
+                'acaoModuloIcon' => 'fa fa-pencil',
+                'acaoModuloToolTipComPermissao' => '',
+                'acaoModuloToolTipeSemPermissao' => '',
+                'acaoModuloFuncaoJS' => 'sisAlterarLayoutPadrao()',
+                'acaoModuloPosicao' => '4',
+                'acaoModuloApresentacao' => 'E'
+            ],
+            4 => [
+                'acaoModuloPermissao' => 'Remover',
+                'acaoModuloIdPermissao' => 'remover',
+                'acaoModuloIcon' => 'fa fa-trash-o',
+                'acaoModuloToolTipComPermissao' => '',
+                'acaoModuloToolTipeSemPermissao' => '',
+                'acaoModuloFuncaoJS' => 'sisRemoverPadrao()',
+                'acaoModuloPosicao' => '5',
+                'acaoModuloApresentacao' => 'E'
+            ],
+            5 => [
+                'acaoModuloPermissao' => 'Imprimir',
+                'acaoModuloIdPermissao' => 'imprimir',
+                'acaoModuloIcon' => 'fa fa-print',
+                'acaoModuloToolTipComPermissao' => '',
+                'acaoModuloToolTipeSemPermissao' => '',
+                'acaoModuloFuncaoJS' => 'sisImprimir()',
+                'acaoModuloPosicao' => '2',
+                'acaoModuloApresentacao' => 'R'
+            ],
+            6 => [
+                'acaoModuloPermissao' => 'Salvar em arquivo PDF',
+                'acaoModuloIdPermissao' => 'salvarPDF',
+                'acaoModuloIcon' => 'fa fa-file-pdf-o',
+                'acaoModuloToolTipComPermissao' => '',
+                'acaoModuloToolTipeSemPermissao' => '',
+                'acaoModuloFuncaoJS' => '',
+                'acaoModuloPosicao' => '1',
+                'acaoModuloApresentacao' => 'R'
+            ]
+        ];
+
+        $confCampos = [
+            'acaoModuloPermissao' => $objPai->texto('acaoModuloPermissao', 'Permissão', true)
+                    ->setEmColunaDeTamanho(6),
+            'acaoModuloIdPermissao' => $objPai->texto('acaoModuloIdPermissao', 'Id da Permissão', true)
+                    ->setEmColunaDeTamanho(6),
+            'acaoModuloIcon' => $objPai->texto('acaoModuloIcon', 'Ícone', true)
+                    ->setEmColunaDeTamanho(6),
+            'acaoModuloToolTipComPermissao' => $objPai->texto('acaoModuloToolTipComPermissao', 'Tooltip c/ Permissão', true)
+                    ->setEmColunaDeTamanho(6),
+            'acaoModuloToolTipeSemPermissao' => $objPai->texto('acaoModuloToolTipeSemPermissao', 'Tooltip c/ Permissão', true)
+                    ->setEmColunaDeTamanho(6),
+            'acaoModuloFuncaoJS' => $objPai->texto('acaoModuloFuncaoJS', 'Função JS', true)
+                    ->setEmColunaDeTamanho(6),
+            'acaoModuloPosicao' => $objPai->numero('acaoModuloPosicao', 'Posição', true)
+                    ->setEmColunaDeTamanho(6),
+            'acaoModuloApresentacao' => $objPai->chosen('acaoModuloApresentacao', 'Apresentação', true)
+                    ->setEmColunaDeTamanho(6)
+                    ->setArray(['E' => 'Expandido', 'R' => 'Recolhido', 'I' => 'Acao invisivel'])];
+
+        $campos[] = $form->masterDetail('acoes', 'Ações do módulo')
                 ->setTabela('_acao_modulo')
                 ->setCodigo('acaoModuloCod')
                 ->setCampoReferencia('moduloCod')
                 ->setCodigoReferencia($formCod)
                 ->setObjetoPai($objPai)
                 ->setObjetoRemover(new \Sappiens\Sistema\Permissao\PermissaoClass(), 'removerPorAcaoModuloCod')
-                ->setTotalItensInicio(3)
-                ->setAddMin(0)
-                ->setCampos([
-            'acaoModuloPermissao' => $objPai->texto('acaoModuloPermissao', 'Permissão', true)
-            ->setEmColunaDeTamanho(6),
-            'acaoModuloIdPermissao' => $objPai->texto('acaoModuloIdPermissao', 'Id da Permissão', true)
-            ->setEmColunaDeTamanho(6),
-            'acaoModuloIcon' => $objPai->texto('acaoModuloIcon', 'Ícone', true)
-            ->setEmColunaDeTamanho(6),
-            'acaoModuloToolTipComPermissao' => $objPai->texto('acaoModuloToolTipComPermissao', 'Tooltip c/ Perm', false)
-            ->setEmColunaDeTamanho(6),
-            'acaoModuloToolTipeSemPermissao' => $objPai->texto('acaoModuloToolTipeSemPermissao', 'Tooltip s/ Perm', false)
-            ->setEmColunaDeTamanho(6),
-            'acaoModuloFuncaoJS' => $objPai->texto('acaoModuloFuncaoJS', 'Função JS', true)
-            ->setEmColunaDeTamanho(6),
-            'acaoModuloPosicao' => $objPai->numero('acaoModuloPosicao', 'Posição', true)
-            ->setEmColunaDeTamanho(6),
-            'acaoModuloApresentacao' => $objPai->chosen('acaoModuloApresentacao', 'Apresentação', true)
-            ->setEmColunaDeTamanho(6)
-            ->setArray(['E' => 'Expandido', 'R' => 'Recolhido', 'I' => 'Acao invisivel'])]
-        );        
+                ->setTotalItensInicio(7)
+                ->setValorItensDeInicio($inicio)
+                ->setCampos($confCampos);
 
         $campos[] = $form->botaoSalvarPadrao();
 
@@ -168,13 +210,20 @@ class ModuloForm
     public function getFormModulo($referenciaCod)
     {
         $form = new \Pixel\Form\Form();
+        $con = \Zion\Banco\Conexao::conectar();
 
-        $campos[] = $form->chosen('moduloCodReferente', 'Módulo de Referência')
+        $qb = $con->link()->createQueryBuilder();
+
+        $qb->select('moduloCod', 'moduloNome')
+                ->from('_modulo', '')
+                ->where($qb->expr()->eq('grupoCod', '?'))
+                ->setParameter(0, $referenciaCod);
+
+        $campos[] = $form->escolha('moduloCodReferente', 'Módulo de Referência')
                 ->setInicio('Sem referência')
-                ->setTabela('_modulo')
                 ->setCampoCod('moduloCod')
                 ->setCampoDesc('moduloNome')
-                ->setWhere("grupoCod = $referenciaCod");
+                ->setSqlCompleto($qb);
 
         return $form->processarForm($campos);
     }
