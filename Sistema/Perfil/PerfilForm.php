@@ -114,7 +114,7 @@ function marcarLinha(obj){
         
         $jsStatic = \Pixel\Form\FormJavaScript::iniciar();
 
-        $jsStatic->setFunctions($js);
+        //$jsStatic->setFunctions($js);
 
         return $jsStatic->getFunctions();
     }

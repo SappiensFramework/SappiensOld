@@ -164,7 +164,7 @@ class ModuloForm
                 'acaoModuloIcon' => 'fa fa-file-pdf-o',
                 'acaoModuloToolTipComPermissao' => '',
                 'acaoModuloToolTipeSemPermissao' => '',
-                'acaoModuloFuncaoJS' => '',
+                'acaoModuloFuncaoJS' => 'sisSalvarPDF()',
                 'acaoModuloPosicao' => '1',
                 'acaoModuloApresentacao' => 'R'
             ]
@@ -177,9 +177,9 @@ class ModuloForm
                     ->setEmColunaDeTamanho(6),
             'acaoModuloIcon' => $objPai->texto('acaoModuloIcon', 'Ícone', true)
                     ->setEmColunaDeTamanho(6),
-            'acaoModuloToolTipComPermissao' => $objPai->texto('acaoModuloToolTipComPermissao', 'Tooltip c/ Permissão', true)
+            'acaoModuloToolTipComPermissao' => $objPai->texto('acaoModuloToolTipComPermissao', 'Tooltip c/ Permissão', false)
                     ->setEmColunaDeTamanho(6),
-            'acaoModuloToolTipeSemPermissao' => $objPai->texto('acaoModuloToolTipeSemPermissao', 'Tooltip c/ Permissão', true)
+            'acaoModuloToolTipeSemPermissao' => $objPai->texto('acaoModuloToolTipeSemPermissao', 'Tooltip c/ Permissão', false)
                     ->setEmColunaDeTamanho(6),
             'acaoModuloFuncaoJS' => $objPai->texto('acaoModuloFuncaoJS', 'Função JS', true)
                     ->setEmColunaDeTamanho(6),

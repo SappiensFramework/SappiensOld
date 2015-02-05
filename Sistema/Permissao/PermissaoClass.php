@@ -74,36 +74,37 @@ class PermissaoClass extends PermissaoSql
         $form = new \Pixel\Form\Form();
 
         $grupos = $this->con->paraArray((new \Sappiens\Sistema\Grupo\GrupoClass())->gruposSql());
-
-        $buffer = $html->abreTagAberta('div', ['class' => 'displaytable']);
+        
+        $buffer = '';
+        //$buffer = $html->abreTagAberta('div', ['class' => 'displaytable']);
         foreach ($grupos as $dadosGrupo) {
 
-            $buffer .= $html->abreTagAberta('div', ['class' => 'panel permissoes-usuario']);
-            $buffer .= $html->abreTagAberta('div', ['class' => 'panel-heading']);
-            $buffer .= $html->abreTagAberta('span', ['class' => 'panel-title', 'onclick' => 'toggleBody(this);']);
-            $buffer .= $html->abreTagFechada('i', ['class' => 'fa fa-plus-square-o']);
-            $buffer .= $dadosGrupo['gruponome'];
-            $buffer .= $html->fechaTag('span');
-
-            $buffer .= $html->abreTagAberta('div', ['class' => 'acoes-marcar']);
-            $buffer .= $html->abreTagAberta('button', ['class' => 'btn btn-success btn-sm marca', 'type' => 'button', 'onclick' => 'contar(this);']);
-            $buffer .= $html->abreTagFechada('i', ['class' => 'fa fa-check']);
-            $buffer .= 'Marcar Todos';
-            $buffer .= $html->abreTagFechada('span', ['class' => 'labels label-s']);
-            $buffer .= $html->fechaTag('button');
-            $buffer .= $html->abreTagAberta('button', ['class' => 'btn btn-danger btn-sm desmarca', 'type' => 'button', 'onclick' => 'contar(this);']);
-            $buffer .= $html->abreTagAberta('strong');
-            $buffer .= 'x';
-            $buffer .= $html->fechaTag('strong');
-            $buffer .= 'Desmarcar Todos';
-            $buffer .= $html->abreTagFechada('span', ['class' => 'labels label-no']);
-            $buffer .= $html->fechaTag('button');
-            $buffer .= $html->fechaTag('div');
-            $buffer .= $html->fechaTag('div');
-
-            $buffer .= $html->abreTagAberta('div', ['class' => 'panel-body']);
-            $buffer .= $html->abreTagAberta('form', ['class' => 'form-inline']);
-            $buffer .= $html->abreTagAberta('ul', ['class' => 'list-no-style']);
+//            $buffer .= $html->abreTagAberta('div', ['class' => 'panel permissoes-usuario']);
+//            $buffer .= $html->abreTagAberta('div', ['class' => 'panel-heading']);
+//            $buffer .= $html->abreTagAberta('span', ['class' => 'panel-title', 'onclick' => 'toggleBody(this);']);
+//            $buffer .= $html->abreTagFechada('i', ['class' => 'fa fa-plus-square-o']);
+//            $buffer .= $dadosGrupo['gruponome'];
+//            $buffer .= $html->fechaTag('span');
+//
+//            $buffer .= $html->abreTagAberta('div', ['class' => 'acoes-marcar']);
+//            $buffer .= $html->abreTagAberta('button', ['class' => 'btn btn-success btn-sm marca', 'type' => 'button', 'onclick' => 'contar(this);']);
+//            $buffer .= $html->abreTagFechada('i', ['class' => 'fa fa-check']);
+//            $buffer .= 'Marcar Todos';
+//            $buffer .= $html->abreTagFechada('span', ['class' => 'labels label-s']);
+//            $buffer .= $html->fechaTag('button');
+//            $buffer .= $html->abreTagAberta('button', ['class' => 'btn btn-danger btn-sm desmarca', 'type' => 'button', 'onclick' => 'contar(this);']);
+//            $buffer .= $html->abreTagAberta('strong');
+//            $buffer .= 'x';
+//            $buffer .= $html->fechaTag('strong');
+//            $buffer .= 'Desmarcar Todos';
+//            $buffer .= $html->abreTagFechada('span', ['class' => 'labels label-no']);
+//            $buffer .= $html->fechaTag('button');
+//            $buffer .= $html->fechaTag('div');
+//            $buffer .= $html->fechaTag('div');
+//
+//            $buffer .= $html->abreTagAberta('div', ['class' => 'panel-body']);
+//            $buffer .= $html->abreTagAberta('form', ['class' => 'form-inline']);
+//            $buffer .= $html->abreTagAberta('ul', ['class' => 'list-no-style']);
 
             $modulos = $this->con->paraArray($modulo->modulosDoGrupoSql($dadosGrupo['grupocod']));
 
@@ -114,13 +115,17 @@ class PermissaoClass extends PermissaoSql
                 $moduloCod = $dadosModulo['modulocod'];
                 $acoes = $this->con->paraArray($acaoModulo->acoesDoModuloSql($moduloCod), 'acaoModuloPermissao', 'acaoModuloCod');
 
+                if(empty($acoes)){
+                    continue;
+                }
+                
                 $permissaoUsuario = [];
                 if ($acao == 'alterar') {
                     $permissaoUsuario = $this->con->paraArray(parent::permissoesPerfil($moduloCod, $perfilCod), 'acaoModuloCod', 'acaoModuloCod');
                 }
 
-                $disabled = $acao == 'visualizar' ? true : false;
-
+                $disabled = $acao == 'visualizar' ? true : false;               
+                
                 $escolha[] = $form->escolha('acaoModulo[]', $dadosModulo['modulonome'])
                         ->setExpandido(true)
                         ->setMultiplo(true)
@@ -131,24 +136,24 @@ class PermissaoClass extends PermissaoSql
                         ->setOrdena(false)
                         ->setArray($acoes);
 
-                $buffer .= $html->abreTagAberta('li', ['class' => 'iten-com-checkbox']);
-                $buffer .= $html->abreTagAberta('div', ['class' => 'col-md-2', 'onclick' => 'marcarLinha(this);']);
+//                $buffer .= $html->abreTagAberta('li', ['class' => 'iten-com-checkbox']);
+//                $buffer .= $html->abreTagAberta('div', ['class' => 'col-md-2', 'onclick' => 'marcarLinha(this);']);
                 $buffer .= $dadosModulo['modulonome'];
-                $buffer .= $html->fechaTag('div');
-
-                $buffer .= $html->abreTagAberta('div', ['class' => 'col-md-10']);
-                $buffer .= $form->processarForm($escolha)->getFormHtml('acaoModulo[]');
-                $buffer .= $html->fechaTag('div');
-                $buffer .= $html->fechaTag('li');
+//                $buffer .= $html->fechaTag('div');
+//
+//                $buffer .= $html->abreTagAberta('div', ['class' => 'col-md-10']);
+                $buffer .= $form->processarForm($escolha)->getFormHtml('acaoModulo[]')."<br>";
+//                $buffer .= $html->fechaTag('div');
+//                $buffer .= $html->fechaTag('li');
             }
 
-            $buffer .= $html->fechaTag('ul');
-            $buffer .= $html->fechaTag('div');
-            $buffer .= $html->fechaTag('div');
+//            $buffer .= $html->fechaTag('ul');
+//            $buffer .= $html->fechaTag('div');
+//            $buffer .= $html->fechaTag('div');
         }
 
-        $buffer .= $html->fechaTag('form');
-        $buffer .= $html->fechaTag('div');
+//        $buffer .= $html->fechaTag('form');
+//        $buffer .= $html->fechaTag('div');
 
         return $buffer;
     }

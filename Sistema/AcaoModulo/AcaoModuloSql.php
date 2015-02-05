@@ -22,7 +22,6 @@ class AcaoModuloSql
                     'moduloCod',
                     'acaoModuloPermissao',
                     'acaoModuloIdPermissao',
-                    'acaoModuloClass',
                     'acaoModuloIcon',
                     'acaoModuloToolTipComPermissao',
                     'acaoModuloToolTipeSemPermissao',
