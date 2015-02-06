@@ -52,12 +52,7 @@ class GrupoForm
                 ->setMaximoCaracteres(30)
                 ->setToolTipMsg('Deve conter o nome da classe do repositório do Bootstrap ou Fontes Awesome')
                 ->setIconFA('fa-font')
-                ->setValor($form->retornaValor('grupoClass'));  
-        
-        $campos[] = $form->upload('grupoArquivo[]', 'Arquivo do Grupo', 'Arquivo')
-                ->setMaximoArquivos(1)
-                ->setCodigoReferencia($formCod)
-                ->setValor('grupoArquivo[]');
+                ->setValor($form->retornaValor('grupoClass'));          
 
         $campos[] = $form->botaoSalvarPadrao();
 
