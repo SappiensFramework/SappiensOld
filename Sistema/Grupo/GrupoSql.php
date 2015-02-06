@@ -17,7 +17,7 @@ class GrupoSql
         $fil = new \Pixel\Filtro\Filtrar($objForm);
         $util = new \Pixel\Crud\CrudUtil();
 
-        $qb = $this->con->link()->createQueryBuilder();
+        $qb = $this->con->qb();
 
         $qb->select('grupoCod, grupoNome, grupoPacote, grupoPosicao, grupoClass')
                 ->from('_grupo', '');
@@ -29,7 +29,7 @@ class GrupoSql
 
     public function getDadosSql($cod)
     {
-        $qb = $this->con->link()->createQueryBuilder();
+        $qb = $this->con->qb();
 
         $qb->select('grupoCod', 'grupoNome', 'grupoPacote', 'grupoPosicao', 'grupoClass')
                 ->from('_grupo', '')
@@ -41,7 +41,7 @@ class GrupoSql
     
     public function gruposSql()
     {
-        $qb = $this->con->link()->createQueryBuilder();
+        $qb = $this->con->qb();
 
         $qb->select(['grupoCod',
                     'grupoNome',
