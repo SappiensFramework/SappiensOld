@@ -15,7 +15,7 @@ class GrupoClass extends GrupoSql
     public function __construct()
     {
         parent::__construct();
-        
+
         $this->crudUtil = new \Pixel\Crud\CrudUtil();
 
         $this->tabela = '_grupo';
@@ -34,7 +34,7 @@ class GrupoClass extends GrupoSql
             'grupoPosicao' => "Posição",
             'grupoClass' => "Ícone"
         ];
-        
+
         $this->filtroDinamico = [
             'grupoNome' => "",
             'grupoPacote' => "",
@@ -63,17 +63,38 @@ class GrupoClass extends GrupoSql
 
     public function cadastrar($objForm)
     {
-        return $this->crudUtil->insert($this->tabela, $this->colunasCrud, $objForm);
+        $grupoCod = $this->crudUtil->insert($this->tabela, $this->colunasCrud, $objForm);
+        
+        $this->criaPasta($objForm);
+        
+        return $grupoCod;
     }
 
     public function alterar($objForm)
     {
-        return $this->crudUtil->update($this->tabela, $this->colunasCrud, $objForm, [$this->chavePrimaria => $objForm->get('cod')]);
+        $afetados = $this->crudUtil->update($this->tabela, $this->colunasCrud, $objForm, [$this->chavePrimaria => $objForm->get('cod')]);
+        
+        $this->criaPasta($objForm);
+        
+        return $afetados;
     }
 
     public function remover($cod)
     {
         return $this->crudUtil->delete($this->tabela, [$this->chavePrimaria => $cod]);
+    }
+
+    private function criaPasta($objForm)
+    {
+        $arq = new \Zion\Arquivo\ManipulaDiretorio();
+
+        $diretorio = SIS_DIR_BASE . $objForm->get('grupoPacote');
+
+        try {
+            $arq->criaDiretorio($diretorio, 0777);
+        } catch (\Exception $ex) {
+            //se não conseguir criar a pasta não tem problema
+        }
     }
 
     public function setValoresFormManu($cod, $formIntancia)
@@ -95,10 +116,10 @@ class GrupoClass extends GrupoSql
         $qb = $con->link()->createQueryBuilder();
 
         $qb->select('grupoPosicao')
-                ->from('_grupo','')
+                ->from('_grupo', '')
                 ->where($qb->expr()->eq('grupoCod', ':grupoCod'))
                 ->setParameter('grupoCod', $grupoCod, \PDO::PARAM_INT);
-        
+
         $posicaoAtual = $con->execRLinha($qb);
 
         if ($maisMenos === '+') {
@@ -117,7 +138,7 @@ class GrupoClass extends GrupoSql
 
         $update = array('grupoPosicao' => array('Inteiro' => $novaPosicao));
 
-        $this->crudUtil->update($this->tabela, ['grupoPosicao'], $update, [$this->chavePrimaria => $grupoCod] );
+        $this->crudUtil->update($this->tabela, ['grupoPosicao'], $update, [$this->chavePrimaria => $grupoCod]);
 
         return $novaPosicao;
     }
