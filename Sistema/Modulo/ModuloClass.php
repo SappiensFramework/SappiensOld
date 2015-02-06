@@ -80,33 +80,56 @@ class ModuloClass extends ModuloSql
 
     public function cadastrar($objForm)
     {
-        return $this->crudUtil->insert($this->tabela, $this->colunasCrud, $objForm);
+        $moduloCod = $this->crudUtil->insert($this->tabela, $this->colunasCrud, $objForm);
+
+        $this->criaPasta($objForm);
+
+        return $moduloCod;
     }
 
     public function alterar($objForm)
     {
-        return $this->crudUtil->update($this->tabela, $this->colunasCrud, $objForm, [$this->chavePrimaria => $objForm->get('cod')]);
+        $afetadas = $this->crudUtil->update($this->tabela, $this->colunasCrud, $objForm, [$this->chavePrimaria => $objForm->get('cod')]);
+
+        $this->criaPasta($objForm);
+
+        return $afetadas;
     }
 
     public function remover($cod)
     {
         $permissao = new \Sappiens\Sistema\Permissao\PermissaoClass();
-        
-        if($this->con->existe('_modulo', 'moduloCodReferente', $cod)){
+
+        if ($this->con->existe('_modulo', 'moduloCodReferente', $cod)) {
             throw new \Exception('Não é possível remover este módulo pois ele possui um ou mais módulos dependentes!');
         }
-        
-        $this->crudUtil->startTransaction();        
+
+        $this->crudUtil->startTransaction();
 
         $permissao->removerPorModuloCod($cod);
-        
+
         $this->crudUtil->delete('_acao_modulo', [$this->chavePrimaria => $cod]);
-        
+
         $removidos = $this->crudUtil->delete($this->tabela, [$this->chavePrimaria => $cod]);
-        
+
         $this->crudUtil->stopTransaction();
-        
+
         return $removidos;
+    }
+
+    private function criaPasta($objForm)
+    {
+        $arq = new \Zion\Arquivo\ManipulaDiretorio();
+
+        $grupoPacote = $this->con->execRLinha((new \Sappiens\Sistema\Grupo\GrupoSql())->getDadosSql($objForm->get('grupoCod')),'grupoPacote');
+
+        $diretorio = SIS_DIR_BASE . $grupoPacote .'/'. $objForm->get('moduloNome');
+
+        try {
+            $arq->criaDiretorio($diretorio, 0777);
+        } catch (\Exception $ex) {
+            //se não conseguir criar a pasta não tem problema
+        }
     }
 
     public function setValoresFormManu($cod, $formIntancia)
@@ -147,7 +170,7 @@ class ModuloClass extends ModuloSql
 
         $update = array('moduloPosicao' => array('Inteiro' => $novaPosicao));
 
-        $this->crudUtil->update($this->tabela, ['moduloPosicao'], $update, [$this->chavePrimaria => $moduloCod] );
+        $this->crudUtil->update($this->tabela, ['moduloPosicao'], $update, [$this->chavePrimaria => $moduloCod]);
 
         return $novaPosicao;
     }
