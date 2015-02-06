@@ -56,12 +56,7 @@ class UsuarioForm
                 ->setTabela('_perfil')
                 ->setCampoCod('perfilCod')
                 ->setCampoDesc('perfilNome')
-                ->setValor($form->retornaValor('perfilCod'));
-
-        $campos[] = $form->texto('usuarioNome', 'Nome', true)
-                ->setMaximoCaracteres(100)
-                ->setMinimoCaracteres(2)
-                ->setValor($form->retornaValor('usuarioNome'));    
+                ->setValor($form->retornaValor('perfilCod'));      
         
         $campos[] = $form->email('usuarioLogin', 'Login', true)
                 ->setMaximoCaracteres(200)

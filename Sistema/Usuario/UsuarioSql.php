@@ -22,7 +22,7 @@ class UsuarioSql
 
         $qb = $this->con->link()->createQueryBuilder();
 
-        $qb->select(['a.usuarioCod', 'b.perfilNome', 'a.usuarioNome',
+        $qb->select(['a.usuarioCod', 'b.perfilNome', 
                     'a.usuarioLogin', 'a.numeroAcessos', 'a.usuarioDataCadastro',
                     'a.usuarioUltimoAcesso'])
                 ->from('_usuario', 'a')
@@ -37,7 +37,7 @@ class UsuarioSql
     {
         $qb = $this->con->link()->createQueryBuilder();
 
-        $qb->select(['usuarioCod','perfilCod','usuarioNome','usuarioLogin',
+        $qb->select(['usuarioCod','perfilCod','usuarioLogin',
             'numeroAcessos','usuarioDataCadastro',
             'usuarioUltimoAcesso'])
                 ->from('_usuario', '')
