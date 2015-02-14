@@ -27,8 +27,10 @@
 *    Cópias da licença disponíveis em /Sappiens/_doc/licenca
 *
 */
-
-require './Config.php';
+	
+if(!require __DIR__ . '/Config.php') {
+	throw new ErrorException();
+}
 
 header('location: ./Dashboard');
 

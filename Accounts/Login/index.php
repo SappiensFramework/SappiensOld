@@ -27,11 +27,11 @@
     Cópias da licença disponíveis em /Sappiens/_doc/licenca
 
 */
-
 define('MODULO', 'Login');
 
-require '../../Config.php';
+use \Pixel\Login\LoginController;
 
+require __DIR__ . '/../../Config.php';
 echo (new \Pixel\Login\LoginController())->controle(\filter_input(\INPUT_POST, 'acao'));
 
 ?>

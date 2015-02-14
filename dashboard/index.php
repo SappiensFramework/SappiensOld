@@ -26,10 +26,11 @@
 
     Cópias da licença disponíveis em /Sappiens/_doc/licenca
 
-*/
+*/	
+require __DIR__ . '/../Config.php';
 
-require '../Config.php';
+require 'DashboardController.php';
 
-echo (new \Sappiens\Dashboard\DashboardController())->controle(\filter_input(\INPUT_GET, 'acao'));
+echo (new Sappiens\Dashboard\DashboardController())->controle(\filter_input(\INPUT_GET, 'acao'));
 
 ?>

@@ -1,7 +1,7 @@
 <?php
 
 require '../../Config.php';
-
+require 'ModuloController.php';
 \define('GRUPO', 'Sistema');
 \define('MODULO', 'Modulo');
 \define('DEFAULT_MODULO_NOME', 'Gerenciar Modulos');

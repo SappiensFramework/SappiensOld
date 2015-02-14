@@ -113,10 +113,10 @@ class Config
                  */
                 'padrao' => [
 
-                    'host'      => '192.168.25.51',
+                    'host'      => 'localhost',
                     'banco'     => 'sappiens',
-                    'usuario'   => 'sapp',
-                    'senha'     => '***',
+                    'usuario'   => 'root',
+                    'senha'     => 'vagrant',
                     'driver'    => 'pdo_mysql'
                     
                 ],                
@@ -181,17 +181,17 @@ class Config
         if($version == 'dev') {
 
             \define('SIS_URL_BASE_STATIC', \SIS_URL_BASE . 'Static/');
-            \define('SIS_URL_BASE_DEFAULT','http://localhost');
-            \define('SIS_FM_BASE', 'C:/xampp/htdocs/Zion/');
-            \define('SIS_LAYOUT_BASE', 'http://localhost/Zion/Layout/');
-            \define('SIS_URL_FM_BASE', 'http://localhost/Zion/Static/');
+            \define('SIS_URL_BASE_DEFAULT','http://192.168.100.101');
+            \define('SIS_FM_BASE', '/var/www/Zion/');
+            \define('SIS_LAYOUT_BASE', 'http://192.168.100.101/Zion/Layout/');
+            \define('SIS_URL_FM_BASE', 'http://192.168.100.101/Zion/Static/');
             \define('SIS_DEFAULT_AUTOCOMPLETE', \SIS_URL_BASE . 'includes/autocomplete/');
             \define('SIS_DEFAULT_DEPENDENCIA', \SIS_URL_BASE . 'includes/dependencia/');
 
             \define('SIS_ID_NAMESPACE_PROJETO','Sappiens');
-            \define('SIS_NAMESPACE_PROJETO','C:/xampp/htdocs');  
-            \define('SIS_NAMESPACE_FRAMEWORK', 'C:/xampp/htdocs/Zion/Lib');
-            \define('SIS_NAMESPACE_TEMPLATE', 'C:/xampp/htdocs/Zion/Lib');
+            \define('SIS_NAMESPACE_PROJETO','/var/www');  
+            \define('SIS_NAMESPACE_FRAMEWORK', '/var/www/Zion/Lib');
+            \define('SIS_NAMESPACE_TEMPLATE', '/var/www/Zion/Lib');
             \define('SIS_RELEASE', 'Developer');
 
         } elseif($version == 'alpha') {
@@ -253,10 +253,11 @@ function sisException($e)
 \set_error_handler("\\Sappiens\\sisErro", \E_WARNING | \E_NOTICE);
 \set_exception_handler("\\Sappiens\\sisException");
 
-require_once \SIS_FM_BASE . 'Lib/Zion/ClassLoader/Loader.php';
+// require_once \SIS_FM_BASE . '/Lib/Zion/ClassLoader/Loader.php';
 
-(new \Zion\ClassLoader\Loader())
-        ->setNameSpaces('Zion', \SIS_NAMESPACE_FRAMEWORK) //NameSpace do Framework
-        ->setNameSpaces('Pixel', \SIS_NAMESPACE_TEMPLATE) //NameSpace do Template
-        ->setNameSpaces(\SIS_ID_NAMESPACE_PROJETO, \SIS_NAMESPACE_PROJETO) //NameSpace do Projeto
-        ->inicio();
+// (new \Zion\ClassLoader\Loader())
+//         ->setNameSpaces('Zion', \SIS_NAMESPACE_FRAMEWORK) //NameSpace do Framework
+//         ->setNameSpaces('Pixel', \SIS_NAMESPACE_TEMPLATE) //NameSpace do Template
+//         ->setNameSpaces(\SIS_ID_NAMESPACE_PROJETO, \SIS_NAMESPACE_PROJETO) //NameSpace do Projeto
+//         ->inicio();	
+require '/vagrant/vendor/autoload.php';
